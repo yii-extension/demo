@@ -2,7 +2,7 @@
     <a href="https://github.com/yiisoft" target="_blank">
         <img src="https://github.com/yiisoft.png" height="100px">
     </a>
-    <h1 align="center">Yii application template</h1>
+    <h1 align="center">Yii application demo for active record</h1>
     <br>
 </p>
 
@@ -16,7 +16,7 @@
     </a>
 </p>
 
-Yii Demo Application for Active Record is best for rapidly creating projects.
+Yii demo application for active record with db-sqlite is best for rapidly creating projects.
 
 ## Directory structure
 
@@ -55,6 +55,19 @@ directly under the `public` root.
 
 All the configuration is in the `config directory` of the `application`.
 
+## Run command console
+
+~~~
+./yii
+~~~
+
+## Run migration
+
+~~~
+./yii migrate/up
+~~~
+
+
 ## Using PHP built-in server
 
 ~~~
@@ -65,12 +78,6 @@ php -S 127.0.0.1:8080 -t public
 
 ~~~
 http://localhost:8080
-~~~
-
-## Run command console
-
-~~~
-./yii
 ~~~
 
 ## Codeception testing
