@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Theme\AdminOneBulma\Config;
 
-final class ParamsTheme
+final class Params
 {
     public function getParams(): array
     {

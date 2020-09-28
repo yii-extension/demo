@@ -81,8 +81,7 @@ final class Params
                         'brandLabel()' => ['My Project'],
                         'brandImage()' => ['/images/yii-logo.jpg'],
                         'itemsOptions()' => [['class' => 'navbar-end']],
-                        'options()' => [['class' => 'is-black', 'data-sticky' => '', 'data-sticky-shadow' => '']]
-                    ],
+                        'options()' => [['class' => 'is-black', 'data-sticky' => '', 'data-sticky-shadow' => '']]                    ],
                 ],
 
                 'name' => 'My Project',

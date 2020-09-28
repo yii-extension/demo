@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\User\Config;
 
-final class ParamsModuleUser
+final class Params
 {
     public function getParams(): array
     {

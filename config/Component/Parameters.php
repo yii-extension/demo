@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Yii\Component;
 
 use App\Service\Parameters;
-use App\Module\User\Config\ParamsModuleUser;
-use App\Theme\AdminOneBulma\Config\ParamsTheme;
+use App\Module\User\Config\Params as UserParams;
+use App\Theme\AdminOneBulma\Config\Params as ThemeParams;
 use Yii\Params;
 
 $params = new Params();
-$paramsTheme = new ParamsTheme();
-$paramsUser = new ParamsModuleUser();
+$userParams = new UserParams();
+$themeParams = new ThemeParams();
 
 return [
     /** component parameters */
@@ -20,8 +20,8 @@ return [
         '__construct()' => [
             array_merge_recursive(
                 $params->getApplicationConfig(),
-                $paramsTheme->getParams(),
-                $paramsUser->getParams()
+                $themeParams->getParams(),
+                $userParams->getParams()
             )
         ]
     ]

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yii\Component;
 
+use App\Module\User\Config\Routes as UserRoutes;
 use Psr\Container\ContainerInterface;
 use Yii\Routes;
 use Yiisoft\DataResponse\Middleware\FormatDataResponse;
@@ -27,11 +28,15 @@ return [
 
     UrlMatcherInterface::class => static function (ContainerInterface $container) {
         $routes = new Routes();
+        $userRoutes = new UserRoutes();
 
         $collector = $container->get(RouteCollectorInterface::class);
 
         $collector->addGroup(
-            Group::create(null, $routes->getRoutes())->addMiddleware(FormatDataResponse::class)
+            Group::create(
+                null,
+                array_merge($routes->getRoutes(), $userRoutes->getRoutes())
+            )->addMiddleware(FormatDataResponse::class)
         );
 
         return new UrlMatcher(new RouteCollection($collector));
