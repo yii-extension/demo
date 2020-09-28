@@ -1,0 +1,252 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Module\User\Repository;
+
+use RuntimeException;
+use App\Service\Mailer;
+use App\Service\Parameters;
+use App\Module\User\Entity\User;
+use App\Module\User\Entity\Token;
+use App\Module\User\Form\Registration as RegistrationForm;
+use Yiisoft\Aliases\Aliases;
+use Yiisoft\ActiveRecord\ActiveRecord;
+use Yiisoft\ActiveRecord\ActiveQuery;
+use Yiisoft\Auth\IdentityInterface;
+use Yiisoft\Db\Exception\Exception;
+use Yiisoft\Form\FormModelInterface;
+use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Security\PasswordHasher;
+
+use function array_rand;
+use function count;
+use function filter_var;
+use function str_shuffle;
+use function str_split;
+
+final class UserRepository implements UserRepositoryInterface
+{
+    private Parameters $app;
+    private Aliases $aliases;
+    private Mailer $mailer;
+    private RegistrationForm $registrationForm;
+    private Token $token;
+    private User $user;
+    private UrlGeneratorInterface $url;
+
+    public function __construct(
+        Parameters $app,
+        Aliases $aliases,
+        Mailer $mailer,
+        RegistrationForm $registrationForm,
+        Token $token,
+        User $user,
+        UrlGeneratorInterface $url
+    ) {
+        $this->app = $app;
+        $this->aliases = $aliases;
+        $this->mailer = $mailer;
+        $this->token = $token;
+        $this->registrationForm = $registrationForm;
+        $this->user = $user;
+        $this->url = $url;
+    }
+
+    public function findIdentity(string $id): ?IdentityInterface
+    {
+        return $this->findUserById((int) $id);
+    }
+
+    public function findIdentityByToken(string $token, ?string $type = null): ?IdentityInterface
+    {
+        return $this->findUserByUserToken($token);
+    }
+
+    /**
+     * @param int|string[] $condition
+     */
+    public function findUser($condition): ?ActiveQuery
+    {
+        return $this->user->find()->where($condition);
+    }
+
+    public function findUserByEmail(string $email): ?ActiveRecord
+    {
+        return $this->findUser(['email' => $email])->one();
+    }
+
+    public function findUserById(int $id): ?ActiveRecord
+    {
+        return $this->findUser(['id' => $id])->one();
+    }
+
+    public function findUserByUsername(string $username): ?ActiveRecord
+    {
+        return $this->findUser(['username' => $username])->one();
+    }
+
+    public function findUserByUsernameOrEmail(string $usernameOrEmail): ?ActiveRecord
+    {
+        if (filter_var($usernameOrEmail, FILTER_VALIDATE_EMAIL)) {
+            return $this->findUserByEmail($usernameOrEmail);
+        }
+
+        return $this->findUserByUsername($usernameOrEmail);
+    }
+
+    public function findUserByUserToken(string $token): ?ActiveRecord
+    {
+        return $this->findUser(['token' => $token])->one();
+    }
+
+    public function getMailUrlToken(): ?string
+    {
+        $url = null;
+
+        if ($this->app->get('user.confirmation') === true) {
+            $url = $this->url->generateAbsolute(
+                $this->token->toUrl(),
+                [
+                    'id' => $this->token->getAttribute('user_id'),
+                    'code' => $this->token->getAttribute('code')
+                ]
+            );
+        }
+
+        return $url;
+    }
+
+    public function isConfirmed(): bool
+    {
+        return $this->user->isConfirmed();
+    }
+
+    public function register(): bool
+    {
+        if ($this->user->getIsNewRecord() === false) {
+            throw new RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
+        }
+
+        if ($this->findUserByUsernameOrEmail($this->registrationForm->getAttributeValue('email'))) {
+            $this->registrationForm->addError('email', 'Email already registered.');
+            return false;
+        }
+
+        if ($this->findUserByUsernameOrEmail($this->registrationForm->getAttributeValue('username'))) {
+            $this->registrationForm->addError('username', 'Username already registered.');
+            return false;
+        }
+
+        $transaction = $this->user->getConnection()->beginTransaction();
+
+        try {
+            $this->insertRecordFromFormModel();
+
+            if (!$this->user->save()) {
+                $transaction->rollBack();
+                return false;
+            }
+
+            if ($this->app->get('user.confirmation') === true) {
+                $this->token->setAttribute('type', Token::TYPE_CONFIRMATION);
+                $this->token->insertRecordFromUser();
+                $this->token->link('user', $this->user);
+            }
+
+            $transaction->commit();
+
+            $result = true;
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    public function sendMailer(): bool
+    {
+        return $this->mailer->run(
+            $this->user->getAttribute('email'),
+            $this->app->get('user.subjectWelcome'),
+            $this->aliases->get('@user/resources/mail'),
+            ['html' => 'welcome', 'text' => 'text/welcome'],
+            [
+                'username' => $this->user->getAttribute('username'),
+                'password' => $this->user->getPassword(),
+                'url' => $this->getMailUrlToken(),
+                'showPassword' => $this->app->get('user.generatingPassword')
+            ]
+        );
+    }
+
+    public function validatePassword(FormModelInterface $form, string $password, string $password_hash): bool
+    {
+        $result = true;
+
+        if (!(new PasswordHasher())->validate($password, $password_hash)) {
+            $form->addError('currentPassword', 'Invalid password.');
+            $result = false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Generate password.
+     *
+     * generates user-friendly random password containing at least one lower case letter, one uppercase letter and one
+     * digit. The remaining characters in the password are chosen at random from those three sets
+     *
+     * @param int $length
+     * @return string
+     *
+     * {@see https://gist.github.com/tylerhall/521810}
+     */
+    private function generate(int $length): string
+    {
+        $sets = [
+            'abcdefghjkmnpqrstuvwxyz',
+            'ABCDEFGHJKMNPQRSTUVWXYZ',
+            '23456789',
+        ];
+        $all = '';
+        $password = '';
+        foreach ($sets as $set) {
+            $password .= $set[array_rand(str_split($set))];
+            $all .= $set;
+        }
+
+        $all = str_split($all);
+        for ($i = 0; $i < $length - count($sets); $i++) {
+            $password .= $all[array_rand($all)];
+        }
+
+        $password = str_shuffle($password);
+        return $password;
+    }
+
+    private function insertRecordFromFormModel(): void
+    {
+        $password = $this->app->get('user.generatingPassword')
+            ? $this->generate(8)
+            : $this->registrationForm->getAttributeValue('password');
+
+        $this->user->username($this->registrationForm->getAttributeValue('username'));
+        $this->user->email($this->registrationForm->getAttributeValue('email'));
+        $this->user->unconfirmedEmail(null);
+        $this->user->password($password);
+        $this->user->passwordHash($password);
+        $this->user->authKey();
+        $this->user->registrationIp($this->registrationForm->getAttributeValue('ip'));
+
+        if ($this->app->get('user.confirmation') === false) {
+            $this->user->confirmedAt();
+        }
+
+        $this->user->createdAt();
+        $this->user->updatedAt();
+        $this->user->flags(0);
+    }
+}
