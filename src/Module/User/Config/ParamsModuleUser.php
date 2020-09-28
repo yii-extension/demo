@@ -64,19 +64,6 @@ final class ParamsModuleUser
                     'inputOptions()' => [['class' => 'field input']],
                     'errorOptions()' => [['class' => 'has-text-left has-text-danger is-italic']]
                 ]
-            ],
-            'navBar' => [
-                'brand' =>
-                    '<div class="navbar-brand">
-                        <a class="navbar-item is-hidden-desktop jb-aside-mobile-toggle">
-                            <span class="icon"><i class="mdi mdi-forwardburger mdi-24px"></i></span>
-                        </a>
-                    </div>
-                    <div class="navbar-brand is-right">
-                        <a class="navbar-item is-hidden-desktop jb-navbar-menu-toggle" data-target="w1-navbar-Menu">
-                            <span class="icon"><i class="mdi mdi-dots-vertical"></i></span>
-                        </a>
-                    </div>',
             ]
         ];
     }

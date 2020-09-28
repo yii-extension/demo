@@ -78,9 +78,17 @@ if (isset($identity) && $identity->getId() !== null) {
                             </header>
                             <div>
                                 <?= Breadcrumbs::widget()
-                                    ->homeLink($app->get('app.breadcrumbs.homeLink'))
+                                    ->homeLink(
+                                        [
+                                            'label' => 'Home',
+                                            'url' => '/',
+                                            'icon' => 'fas fa-home',
+                                            'iconOptions' => 'icon',
+                                            'encode' => false
+                                        ]
+                                    )
                                     ->links($breadCrumbsItems)
-                                    ->options($app->get('app.breadcrumbs.options'))
+                                    ->options(['class' => 'has-succeeds-separator is-centered has-margin-top-20'])
                                 ?>
                                 <?= FlashMessage::widget() ?>
                             </div>
