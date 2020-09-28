@@ -8,7 +8,7 @@ jobs:
   tests:
     name: PHP ${{ matrix.php-version }}-${{ matrix.os }}
     env:
-      extensions: curl, mbstring, dom, intl, fileinfo, json, libxml, xml, xmlwriter
+      extensions: curl, mbstring, dom, intl, fileinfo, json, libxml, pdo, pdo_sqlite, xml, xmlwriter
       key: cache-v1
 
     runs-on: ${{ matrix.os }}
