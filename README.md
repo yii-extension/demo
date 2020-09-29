@@ -9,6 +9,8 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/yii-extension/demo)](https://packagist.org/packages/yii-extension/demo)
 [![ci](https://github.com/yii-extension/demo/workflows/ci/badge.svg)](https://github.com/yii-extension/demo/actions)
 [![codecov](https://codecov.io/gh/yii-extension/demo/branch/master/graph/badge.svg)](https://codecov.io/gh/yii-extension/demo)
+[![static analysis](https://github.com/yii-extension/demo/workflows/static%20analysis/badge.svg)](https://github.com/yii-extension/demo/actions?query=workflow%3A%22static+analysis%22)
+[![type-coverage](https://shepherd.dev/github/yii-extension/demo/coverage.svg)](https://shepherd.dev/github/yii-extension/demo)
 
 <p align="center">
     <a href="https://github.com/yii-extension/app" target="_blank">
