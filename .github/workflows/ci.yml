@@ -80,6 +80,7 @@ jobs:
 
       - name: Apply migration user module
         run: ./yii migrate/up --no-interaction
+        shell: bash
 
       - name: Run tests with codeception with coverage on Linux php 7.4
         if: matrix.os == 'ubuntu-latest' && matrix.php-version == '7.4'
