@@ -58,16 +58,6 @@ final class Login
         return $result;
     }
 
-    public function logout(User $user): bool
-    {
-        $identity = $this->identityRepository->findIdentity($user->getId());
-
-        /** @psalm-suppress UndefinedInterfaceMethod */
-        $identity->updateAttributes(['last_logout_at' => time()]);
-
-        return $user->logout();
-    }
-
     public function isLoginConfirm(string $id, string $ip): bool
     {
         $user = $this->identityRepository->findIdentity($id);

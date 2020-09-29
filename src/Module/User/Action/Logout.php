@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\User\Action;
 
-use App\Module\User\Service\Login;
+use App\Module\User\Service\Logout as LogoutService;
 use Psr\Http\Message\ResponseInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -14,11 +14,11 @@ final class Logout
 {
     public function logout(
         DataResponseFactoryInterface $responseFactory,
-        Login $login,
+        LogoutService $logoutService,
         UrlGeneratorInterface $url,
         User $userIdentity
     ): ResponseInterface {
-        $login->logout($userIdentity);
+        $logoutService->run($userIdentity);
 
         return $responseFactory
             ->createResponse(302)
