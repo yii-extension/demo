@@ -10,8 +10,8 @@
         <directory name="src" />
         <ignoreFiles>
             <directory name="vendor" />
-            <directory name="\src\Theme\AdminOneBulma\resources" />
-            <directory name="\src\Module\User\resources" />
+            <directory name="src/Theme/AdminOneBulma/resources" />
+            <directory name="src/Module/User/resources" />
         </ignoreFiles>
     </projectFiles>
 </psalm>
