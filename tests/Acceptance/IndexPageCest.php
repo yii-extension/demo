@@ -10,7 +10,6 @@ final class IndexPageCest
 {
     public function _before(AcceptanceTester $I): void
     {
-        $I->wantTo('index page works.');
         $I->amOnPage('/');
     }
 

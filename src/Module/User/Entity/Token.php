@@ -7,7 +7,6 @@ namespace App\Module\User\Entity;
 use RuntimeException;
 use Yiisoft\ActiveRecord\ActiveRecord;
 use Yiisoft\ActiveRecord\ActiveQuery;
-use Yiisoft\Security\Random;
 
 /**
  * Token Active Record model.
@@ -30,13 +29,6 @@ final class Token extends ActiveRecord
     public function tableName(): string
     {
         return '{{%token}}';
-    }
-
-    public function insertRecordFromUser(): void
-    {
-        $this->deleteAll(['user_id' => $this->user_id, 'type' => $this->type]);
-        $this->setAttribute('created_at', time());
-        $this->setAttribute('code', Random::string());
     }
 
     public function getUser(): ActiveQuery

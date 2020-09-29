@@ -69,7 +69,6 @@ All the configuration is in the `config directory` of the `application`.
 ./yii migrate/up
 ~~~
 
-
 ## Using PHP built-in server
 
 ~~~
@@ -81,6 +80,14 @@ php -S 127.0.0.1:8080 -t public
 ~~~
 http://localhost:8080
 ~~~
+
+## Implemented functions
+
+- [x] Admin Panel Dashboard.
+- [x] /auth/login
+- [x] /registration/register
+- [x] /registration/resend
+- [x] /registration/confirm[/{id}/{token}
 
 ## Codeception testing
 

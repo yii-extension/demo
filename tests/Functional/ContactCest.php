@@ -6,20 +6,19 @@ namespace App\Tests\Functional;
 
 use App\Tests\FunctionalTester;
 
-final class ContactFormCest
+final class ContactCest
 {
-    public function _before(FunctionalTester $I)
+    public function _before(FunctionalTester $I): void
     {
         $I->amOnPage('/contact');
     }
 
-    public function openContactPage(FunctionalTester $I)
+    public function testOpenContactPage(FunctionalTester $I): void
     {
-        $I->wantTo('ensure that contact page works');
         $I->see('Please fill out the following to Contact.');
     }
 
-    public function submitEmptyForm(FunctionalTester $I)
+    public function testSubmitEmptyForm(FunctionalTester $I): void
     {
         $I->submitForm('#form-contact', []);
         $I->expectTo('see validations errors');
@@ -30,7 +29,7 @@ final class ContactFormCest
         $I->see('Value cannot be blank.');
     }
 
-    public function submitFormWithIncorrectEmail(FunctionalTester $I)
+    public function testSubmitFormWithIncorrectEmail(FunctionalTester $I): void
     {
         $I->submitForm('#form-contact', [
             'ContactForm[name]' => 'tester',
@@ -43,7 +42,7 @@ final class ContactFormCest
         $I->see('This value is not a valid email address.');
     }
 
-    public function submitFormSuccessfully(FunctionalTester $I)
+    public function testSubmitFormSuccessfully(FunctionalTester $I): void
     {
         $I->submitForm('#form-contact', [
             'ContactForm[username]' => 'tester',

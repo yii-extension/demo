@@ -8,18 +8,17 @@ use App\Tests\AcceptanceTester;
 
 final class ContactPageCest
 {
-    public function _before(AcceptanceTester $I)
+    public function _before(AcceptanceTester $I): void
     {
         $I->amOnPage('/contact');
     }
 
-    public function contactPageWorks(AcceptanceTester $I)
+    public function testContactPage(AcceptanceTester $I): void
     {
-        $I->wantTo('ensure that contact page works');
         $I->see('Please fill out the following to Contact.');
     }
 
-    public function contactFormCanBeSubmitted(AcceptanceTester $I)
+    public function testContactFormCanBeSubmitted(AcceptanceTester $I): void
     {
         $I->amGoingTo('submit contact form with correct data');
         $I->fillField('#contactform-username', 'tester');

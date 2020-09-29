@@ -20,6 +20,7 @@ use Yiisoft\Db\Exception\Exception;
 use Yiisoft\Form\FormModelInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Security\PasswordHasher;
+use Yiisoft\Security\Random;
 
 use function array_rand;
 use function count;
@@ -140,7 +141,17 @@ final class UserRepository implements IdentityRepositoryInterface
 
             if ($this->app->get('user.confirmation') === true) {
                 $this->token->setAttribute('type', Token::TYPE_CONFIRMATION);
-                $this->token->insertRecordFromUser();
+
+                $this->token->deleteAll(
+                    [
+                        'user_id' => $this->token->getAttribute('user_id'),
+                        'type' => $this->token->getAttribute('type')
+                    ]
+                );
+
+                $this->token->setAttribute('created_at', time());
+                $this->token->setAttribute('code', Random::string());
+
                 $this->token->link('user', $this->user);
             }
 

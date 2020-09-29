@@ -8,7 +8,7 @@ use Yiisoft\Html\Html;
 ?>
 
 <p class = 'mail-confirmation'>
-    Hello,
+    Hello, <?= $params['username'] ?>
 </p>
 
 <p class = 'mail-confirmation'>

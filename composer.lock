@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "afbae5c960a89bb03b68280a6e50f9e8",
+    "content-hash": "173652d50be48e3e5d3b1e5170d2939c",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -5885,6 +5885,61 @@
             "time": "2020-08-28T08:06:29+00:00"
         },
         {
+            "name": "codeception/module-db",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Codeception/module-db.git",
+                "reference": "13a2b86206d09c50ab2e5375b261df35b650e58f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Codeception/module-db/zipball/13a2b86206d09c50ab2e5375b261df35b650e58f",
+                "reference": "13a2b86206d09c50ab2e5375b261df35b650e58f",
+                "shasum": ""
+            },
+            "require": {
+                "codeception/codeception": "*@dev",
+                "php": ">=5.6.0 <8.0"
+            },
+            "conflict": {
+                "codeception/codeception": "<4.0"
+            },
+            "require-dev": {
+                "codeception/util-robohelpers": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Bodnarchuk"
+                },
+                {
+                    "name": "Gintautas Miselis"
+                }
+            ],
+            "description": "WebDriver module for Codeception",
+            "homepage": "http://codeception.com/",
+            "keywords": [
+                "acceptance-testing",
+                "browser-testing",
+                "codeception"
+            ],
+            "support": {
+                "issues": "https://github.com/Codeception/module-db/issues",
+                "source": "https://github.com/Codeception/module-db/tree/master"
+            },
+            "time": "2019-12-08T17:56:49+00:00"
+        },
+        {
             "name": "codeception/module-phpbrowser",
             "version": "1.0.1",
             "source": {
@@ -9890,9 +9945,9 @@
         "yiisoft/yii-bulma": 20,
         "yiisoft/yii-db-migration": 20,
         "yiisoft/yii-web": 20,
-        "roave/security-advisories": 20,
         "codeception/module-asserts": 20,
-        "codeception/module-phpbrowser": 20
+        "codeception/module-phpbrowser": 20,
+        "roave/security-advisories": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

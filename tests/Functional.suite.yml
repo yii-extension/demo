@@ -8,6 +8,11 @@
 actor: FunctionalTester
 modules:
     enabled:
+        - Db:
+            dsn: 'sqlite:/config/Database/yiitest.sq3'
+            user: ''
+            password: ''
+            cleanup: true
         - PhpBrowser:
             url: http://localhost:8080
         # add a framework module here

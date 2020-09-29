@@ -86,6 +86,7 @@ $assetManager->register([
         <?php endif ?>
 
         <p class = 'has-text-grey'>
+            <?= Html::a('Didn\'t receive confirmation message', $url->generate('registration/resend')) ?>
         </p>
 
     </div>

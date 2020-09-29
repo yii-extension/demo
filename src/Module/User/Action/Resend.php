@@ -4,42 +4,41 @@ declare(strict_types=1);
 
 namespace App\Module\User\Action;
 
-use App\Module\User\Form\Login as LoginForm;
-use App\Module\User\Service\Login as LoginService;
+use App\Module\User\Form\Resend as ResendForm;
+use App\Module\User\Service\Resend as ResendService;
 use App\Service\Parameters;
 use App\Service\View;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Auth\IdentityRepositoryInterface;
+use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 
-final class Login
+final class Resend
 {
-    public function login(
+    public function resend(
         Parameters $app,
         IdentityRepositoryInterface $identityRepository,
-        LoginForm $loginForm,
-        LoginService $loginService,
-        ServerRequestInterface $request,
+        ResendForm $resendForm,
+        ResendService $resendService,
         DataResponseFactoryInterface $responseFactory,
+        ServerRequestInterface $request,
         UrlGeneratorInterface $url,
         View $view
     ): ResponseInterface {
         $body = $request->getParsedBody();
         $method = $request->getMethod();
-        $ip = $request->getServerParams()['REMOTE_ADDR'];
 
         if (
             $method === 'POST'
-            && $loginForm->load($body)
-            && $loginForm->validate()
-            && $loginService->isLogin($identityRepository, $ip)
+            && $resendForm->load($body)
+            && $resendForm->validate()
+            && $resendService->run($resendForm, $identityRepository)
         ) {
             $view->addFlash(
-                'is-success',
+                'is-warning',
                 $app->get('user.messageHeader'),
-                'Sign in successful - ' . date("F j, Y, g:i a")
+                'Please check your email to activate your username.'
             );
 
             return $responseFactory
@@ -49,6 +48,6 @@ final class Login
 
         return $view
             ->viewPath('@user/resources/views')
-            ->renderWithLayout('auth/login', ['body' => $body, 'data' => $loginForm]);
+            ->renderWithLayout('/registration/resend', ['data' => $resendForm]);
     }
 }

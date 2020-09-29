@@ -6,42 +6,38 @@ namespace App\Module\User\Service;
 
 use App\Module\User\Entity\User as UserEntity;
 use App\Module\User\Form\Login as LoginForm;
+use App\Module\User\Repository\UserRepository;
 use Yiisoft\Yii\Web\User\User;
+use Yiisoft\Auth\IdentityInterface;
 use Yiisoft\Auth\IdentityRepositoryInterface;
 
 final class Login
 {
     private LoginForm $loginForm;
     private User $user;
-    private IdentityRepositoryInterface $identityRepository;
 
-    public function __construct(IdentityRepositoryInterface $identityRepository, LoginForm $loginForm, User $user)
+    public function __construct(LoginForm $loginForm, User $user)
     {
-        $this->identityRepository = $identityRepository;
         $this->loginForm = $loginForm;
         $this->user = $user;
 
     }
 
-    public function isLogin(string $ip): bool
+    public function isLogin(IdentityRepositoryInterface $identityRepository, string $ip): bool
     {
         $login = $this->loginForm->getAttributeValue('login');
         $password = $this->loginForm->getAttributeValue('password');
 
-        /**
-         * @psalm-suppress UndefinedInterfaceMethod
-         * @var UserEntity $user
-         */
-        $user = $this->identityRepository->findUserByUsernameOrEmail($login);
+        /** @var UserRepository $identityRepository */
+        $user = $identityRepository->findUserByUsernameOrEmail($login);
 
         if ($user === null) {
             $this->loginForm->addError('password', 'Unregistered user/Invalid password.');
         }
 
-        /** @psalm-suppress UndefinedInterfaceMethod */
         if (
             $user
-            && $this->identityRepository->validatePassword(
+            && $identityRepository->validatePassword(
                 $this->loginForm,
                 $password,
                 $user->getAttribute('password_hash')
@@ -49,6 +45,8 @@ final class Login
             && $this->validateConfirmed($user)
         ) {
             $this->updateAttributeLogin($user, $ip);
+
+            /** @var IdentityInterface $user */
             $result = $this->user->login($user);
         } else {
             $this->loginForm->addError('password', 'Unregistered user/Invalid password.');
@@ -58,9 +56,9 @@ final class Login
         return $result;
     }
 
-    public function isLoginConfirm(string $id, string $ip): bool
+    public function isLoginConfirm(IdentityRepositoryInterface $identityRepository, string $id, string $ip): bool
     {
-        $user = $this->identityRepository->findIdentity($id);
+        $user = $identityRepository->findIdentity($id);
 
         $this->updateAttributeLogin($user, $ip);
 

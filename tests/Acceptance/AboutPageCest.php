@@ -10,7 +10,6 @@ final class AboutPageCest
 {
     public function _before(AcceptanceTester $I): void
     {
-        $I->wantTo('about page works.');
         $I->amOnPage('/about');
     }
 

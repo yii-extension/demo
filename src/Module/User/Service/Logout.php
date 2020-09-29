@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\User\Service;
 
+use App\Module\User\Entity\User as UserEntity;
 use Yiisoft\Yii\Web\User\User;
 use Yiisoft\Auth\IdentityRepositoryInterface;
 
@@ -20,7 +21,7 @@ final class Logout
     {
         $identity = $this->identityRepository->findIdentity($user->getId());
 
-        /** @psalm-suppress UndefinedInterfaceMethod */
+        /** @var UserEntity $identity */
         $identity->updateAttributes(['last_logout_at' => time()]);
 
         return $user->logout();
