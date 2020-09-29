@@ -14,6 +14,8 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\ActiveRecord\ActiveRecord;
 use Yiisoft\ActiveRecord\ActiveQuery;
 use Yiisoft\Auth\IdentityInterface;
+use Yiisoft\Auth\IdentityRepositoryInterface;
+use Yiisoft\Db\Connection\ConnectionInterface;
 use Yiisoft\Db\Exception\Exception;
 use Yiisoft\Form\FormModelInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -25,10 +27,11 @@ use function filter_var;
 use function str_shuffle;
 use function str_split;
 
-final class UserRepository implements UserRepositoryInterface
+final class UserRepository implements IdentityRepositoryInterface
 {
     private Parameters $app;
     private Aliases $aliases;
+    private ConnectionInterface $db;
     private Mailer $mailer;
     private RegistrationForm $registrationForm;
     private Token $token;
@@ -38,6 +41,7 @@ final class UserRepository implements UserRepositoryInterface
     public function __construct(
         Parameters $app,
         Aliases $aliases,
+        ConnectionInterface $db,
         Mailer $mailer,
         RegistrationForm $registrationForm,
         Token $token,
@@ -46,6 +50,7 @@ final class UserRepository implements UserRepositoryInterface
     ) {
         $this->app = $app;
         $this->aliases = $aliases;
+        $this->db = $db;
         $this->mailer = $mailer;
         $this->token = $token;
         $this->registrationForm = $registrationForm;
@@ -53,37 +58,31 @@ final class UserRepository implements UserRepositoryInterface
         $this->url = $url;
     }
 
+    /** @psalm-suppress InvalidReturnType, InvalidReturnStatement */
     public function findIdentity(string $id): ?IdentityInterface
     {
-        return $this->findUserById((int) $id);
+        return $this->user->findOne(['id' => $id]);
     }
 
+    /** @psalm-suppress InvalidReturnType, InvalidReturnStatement */
     public function findIdentityByToken(string $token, ?string $type = null): ?IdentityInterface
     {
-        return $this->findUserByUserToken($token);
-    }
-
-    /**
-     * @param int|string[] $condition
-     */
-    public function findUser($condition): ?ActiveQuery
-    {
-        return $this->user->find()->where($condition);
+        return $this->user->findOne(['auth_key' => $token]);
     }
 
     public function findUserByEmail(string $email): ?ActiveRecord
     {
-        return $this->findUser(['email' => $email])->one();
+        return $this->user->findOne(['email' => $email]);
     }
 
     public function findUserById(int $id): ?ActiveRecord
     {
-        return $this->findUser(['id' => $id])->one();
+        return $this->user->findOne(['id' => $id]);
     }
 
     public function findUserByUsername(string $username): ?ActiveRecord
     {
-        return $this->findUser(['username' => $username])->one();
+        return $this->user->findOne(['username' => $username]);
     }
 
     public function findUserByUsernameOrEmail(string $usernameOrEmail): ?ActiveRecord
@@ -93,11 +92,6 @@ final class UserRepository implements UserRepositoryInterface
         }
 
         return $this->findUserByUsername($usernameOrEmail);
-    }
-
-    public function findUserByUserToken(string $token): ?ActiveRecord
-    {
-        return $this->findUser(['token' => $token])->one();
     }
 
     public function getMailUrlToken(): ?string
@@ -117,11 +111,6 @@ final class UserRepository implements UserRepositoryInterface
         return $url;
     }
 
-    public function isConfirmed(): bool
-    {
-        return $this->user->isConfirmed();
-    }
-
     public function register(): bool
     {
         if ($this->user->getIsNewRecord() === false) {
@@ -138,7 +127,8 @@ final class UserRepository implements UserRepositoryInterface
             return false;
         }
 
-        $transaction = $this->user->getConnection()->beginTransaction();
+        /** @psalm-suppress UndefinedInterfaceMethod */
+        $transaction = $this->db->beginTransaction();
 
         try {
             $this->insertRecordFromFormModel();

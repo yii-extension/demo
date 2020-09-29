@@ -26,7 +26,7 @@ final class Params
             '@views' => '@root/resources/views',
 
             /** config theme adminonebulma */
-            '@AdminOneLayout' => '@root/src/Theme/AdminOneBulma/layout',
+            '@AdminOneLayout' => '@root/src/Theme/AdminOneBulma/resources/layout',
 
             /** config yii-db-migration */
             '@yiisoft/yii/db/migration' => '@vendor/yii-db-migration',

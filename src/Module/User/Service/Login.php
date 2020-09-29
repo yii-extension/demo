@@ -6,20 +6,21 @@ namespace App\Module\User\Service;
 
 use App\Module\User\Entity\User as UserEntity;
 use App\Module\User\Form\Login as LoginForm;
-use App\Module\User\Repository\UserRepositoryInterface;
 use Yiisoft\Yii\Web\User\User;
+use Yiisoft\Auth\IdentityRepositoryInterface;
 
 final class Login
 {
     private LoginForm $loginForm;
     private User $user;
-    private UserRepositoryInterface $userRepository;
+    private IdentityRepositoryInterface $identityRepository;
 
-    public function __construct(LoginForm $loginForm, User $user, UserRepositoryInterface $userRepository)
+    public function __construct(IdentityRepositoryInterface $identityRepository, LoginForm $loginForm, User $user)
     {
+        $this->identityRepository = $identityRepository;
         $this->loginForm = $loginForm;
         $this->user = $user;
-        $this->userRepository = $userRepository;
+
     }
 
     public function isLogin(string $ip): bool
@@ -27,16 +28,20 @@ final class Login
         $login = $this->loginForm->getAttributeValue('login');
         $password = $this->loginForm->getAttributeValue('password');
 
-        /** @var UserEntity $user */
-        $user = $this->userRepository->findUserByUsernameOrEmail($login);
+        /**
+         * @psalm-suppress UndefinedInterfaceMethod
+         * @var UserEntity $user
+         */
+        $user = $this->identityRepository->findUserByUsernameOrEmail($login);
 
         if ($user === null) {
             $this->loginForm->addError('password', 'Unregistered user/Invalid password.');
         }
 
+        /** @psalm-suppress UndefinedInterfaceMethod */
         if (
             $user
-            && $this->userRepository->validatePassword(
+            && $this->identityRepository->validatePassword(
                 $this->loginForm,
                 $password,
                 $user->getAttribute('password_hash')
@@ -55,8 +60,9 @@ final class Login
 
     public function logout(User $user): bool
     {
-        $identity = $this->userRepository->findIdentity($user->getId());
+        $identity = $this->identityRepository->findIdentity($user->getId());
 
+        /** @psalm-suppress UndefinedInterfaceMethod */
         $identity->updateAttributes(['last_logout_at' => time()]);
 
         return $user->logout();
@@ -64,7 +70,7 @@ final class Login
 
     public function isLoginConfirm(string $id, string $ip): bool
     {
-        $user = $this->userRepository->findIdentity($id);
+        $user = $this->identityRepository->findIdentity($id);
 
         $this->updateAttributeLogin($user, $ip);
 

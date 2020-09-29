@@ -10,18 +10,19 @@ use App\Module\User\Entity\User;
 use App\Module\User\Entity\Token;
 use App\Module\User\Form\Registration;
 use App\Module\User\Repository\UserRepository;
-use App\Module\User\Repository\UserRepositoryInterface;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Auth\IdentityRepositoryInterface;
+use Yiisoft\Db\Connection\ConnectionInterface;
 use Yiisoft\Factory\Definitions\Reference;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 return [
-    UserRepositoryInterface::class => [
+    UserRepository::class => [
         '__class' => UserRepository::class,
         '__construct()' => [
             Reference::to(Parameters::class),
             Reference::to(Aliases::class),
+            Reference::to(ConnectionInterface::class),
             Reference::to(Mailer::class),
             Reference::to(Registration::class),
             Reference::to(Token::class),
@@ -30,5 +31,5 @@ return [
         ]
     ],
 
-    IdentityRepositoryInterface::class => UserRepositoryInterface::class
+    IdentityRepositoryInterface::class => UserRepository::class
 ];

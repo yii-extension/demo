@@ -8,7 +8,7 @@ use Yiisoft\Html\Html;
 ?>
 
 <p class = 'mailer-welcome'>
-    Hello,
+    Hello, <?= $params['username'] ?>
 </p>
 
 <p class = 'mailer-welcome'>
