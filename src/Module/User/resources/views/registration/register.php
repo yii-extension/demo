@@ -64,6 +64,7 @@ $assetManager->register([
         <hr class = 'mb-2'></hr>
 
         <div class = 'text-center pt-3'>
+            <?= Html::a('Already registered - Sign in!', $url->generate('auth/login')) ?>
         </div>
 
     <?php Form::end() ?>
