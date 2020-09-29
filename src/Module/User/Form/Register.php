@@ -12,7 +12,7 @@ use Yiisoft\Validator\Rule\HasLength;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\MatchRegularExpression;
 
-final class Registration extends FormModel
+final class Register extends FormModel
 {
     private string $email = '';
     private string $username = '';
@@ -34,6 +34,11 @@ final class Registration extends FormModel
             'username' => 'Username:',
             'password' => 'Password:'
         ];
+    }
+
+    public function formName(): string
+    {
+        return 'Register';
     }
 
     public function ip(string $value): void

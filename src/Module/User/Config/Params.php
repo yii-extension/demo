@@ -32,7 +32,7 @@ final class Params
                 'passwordRecovery' => true,
 
                 /** Registration enabled/disabled module user. */
-                'registration' => true,
+                'register' => true,
 
                 /** Configure the subject confirm email. */
                 'subjectConfirm' => 'Confirm account.',

@@ -49,7 +49,7 @@ $assetManager->register([
 
     <hr class = 'mb-2'></hr>
 
-    <?php if ($app->get('user.registration')) : ?>
+    <?php if ($app->get('user.register')) : ?>
         <p class = 'text-center'>
             <?= Html::a('Don\'t have an account - Sign up!', $url->generate('registration/register')) ?>
         </p>

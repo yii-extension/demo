@@ -14,7 +14,7 @@ $this->setTitle('Register');
   * @var \App\Service\Parameters $app
   * @var \Yiisoft\Assets\AssetManager $assetManager
   * @var string|null $csrf
-  * @var \App\Module\User\Form\Registration $data
+  * @var \App\Module\User\Form\Register $data
   * @var \Yiisoft\Router\UrlGeneratorInterface $url
   * @var \Yiisoft\Router\UrlMatcherInterface $urlMatcher
   */

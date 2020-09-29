@@ -9,7 +9,7 @@ use App\Service\Mailer;
 use App\Service\Parameters;
 use App\Module\User\Entity\User;
 use App\Module\User\Entity\Token;
-use App\Module\User\Form\Registration as RegistrationForm;
+use App\Module\User\Form\Register as RegisterForm;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\ActiveRecord\ActiveRecord;
 use Yiisoft\ActiveRecord\ActiveQuery;
@@ -34,7 +34,7 @@ final class UserRepository implements IdentityRepositoryInterface
     private Aliases $aliases;
     private ConnectionInterface $db;
     private Mailer $mailer;
-    private RegistrationForm $registrationForm;
+    private RegisterForm $registerForm;
     private Token $token;
     private User $user;
     private UrlGeneratorInterface $url;
@@ -44,7 +44,7 @@ final class UserRepository implements IdentityRepositoryInterface
         Aliases $aliases,
         ConnectionInterface $db,
         Mailer $mailer,
-        RegistrationForm $registrationForm,
+        RegisterForm $registerForm,
         Token $token,
         User $user,
         UrlGeneratorInterface $url
@@ -54,7 +54,7 @@ final class UserRepository implements IdentityRepositoryInterface
         $this->db = $db;
         $this->mailer = $mailer;
         $this->token = $token;
-        $this->registrationForm = $registrationForm;
+        $this->registerForm = $registerForm;
         $this->user = $user;
         $this->url = $url;
     }
@@ -118,13 +118,13 @@ final class UserRepository implements IdentityRepositoryInterface
             throw new RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
         }
 
-        if ($this->findUserByUsernameOrEmail($this->registrationForm->getAttributeValue('email'))) {
-            $this->registrationForm->addError('email', 'Email already registered.');
+        if ($this->findUserByUsernameOrEmail($this->registerForm->getAttributeValue('email'))) {
+            $this->registerForm->addError('email', 'Email already registered.');
             return false;
         }
 
-        if ($this->findUserByUsernameOrEmail($this->registrationForm->getAttributeValue('username'))) {
-            $this->registrationForm->addError('username', 'Username already registered.');
+        if ($this->findUserByUsernameOrEmail($this->registerForm->getAttributeValue('username'))) {
+            $this->registerForm->addError('username', 'Username already registered.');
             return false;
         }
 
@@ -232,15 +232,15 @@ final class UserRepository implements IdentityRepositoryInterface
     {
         $password = $this->app->get('user.generatingPassword')
             ? $this->generate(8)
-            : $this->registrationForm->getAttributeValue('password');
+            : $this->registerForm->getAttributeValue('password');
 
-        $this->user->username($this->registrationForm->getAttributeValue('username'));
-        $this->user->email($this->registrationForm->getAttributeValue('email'));
+        $this->user->username($this->registerForm->getAttributeValue('username'));
+        $this->user->email($this->registerForm->getAttributeValue('email'));
         $this->user->unconfirmedEmail(null);
         $this->user->password($password);
         $this->user->passwordHash($password);
         $this->user->authKey();
-        $this->user->registrationIp($this->registrationForm->getAttributeValue('ip'));
+        $this->user->registrationIp($this->registerForm->getAttributeValue('ip'));
 
         if ($this->app->get('user.confirmation') === false) {
             $this->user->confirmedAt();

@@ -8,7 +8,7 @@ use App\Service\Mailer;
 use App\Service\Parameters;
 use App\Module\User\Entity\User;
 use App\Module\User\Entity\Token;
-use App\Module\User\Form\Registration;
+use App\Module\User\Form\Register;
 use App\Module\User\Repository\UserRepository;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Auth\IdentityRepositoryInterface;
@@ -24,7 +24,7 @@ return [
             Reference::to(Aliases::class),
             Reference::to(ConnectionInterface::class),
             Reference::to(Mailer::class),
-            Reference::to(Registration::class),
+            Reference::to(Register::class),
             Reference::to(Token::class),
             Reference::to(User::class),
             Reference::to(UrlGeneratorInterface::class)

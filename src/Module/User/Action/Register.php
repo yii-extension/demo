@@ -8,7 +8,7 @@ use RuntimeException;
 use App\Module\User\Repository\UserRepository;
 use App\Service\Parameters;
 use App\Service\View;
-use App\Module\User\Form\Registration as RegistrationForm;
+use App\Module\User\Form\Register as RegisterForm;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\Auth\IdentityRepositoryInterface;
@@ -20,7 +20,7 @@ final class Register
     public function register(
         Parameters $app,
         IdentityRepositoryInterface $identityRepository,
-        RegistrationForm $registrationForm,
+        RegisterForm $registerForm,
         ServerRequestInterface $request,
         DataResponseFactoryInterface $responseFactory,
         UrlGeneratorInterface $url,
@@ -28,13 +28,13 @@ final class Register
     ): ResponseInterface {
         $body = $request->getParsedBody();
         $method = $request->getMethod();
-        $registrationForm->ip($request->getServerParams()['REMOTE_ADDR']);
+        $registerForm->ip($request->getServerParams()['REMOTE_ADDR']);
 
         /** @var UserRepository $identityRepository */
         if (
             $method === 'POST'
-            && $registrationForm->load($body)
-            && $registrationForm->validate()
+            && $registerForm->load($body)
+            && $registerForm->validate()
             && $identityRepository->register()
         ) {
             /** @var UserRepository $identityRepository */
@@ -59,10 +59,10 @@ final class Register
             );
         }
 
-        if ($app->get('user.registration')) {
+        if ($app->get('user.register')) {
             return $view
                 ->viewPath('@user/resources/views')
-                ->renderWithLayout('/registration/register', ['data' => $registrationForm]);
+                ->renderWithLayout('/registration/register', ['data' => $registerForm]);
         }
 
         throw new RuntimeException('Module register user is disabled in the application configuration.');

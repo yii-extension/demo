@@ -21,9 +21,9 @@ final class RegisterCest
 
     public function testRegisterSuccessDataDefaultAccountConfirmationFalse(AcceptanceTester $I): void
     {
-        $I->fillField('#registration-email', 'administrator@example.com');
-        $I->fillField('#registration-username', 'admin');
-        $I->fillField('#registration-password', '123456');
+        $I->fillField('#register-email', 'administrator@example.com');
+        $I->fillField('#register-username', 'admin');
+        $I->fillField('#register-password', '123456');
         $I->click('Register', '#form-registration-register');
 
         $I->expectTo('see registration register validation.');
@@ -44,9 +44,9 @@ final class RegisterCest
 
     public function testRegisterWrongEmailData(AcceptanceTester $I): void
     {
-        $I->fillField('#registration-email', 'register');
-        $I->fillField('#registration-username', 'register');
-        $I->fillField('#registration-password', '123456');
+        $I->fillField('#register-email', 'register');
+        $I->fillField('#register-username', 'register');
+        $I->fillField('#register-password', '123456');
         $I->click('Register', '#form-registration-register');
 
         $I->expectTo('see registration register validation.');
@@ -56,9 +56,9 @@ final class RegisterCest
 
     public function testRegisterEmailExistData(AcceptanceTester $I): void
     {
-        $I->fillField('#registration-email', 'administrator@example.com');
-        $I->fillField('#registration-username', 'administrator');
-        $I->fillField('#registration-password', '123456');
+        $I->fillField('#register-email', 'administrator@example.com');
+        $I->fillField('#register-username', 'administrator');
+        $I->fillField('#register-password', '123456');
         $I->click('Register', '#form-registration-register');
 
         $I->expectTo('see registration register validation.');
@@ -68,18 +68,18 @@ final class RegisterCest
 
     public function testsRegisterInvalidUsernameData(AcceptanceTester $I): void
     {
-        $I->fillField('#registration-email', 'demo@example.com');
-        $I->fillField('#registration-username', '**admin');
-        $I->fillField('#registration-password', '123456');
+        $I->fillField('#register-email', 'demo@example.com');
+        $I->fillField('#register-username', '**admin');
+        $I->fillField('#register-password', '123456');
         $I->click('Register', '#form-registration-register');
 
         $I->expectTo('see registration register validation.');
         $I->see('Value is invalid.');
 
         $I->wantTo('register invalid data.');
-        $I->fillField('#registration-email', 'demo@example.com');
-        $I->fillField('#registration-username', '**');
-        $I->fillField('#registration-password', '123456');
+        $I->fillField('#register-email', 'demo@example.com');
+        $I->fillField('#register-username', '**');
+        $I->fillField('#register-password', '123456');
         $I->click('Register', '#form-registration-register');
 
 
@@ -90,9 +90,9 @@ final class RegisterCest
 
     public function testRegisterUsernameExistData(AcceptanceTester $I): void
     {
-        $I->fillField('#registration-email', 'demo@example.com');
-        $I->fillField('#registration-username', 'admin');
-        $I->fillField('#registration-password', '123456');
+        $I->fillField('#register-email', 'demo@example.com');
+        $I->fillField('#register-username', 'admin');
+        $I->fillField('#register-password', '123456');
         $I->click('Register', '#form-registration-register');
 
         $I->expectTo('see registration register validation.');
@@ -102,9 +102,9 @@ final class RegisterCest
 
     public function testRegisterInvalidPasswordData(AcceptanceTester $I): void
     {
-        $I->fillField('#registration-email', 'demo@example.com');
-        $I->fillField('#registration-username', 'demo');
-        $I->fillField('#registration-password', '123');
+        $I->fillField('#register-email', 'demo@example.com');
+        $I->fillField('#register-username', 'demo');
+        $I->fillField('#register-password', '123');
         $I->click('Register', '#form-registration-register');
 
         $I->expectTo('see registration register validation.');
