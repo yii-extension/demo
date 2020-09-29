@@ -3,20 +3,25 @@
 declare(strict_types=1);
 
 use App\Module\User\Asset\Register as RegisterAsset;
-use Yiisoft\Form\Widget\Form;
+use App\Module\User\Form\Register;
+use App\Service\Parameters;
+use Yiisoft\Assets\AssetManager;
 use Yiisoft\Form\Widget\Field;
+use Yiisoft\Form\Widget\Form;
 use Yiisoft\Html\Html;
+use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Router\UrlMatcherInterface;
 
 $this->setTitle('Register');
 
 
  /**
-  * @var \App\Service\Parameters $app
-  * @var \Yiisoft\Assets\AssetManager $assetManager
+  * @var Parameters $app
+  * @var AssetManager $assetManager
   * @var string|null $csrf
-  * @var \App\Module\User\Form\Register $data
-  * @var \Yiisoft\Router\UrlGeneratorInterface $url
-  * @var \Yiisoft\Router\UrlMatcherInterface $urlMatcher
+  * @var Register $data
+  * @var UrlGeneratorInterface $url
+  * @var UrlMatcherInterface $urlMatcher
   */
 $assetManager->register([
     RegisterAsset::class

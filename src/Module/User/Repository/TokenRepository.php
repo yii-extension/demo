@@ -7,7 +7,7 @@ namespace App\Module\User\Repository;
 use App\Module\User\Entity\Token;
 use App\Service\Mailer;
 use App\Service\Parameters;
-use Yiisoft\ActiveRecord\ActiveRecord;
+use Yiisoft\ActiveRecord\ActiveRecordInterface;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Security\Random;
@@ -34,20 +34,20 @@ final class TokenRepository
         $this->url = $url;
     }
 
-    public function findTokenById(int $id): ?ActiveRecord
+    public function findTokenById(int $id): ?ActiveRecordInterface
     {
         return $this->token->findOne(['user_id' => $id]);
     }
 
-    public function findTokenByParams(int $id, string $code, int $type): ?ActiveRecord
+    public function findTokenByParams(int $id, string $code, int $type): ?ActiveRecordInterface
     {
         return $this->token->findOne(['user_id' => $id, 'code' => $code, 'type' => $type]);
     }
 
-    public function register(string $id): void
+    public function register(int $id, int $token): bool
     {
         $this->token->setAttribute('user_id', $id);
-        $this->token->setAttribute('type', Token::TYPE_CONFIRMATION);
+        $this->token->setAttribute('type', $token);
 
         $this->token->deleteAll(
             [
@@ -59,19 +59,24 @@ final class TokenRepository
         $this->token->setAttribute('created_at', time());
         $this->token->setAttribute('code', Random::string());
 
-        $this->token->save();
+        return $this->token->save();
     }
 
-    public function sendEmail(int $id, string $email, string $username): bool
-    {
+    public function sendEmail(
+        int $id,
+        string $email,
+        string $username,
+        string $subjectMessage,
+        array $template
+    ): bool {
         /** @var Token $query */
         $query = $this->findTokenById($id);
 
         return $this->mailer->run(
             $email,
-            $this->app->get('user.subjectConfirm'),
+            $this->app->get($subjectMessage),
             $this->aliases->get('@user/resources/mail'),
-            ['html' => 'confirmation', 'text' => 'text/confirmation'],
+            $template,
             [
                 'username' => $username,
                 'url' => $this->url->generateAbsolute(

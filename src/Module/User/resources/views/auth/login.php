@@ -3,20 +3,26 @@
 declare(strict_types=1);
 
 use App\Module\User\Asset\Login as LoginAsset;
+use App\Module\User\Form\Login;
+use App\Service\Parameters;
 use Yii\Extension\Fontawesome\Dev\Css\NpmAllAsset;
+use Yiisoft\Assets\AssetManager;
 use Yiisoft\Form\Widget\Field;
 use Yiisoft\Form\Widget\Form;
 use Yiisoft\Html\Html;
+use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Router\UrlMatcherInterface;
+
+$this->setTitle('Login');
 
 /**
- * @var \App\Service\Parameters $app
- * @var \Yiisoft\Assets\AssetManager $assetManager
+ * @var Parameters $app
+ * @var AssetManager $assetManager
  * @var string|null $csrf
- * @var \App\Module\User\Form\Login $data
- * @var \Yiisoft\Router\UrlGeneratorInterface $url
- * @var \Yiisoft\Router\UrlMatcherInterface $urlMatcher
+ * @var Login $data
+ * @var UrlGeneratorInterface $url
+ * @var UrlMatcherInterface $urlMatcher
  */
-$this->setTitle('Login');
 
 $assetManager->register([
     NpmAllAsset::class,
@@ -82,6 +88,7 @@ $assetManager->register([
 
         <?php if ($app->get('user.passwordRecovery') === true) : ?>
             <p class = 'has-text-grey has-margin-top-10'>
+                <?= Html::a('Forgot Password', $url->generate('recovery/request')) ?>
             </p>
         <?php endif ?>
 

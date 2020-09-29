@@ -85,9 +85,14 @@ http://localhost:8080
 
 - [x] Admin Panel Dashboard.
 - [x] /auth/login
+- [x] /auth/logout
+- [x] /recovery/request
+- [x] /recovery/reset[/{id}/{code}]
+- [x] /registration/confirm[/{id}/{token}
 - [x] /registration/register
 - [x] /registration/resend
-- [x] /registration/confirm[/{id}/{token}
+
+Note: check the directory `/runtime/mail`, the emails are stored in it.
 
 ## Codeception testing
 

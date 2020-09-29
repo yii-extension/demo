@@ -2395,12 +2395,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/arrays.git",
-                "reference": "c0e593a5566300fe45558331f2ad4dcb531b67e6"
+                "reference": "ea9969f07404bb15c7abf635b74a98d9fbd1cd94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/arrays/zipball/c0e593a5566300fe45558331f2ad4dcb531b67e6",
-                "reference": "c0e593a5566300fe45558331f2ad4dcb531b67e6",
+                "url": "https://api.github.com/repos/yiisoft/arrays/zipball/ea9969f07404bb15c7abf635b74a98d9fbd1cd94",
+                "reference": "ea9969f07404bb15c7abf635b74a98d9fbd1cd94",
                 "shasum": ""
             },
             "require": {
@@ -2427,7 +2427,7 @@
             "license": [
                 "BSD-3-Clause"
             ],
-            "description": "Yii - Array Helper",
+            "description": "Yii Array Helper",
             "homepage": "http://www.yiiframework.com/",
             "keywords": [
                 "array",
@@ -2435,11 +2435,11 @@
                 "yii"
             ],
             "support": {
-                "forum": "http://www.yiiframework.com/forum/",
+                "forum": "https://forum.yiiframework.com/",
                 "irc": "irc://irc.freenode.net/yii",
                 "issues": "https://github.com/yiisoft/arrays/issues",
                 "source": "https://github.com/yiisoft/arrays",
-                "wiki": "http://www.yiiframework.com/wiki/"
+                "wiki": "https://www.yiiframework.com/wiki/"
             },
             "funding": [
                 {
@@ -2451,7 +2451,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2020-09-23T13:12:31+00:00"
+            "time": "2020-09-28T23:17:42+00:00"
         },
         {
             "name": "yiisoft/assets",
@@ -3173,12 +3173,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/di.git",
-                "reference": "29508baf760d9b90f54c561b5fa07ae03fdde712"
+                "reference": "4042b039f024a384633dac018be7587cead02dd5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/di/zipball/29508baf760d9b90f54c561b5fa07ae03fdde712",
-                "reference": "29508baf760d9b90f54c561b5fa07ae03fdde712",
+                "url": "https://api.github.com/repos/yiisoft/di/zipball/4042b039f024a384633dac018be7587cead02dd5",
+                "reference": "4042b039f024a384633dac018be7587cead02dd5",
                 "shasum": ""
             },
             "require": {
@@ -3193,9 +3193,9 @@
             "require-dev": {
                 "infection/infection": "^0.17.0",
                 "league/container": "^3.2",
-                "phan/phan": "^3.0",
                 "phpbench/phpbench": "~0.17",
                 "phpunit/phpunit": "^9.3",
+                "vimeo/psalm": "^3.16",
                 "yiisoft/injector": "^1.0@dev"
             },
             "suggest": {
@@ -3246,7 +3246,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2020-09-28T11:07:18+00:00"
+            "time": "2020-09-29T10:39:53+00:00"
         },
         {
             "name": "yiisoft/event-dispatcher",
@@ -3322,12 +3322,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/factory.git",
-                "reference": "2172fa64cbf0e27881efac4b6ec9e8819702f7f4"
+                "reference": "eaad1b40541f7ca6d042c98d3509503de5f9436f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/factory/zipball/2172fa64cbf0e27881efac4b6ec9e8819702f7f4",
-                "reference": "2172fa64cbf0e27881efac4b6ec9e8819702f7f4",
+                "url": "https://api.github.com/repos/yiisoft/factory/zipball/eaad1b40541f7ca6d042c98d3509503de5f9436f",
+                "reference": "eaad1b40541f7ca6d042c98d3509503de5f9436f",
                 "shasum": ""
             },
             "require": {
@@ -3383,7 +3383,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2020-09-24T10:42:44+00:00"
+            "time": "2020-09-29T10:11:12+00:00"
         },
         {
             "name": "yiisoft/files",
@@ -7227,16 +7227,16 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.12.0",
+            "version": "1.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "765cd5d5d237525f8bbadaec5dc161c83a369119"
+                "reference": "8ce87516be71aae9b956f81906aaf0338e0d8a2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/765cd5d5d237525f8bbadaec5dc161c83a369119",
-                "reference": "765cd5d5d237525f8bbadaec5dc161c83a369119",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/8ce87516be71aae9b956f81906aaf0338e0d8a2d",
+                "reference": "8ce87516be71aae9b956f81906aaf0338e0d8a2d",
                 "shasum": ""
             },
             "require": {
@@ -7288,9 +7288,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpspec/prophecy/issues",
-                "source": "https://github.com/phpspec/prophecy/tree/1.12.0"
+                "source": "https://github.com/phpspec/prophecy/tree/1.12.1"
             },
-            "time": "2020-09-28T12:23:07+00:00"
+            "time": "2020-09-29T09:10:42+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",

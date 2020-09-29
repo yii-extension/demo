@@ -5,32 +5,32 @@ declare(strict_types=1);
 namespace App\Module\User\Form;
 
 use Yiisoft\Form\FormModel;
-use Yiisoft\Validator\Rule\Email;
+use Yiisoft\Validator\Rule\HasLength;
 use Yiisoft\Validator\Rule\Required;
 
-final class Resend extends FormModel
+final class Reset extends FormModel
 {
-    private string $email = '';
+    private string $password = '';
 
     public function attributeLabels(): array
     {
         return [
-            'email' => 'Email'
+            'password' => 'Password:'
         ];
     }
 
     public function formName(): string
     {
-        return 'Resend';
+        return 'Reset';
     }
 
     public function rules(): array
     {
         return [
-            'email' => [
+            'password' => [
                 new Required(),
-                new Email()
-            ]
+                (new HasLength())->min(6)->max(72)->tooShortMessage('Password should contain at least 6 characters.')
+            ],
         ];
     }
 }

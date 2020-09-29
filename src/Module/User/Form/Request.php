@@ -8,20 +8,20 @@ use Yiisoft\Form\FormModel;
 use Yiisoft\Validator\Rule\Email;
 use Yiisoft\Validator\Rule\Required;
 
-final class Resend extends FormModel
+final class Request extends FormModel
 {
     private string $email = '';
 
     public function attributeLabels(): array
     {
         return [
-            'email' => 'Email'
+            'email' => 'Email:'
         ];
     }
 
     public function formName(): string
     {
-        return 'Resend';
+        return 'Request';
     }
 
     public function rules(): array

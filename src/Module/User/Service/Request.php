@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Module\User\Service;
 
-use App\Module\User\Entity\User;
 use App\Module\User\Entity\Token;
-use App\Module\User\Form\Resend as ResendForm;
+use App\Module\User\Form\Request as RequestForm;
 use App\Module\User\Repository\TokenRepository;
 use App\Module\User\Repository\UserRepository;
 use Yiisoft\Auth\IdentityRepositoryInterface;
 
-final class Resend
+final class Request
 {
     private TokenRepository $tokenRepository;
 
@@ -19,38 +18,34 @@ final class Resend
         $this->tokenRepository = $tokenRepository;
     }
 
-    public function run(ResendForm $resendForm, IdentityRepositoryInterface $identityRepository): bool
+    public function run(RequestForm $requestForm, IdentityRepositoryInterface $identityRepository): bool
     {
         $result = false;
 
-        $email = $resendForm->getAttributeValue('email');
+        $email = $requestForm->getAttributeValue('email');
 
         /** @var UserRepository $identityRepository */
         $identity = $identityRepository->findUserByUsernameOrEmail($email);
 
         if ($identity === null) {
-            $resendForm->addError('email', 'Email not registered.');
+            $requestForm->addError('email', 'Email not registered.');
 
             return $result;
         }
 
-        if ($identity->getAttribute('confirmed_at') !== null) {
-            $resendForm->addError('email', 'User is active.');
+        if ($identity->getAttribute('confirmed_at') === null) {
+            $requestForm->addError('email', 'Inactive user.');
 
             return $result;
         }
 
-        /** @var User $identity */
-        if (
-            !$identity->isConfirmed()
-            && $this->tokenRepository->register($identity->getAttribute('id'), Token::TYPE_CONFIRMATION)
-        ) {
+        if ($this->tokenRepository->register($identity->getAttribute('id'), Token::TYPE_RECOVERY)) {
             $result = $this->tokenRepository->sendEmail(
                 $identity->getAttribute('id'),
                 $identity->getAttribute('email'),
                 $identity->getAttribute('username'),
-                'user.subjectConfirm',
-                ['html' => 'confirmation', 'text' => 'text/confirmation'],
+                'user.subjectRecovery',
+                ['html' => 'recovery', 'text' => 'text/recovery']
             );
         }
 
