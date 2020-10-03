@@ -12,7 +12,9 @@ use App\Module\User\Entity\Token;
 use App\Module\User\Form\Register as RegisterForm;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\ActiveRecord\ActiveRecord;
+use Yiisoft\ActiveRecord\ActiveRecordInterface;
 use Yiisoft\ActiveRecord\ActiveQuery;
+use Yiisoft\ActiveRecord\ActiveQueryInterface;
 use Yiisoft\Auth\IdentityInterface;
 use Yiisoft\Auth\IdentityRepositoryInterface;
 use Yiisoft\Db\Connection\ConnectionInterface;
@@ -37,6 +39,7 @@ final class UserRepository implements IdentityRepositoryInterface
     private RegisterForm $registerForm;
     private Token $token;
     private User $user;
+    private ?ActiveQueryInterface $userQuery = null;
     private UrlGeneratorInterface $url;
 
     public function __construct(
@@ -57,36 +60,71 @@ final class UserRepository implements IdentityRepositoryInterface
         $this->registerForm = $registerForm;
         $this->user = $user;
         $this->url = $url;
+        $this->userQuery();
     }
+
+    public function apiUserAll(): ?array
+    {
+        $rows = $this->userQuery->all();
+
+        foreach ($rows as $row) {
+            $items[] = [
+                'id' => $row['id'],
+                'username' => $row['username'],
+                'email' => $row['email'],
+                'registration_ip' => $row['registration_ip'],
+                'created_at' => date('Y-m-d G:i:s', (int) $row['created_at']),
+                'last_login_at' => date('Y-m-d G:i:s', (int) $row['last_login_at']),
+                'blocked_at' => $row['blocked_at'] === null ? 'No Blocked' : 'Blocked'
+            ];
+        }
+
+        return $items;
+    }
+
 
     /** @psalm-suppress InvalidReturnType, InvalidReturnStatement */
     public function findIdentity(string $id): ?IdentityInterface
     {
-        return $this->user->findOne(['id' => $id]);
+        return $this->findUserbyWhere(['id' => $id]);
     }
 
     /** @psalm-suppress InvalidReturnType, InvalidReturnStatement */
     public function findIdentityByToken(string $token, ?string $type = null): ?IdentityInterface
     {
-        return $this->user->findOne(['auth_key' => $token]);
+        return $this->findUserbyWhere(['auth_key' => $token]);
     }
 
-    public function findUserByEmail(string $email): ?ActiveRecord
+    /**
+     * @param string[] $condition
+     *
+     * @return array|bool
+     */
+    public function findUserbyWhere(array $condition)
     {
-        return $this->user->findOne(['email' => $email]);
+        return $this->userQuery->where($condition)->one();
     }
 
-    public function findUserById(int $id): ?ActiveRecord
+    /**
+     * @return array|bool
+     */
+    public function findUserByEmail(string $email)
     {
-        return $this->user->findOne(['id' => $id]);
+        return $this->findUserbyWhere(['email' => $email]);
     }
 
-    public function findUserByUsername(string $username): ?ActiveRecord
+    /**
+     * @return array|bool
+     */
+    public function findUserByUsername(string $username)
     {
-        return $this->user->findOne(['username' => $username]);
+        return $this->findUserbyWhere(['username' => $username]);
     }
 
-    public function findUserByUsernameOrEmail(string $usernameOrEmail): ?ActiveRecord
+    /**
+     * @return array|bool
+     */
+    public function findUserByUsernameOrEmail(string $usernameOrEmail)
     {
         if (filter_var($usernameOrEmail, FILTER_VALIDATE_EMAIL)) {
             return $this->findUserByEmail($usernameOrEmail);
@@ -249,5 +287,14 @@ final class UserRepository implements IdentityRepositoryInterface
         $this->user->createdAt();
         $this->user->updatedAt();
         $this->user->flags(0);
+    }
+
+    public function userQuery(): ActiveQueryInterface
+    {
+        if ($this->userQuery === null) {
+            $this->userQuery = new ActiveQuery(User::class, $this->db);
+        }
+
+        return $this->userQuery;
     }
 }

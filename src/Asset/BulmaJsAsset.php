@@ -14,15 +14,13 @@ final class BulmaJsAsset extends AssetBundle
 
     public array $js = [
         'file.js',
-        'message.js',
-        'navbar.js'
+        'message.js'
     ];
 
     public array $publishOptions = [
         'only' => [
             'file.js',
-            'message.js',
-            'navbar.js'
+            'message.js'
         ]
     ];
 }

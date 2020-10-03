@@ -7,21 +7,27 @@ namespace App\Module\User\Repository;
 use App\Module\User\Entity\Token;
 use App\Service\Mailer;
 use App\Service\Parameters;
+use Yiisoft\ActiveRecord\ActiveQuery;
+use Yiisoft\ActiveRecord\ActiveQueryInterface;
 use Yiisoft\ActiveRecord\ActiveRecordInterface;
 use Yiisoft\Aliases\Aliases;
+use Yiisoft\Db\Connection\ConnectionInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Security\Random;
 
 final class TokenRepository
 {
     private Aliases $aliases;
+    private ConnectionInterface $db;
     private Parameters $app;
     private Mailer $mailer;
     private Token $token;
+    private ?ActiveQueryInterface $tokenQuery = null;
     private UrlGeneratorInterface $url;
 
     public function __construct(
         Aliases $aliases,
+        ConnectionInterface $db,
         Parameters $app,
         Mailer $mailer,
         Token $token,
@@ -29,19 +35,37 @@ final class TokenRepository
     ) {
         $this->aliases = $aliases;
         $this->app = $app;
+        $this->db = $db;
         $this->mailer = $mailer;
         $this->token = $token;
         $this->url = $url;
+        $this->tokenQuery();
     }
 
-    public function findTokenById(int $id): ?ActiveRecordInterface
+    /**
+     * @return array|bool
+     *
+     * @param (int|string)[] $condition
+     */
+    public function findTokenbyWhere(array $condition)
     {
-        return $this->token->findOne(['user_id' => $id]);
+        return $this->tokenQuery->where($condition)->one();
     }
 
-    public function findTokenByParams(int $id, string $code, int $type): ?ActiveRecordInterface
+    /**
+     * @return array|bool
+     */
+    public function findTokenById(int $id)
     {
-        return $this->token->findOne(['user_id' => $id, 'code' => $code, 'type' => $type]);
+        return $this->findTokenByWhere(['user_id' => $id]);
+    }
+
+    /**
+     * @return array|bool
+     */
+    public function findTokenByParams(int $id, string $code, int $type)
+    {
+        return $this->findTokenByWhere(['user_id' => $id, 'code' => $code, 'type' => $type]);
     }
 
     public function register(int $id, int $token): bool
@@ -85,5 +109,14 @@ final class TokenRepository
                 )
             ]
         );
+    }
+
+    private function tokenQuery(): ActiveQueryInterface
+    {
+        if ($this->tokenQuery === null) {
+            $this->tokenQuery = new ActiveQuery(Token::class, $this->db);
+        }
+
+        return $this->tokenQuery;
     }
 }
