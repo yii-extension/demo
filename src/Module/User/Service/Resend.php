@@ -34,6 +34,7 @@ final class Resend
             return $result;
         }
 
+        /** @var User $identity */
         if ($identity->getAttribute('confirmed_at') !== null) {
             $resendForm->addError('email', 'User is active.');
 

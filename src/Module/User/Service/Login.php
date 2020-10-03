@@ -29,25 +29,25 @@ final class Login
         $password = $this->loginForm->getAttributeValue('password');
 
         /** @var UserRepository $identityRepository */
-        $user = $identityRepository->findUserByUsernameOrEmail($login);
+        $identity = $identityRepository->findUserByUsernameOrEmail($login);
 
-        if ($user === null) {
+        if ($identity === null) {
             $this->loginForm->addError('password', 'Unregistered user/Invalid password.');
         }
 
+        /** @var UserEntity $identity */
         if (
-            $user
+            $identity
             && $identityRepository->validatePassword(
                 $this->loginForm,
                 $password,
-                $user->getAttribute('password_hash')
+                $identity->getAttribute('password_hash')
             )
-            && $this->validateConfirmed($user)
+            && $this->validateConfirmed($identity)
         ) {
-            $this->updateAttributeLogin($user, $ip);
+            $this->updateAttributeLogin($identity, $ip);
 
-            /** @var IdentityInterface $user */
-            $result = $this->user->login($user);
+            $result = $this->user->login($identity);
         } else {
             $this->loginForm->addError('password', 'Unregistered user/Invalid password.');
             $result = false;
@@ -58,23 +58,23 @@ final class Login
 
     public function isLoginConfirm(IdentityRepositoryInterface $identityRepository, string $id, string $ip): bool
     {
-        $user = $identityRepository->findIdentity($id);
+        $identity = $identityRepository->findIdentity($id);
 
-        $this->updateAttributeLogin($user, $ip);
+        $this->updateAttributeLogin($identity, $ip);
 
-        return $this->user->login($user);
+        return $this->user->login($identity);
     }
 
-    private function updateAttributeLogin(UserEntity $user, string $ip): void
+    private function updateAttributeLogin(UserEntity $identity, string $ip): void
     {
-        $user->updateAttributes(['ip_last_login' => $ip, 'last_login_at' => time()]);
+        $identity->updateAttributes(['ip_last_login' => $ip, 'last_login_at' => time()]);
     }
 
-    private function validateConfirmed(UserEntity $user): bool
+    private function validateConfirmed(UserEntity $identity): bool
     {
         $result = true;
 
-        if ($user->getAttribute('confirmed_at') === null) {
+        if ($identity->getAttribute('confirmed_at') === null) {
             $this->loginForm->addError('password', 'Please check your email to activate your account.');
             $result = false;
         }

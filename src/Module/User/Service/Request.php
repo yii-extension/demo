@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\User\Service;
 
+use App\Module\User\Entity\User;
 use App\Module\User\Entity\Token;
 use App\Module\User\Form\Request as RequestForm;
 use App\Module\User\Repository\TokenRepository;
@@ -33,6 +34,7 @@ final class Request
             return $result;
         }
 
+        /** @var User $identity  */
         if ($identity->getAttribute('confirmed_at') === null) {
             $requestForm->addError('email', 'Inactive user.');
 
