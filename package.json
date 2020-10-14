@@ -1,0 +1,7 @@
+{
+    "dependencies": {
+        "admin-one-bulma-dashboard": "github:vikdiesel/admin-one-bulma-dashboard",
+        "axios": "^0.20.0",
+        "vue-tables-2": "^2.1.46"
+    }
+}
