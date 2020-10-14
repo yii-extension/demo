@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Module\User\Asset\Login as LoginAsset;
 use App\Module\User\Form\Login;
-use App\Service\Parameters;
+use App\Module\User\Repository\ModuleSettings as ModuleSettingsRepository;
 use Yii\Extension\Fontawesome\Dev\Css\NpmAllAsset;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Form\Widget\Field;
@@ -16,10 +16,11 @@ use Yiisoft\Router\UrlMatcherInterface;
 $this->setTitle('Login');
 
 /**
- * @var Parameters $app
  * @var AssetManager $assetManager
  * @var string|null $csrf
  * @var Login $data
+ * @var Field $field
+ * @var ModuleSettingsRepository $settings
  * @var UrlGeneratorInterface $url
  * @var UrlMatcherInterface $urlMatcher
  */
@@ -71,9 +72,9 @@ $assetManager->register([
             )
             ->start() ?>
 
-            <?= Field::widget($app->get('user.field'))->config($data, 'login') ?>
+            <?= $field->config($data, 'login') ?>
 
-            <?= Field::widget($app->get('user.field'))->config($data, 'password')->passwordInput() ?>
+            <?= $field->config($data, 'password')->passwordInput() ?>
 
             <?= Html::submitButton(
                 'Login ' . html::tag('i', '', ['class' => 'fas fa-sign-in-alt', 'aria-hidden' => 'true']),
@@ -86,7 +87,7 @@ $assetManager->register([
 
         <?= Form::end() ?>
 
-        <?php if ($app->get('user.passwordRecovery') === true) : ?>
+        <?php if ($settings->isPasswordRecovery() === true) : ?>
             <p class = 'has-text-grey has-margin-top-10'>
                 <?= Html::a('Forgot Password', $url->generate('recovery/request')) ?>
             </p>

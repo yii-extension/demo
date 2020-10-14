@@ -29,7 +29,7 @@ $breadCrumbsItems = [];
 $class = [
     'lang' => $app->get('app.language')
 ];
-
+$route = $urlMatcher->getCurrentRoute()->getName();
 
 if (isset($this->params['breadcrumbs']) && $url->generate($urlMatcher->getCurrentRoute()->getName()) !== '/') {
     $breadCrumbsItems = [
@@ -40,6 +40,7 @@ if (isset($this->params['breadcrumbs']) && $url->generate($urlMatcher->getCurren
 if (isset($identity) && $identity->getId() !== null) {
     $class['class'] = 'has-aside-left has-aside-mobile-transition has-aside-expanded';
 }
+
 ?>
 
 <?= $this->beginPage() ?>
@@ -94,7 +95,8 @@ if (isset($identity) && $identity->getId() !== null) {
                             </div>
                         </div>
 
-                        <div class = 'hero-body is-light'>
+                        <div class = 'hero-body is-light <?= $route === "admin/index" ? "align-items-flex-start" : ""?>'
+                        >
                             <div class = 'container has-text-centered'>
                                 <?= $content ?>
                             </div>

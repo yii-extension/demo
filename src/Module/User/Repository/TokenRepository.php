@@ -6,7 +6,6 @@ namespace App\Module\User\Repository;
 
 use App\Module\User\Entity\Token;
 use App\Service\Mailer;
-use App\Service\Parameters;
 use Yiisoft\ActiveRecord\ActiveQuery;
 use Yiisoft\ActiveRecord\ActiveQueryInterface;
 use Yiisoft\ActiveRecord\ActiveRecordInterface;
@@ -19,7 +18,6 @@ final class TokenRepository
 {
     private Aliases $aliases;
     private ConnectionInterface $db;
-    private Parameters $app;
     private Mailer $mailer;
     private Token $token;
     private ?ActiveQueryInterface $tokenQuery = null;
@@ -28,13 +26,11 @@ final class TokenRepository
     public function __construct(
         Aliases $aliases,
         ConnectionInterface $db,
-        Parameters $app,
         Mailer $mailer,
         Token $token,
         UrlGeneratorInterface $url
     ) {
         $this->aliases = $aliases;
-        $this->app = $app;
         $this->db = $db;
         $this->mailer = $mailer;
         $this->token = $token;
@@ -86,7 +82,7 @@ final class TokenRepository
         return $this->token->save();
     }
 
-    public function sendEmail(
+    public function sendMailer(
         int $id,
         string $email,
         string $username,
@@ -98,7 +94,7 @@ final class TokenRepository
 
         return $this->mailer->run(
             $email,
-            $this->app->get($subjectMessage),
+            $subjectMessage,
             $this->aliases->get('@user/resources/mail'),
             $template,
             [

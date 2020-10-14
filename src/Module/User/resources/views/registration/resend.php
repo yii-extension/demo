@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Module\User\Asset\Resend as ResendAsset;
+use App\Module\User\Repository\ModuleSettings as ModuleSettingsRepository;
 use Yii\Extension\Fontawesome\Dev\Css\NpmAllAsset;
 use Yiisoft\Form\Widget\Field;
 use Yiisoft\Form\Widget\Form;
@@ -10,6 +11,16 @@ use Yiisoft\Html\Html;
 
 $this->params['breadcrumbs'] = 'Resend confirmation message';
 $this->setTitle($this->params['breadcrumbs']);
+
+/**
+ * @var AssetManager $assetManager
+ * @var string|null $csrf
+ * @var Reset $data
+ * @var Field $field
+ * @var ModuleSettingsRepository $settings
+ * @var UrlGeneratorInterface $url
+ * @var UrlMatcherInterface $urlMatcher
+ */
 
 $assetManager->register([
     NpmAllAsset::class,
@@ -36,7 +47,7 @@ $assetManager->register([
         )
         ->start() ?>
 
-        <?= Field::widget($app->get('user.field'))->config($data, 'email') ?>
+        <?= $field->config($data, 'email') ?>
 
         <?= Html::submitButton(
             'Continue',
@@ -49,7 +60,7 @@ $assetManager->register([
 
     <hr class = 'mb-2'></hr>
 
-    <?php if ($app->get('user.register')) : ?>
+    <?php if ($settings->isRegister()) : ?>
         <p class = 'text-center'>
             <?= Html::a('Don\'t have an account - Sign up!', $url->generate('registration/register')) ?>
         </p>

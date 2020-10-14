@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Module\User\Asset\Reset as ResetAsset;
 use App\Module\User\Form\Reset;
-use App\Service\Parameters;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Form\Widget\Field;
 use Yiisoft\Form\Widget\Form;
@@ -18,10 +17,10 @@ $this->setTitle($this->params['breadcrumbs']);
 /**
  * @var string $id
  * @var string $code
- * @var Parameters $app
  * @var AssetManager $assetManager
  * @var string|null $csrf
  * @var Reset $data
+ * @var Field $field
  * @var UrlGeneratorInterface $url
  * @var UrlMatcherInterface $urlMatcher
  */
@@ -51,7 +50,7 @@ $assetManager->register([
         )
         ->start() ?>
 
-        <?= Field::widget($app->get('user.field'))->config($data, 'password')->passwordInput() ?>
+        <?= $field->config($data, 'password')->passwordInput() ?>
 
         <?= Html::submitButton('Reset Password', [
             'class' => 'button is-block is-info is-fullwidth',

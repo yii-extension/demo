@@ -6,8 +6,10 @@ namespace App\Service;
 
 use Psr\Http\Message\ResponseInterface;
 use Yiisoft\Aliases\Aliases;
+use Yiisoft\Assets\AssetManager;
 use Yiisoft\Csrf\CsrfToken;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\Form\Widget\Field;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Router\UrlMatcherInterface;
 use Yiisoft\Session\Flash\Flash;
@@ -17,11 +19,13 @@ use Yiisoft\Yii\Web\User\User;
 
 final class View implements ViewContextInterface
 {
-    protected Aliases $aliases;
-    protected DataResponseFactoryInterface $responseFactory;
+    private Aliases $aliases;
+    private Parameters $app;
+    private AssetManager $assetManager;
     private CsrfToken $csrf;
     private Flash $flash;
-    private Parameters $app;
+    private Field $field;
+    protected DataResponseFactoryInterface $responseFactory;
     private UrlGeneratorInterface $url;
     private UrlMatcherInterface $urlMatcher;
     private User $user;
@@ -29,20 +33,24 @@ final class View implements ViewContextInterface
     private WebView $webView;
 
     public function __construct(
-        Parameters $app,
         Aliases $aliases,
+        Parameters $app,
+        AssetManager $assetManager,
         CsrfToken $csrf,
         Flash $flash,
+        Field $field,
         DataResponseFactoryInterface $responseFactory,
         UrlMatcherInterface $urlMatcher,
         UrlGeneratorInterface $url,
         User $user,
         WebView $webView
     ) {
-        $this->app = $app;
         $this->aliases = $aliases;
+        $this->app = $app;
+        $this->assetManager = $assetManager;
         $this->csrf = $csrf;
         $this->flash = $flash;
+        $this->field = $field;
         $this->responseFactory = $responseFactory;
         $this->url = $url;
         $this->user = $user;
@@ -56,8 +64,10 @@ final class View implements ViewContextInterface
             $parameters,
             [
                 'app' => $this->app,
+                'assetManager' => $this->assetManager,
                 'csrf' => $this->csrf->getValue(),
                 'identity' => $this->user,
+                'field' => $this->field,
                 'url' => $this->url,
                 'urlMatcher' => $this->urlMatcher
             ]

@@ -11,6 +11,6 @@ final class MaterialDesignIconsAsset extends AssetBundle
     public bool $cdn = true;
 
     public array $css = [
-        'https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.css'
+        'https://cdn.materialdesignicons.com/5.3.45/css/materialdesignicons.css'
     ];
 }

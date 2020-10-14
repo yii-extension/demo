@@ -6,9 +6,9 @@ namespace App\Module\User\Action;
 
 use App\Module\User\Entity\User;
 use App\Module\User\Entity\Token;
+use App\Module\User\Repository\ModuleSettings as ModuleSettingsRepository;
 use App\Module\User\Repository\TokenRepository;
 use App\Module\User\Service\Login as LoginService;
-use App\Service\Parameters;
 use App\Service\View;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -19,11 +19,11 @@ use Yiisoft\Router\UrlGeneratorInterface;
 final class Confirm
 {
     public function confirm(
-        Parameters $app,
         IdentityRepositoryInterface $identityRepository,
         LoginService $loginService,
         ServerRequestInterface $request,
         DataResponseFactoryInterface $responseFactory,
+        ModuleSettingsRepository $settings,
         TokenRepository $tokenRepository,
         UrlGeneratorInterface $url,
         View $view
@@ -49,11 +49,11 @@ final class Confirm
         if (
             $user === null ||
             !$token instanceof Token ||
-            $token->isExpired($app->get('user.tokenConfirmWithin'))
+            $token->isExpired($settings->getTokenConfirmWithin())
         ) {
             $view->addFlash(
                 'is-danger',
-                $app->get('user.messageHeader'),
+                $settings->getMessageHeader(),
                 'The requested page does not exist.'
             );
 
@@ -66,7 +66,7 @@ final class Confirm
             $user !== null
             && $token instanceof Token
             && $loginService->isLoginConfirm($identityRepository, $id, $ip)
-            && !$token->isExpired($app->get('user.tokenConfirmWithin'))
+            && !$token->isExpired($settings->getTokenConfirmWithin())
         ) {
             $token->delete();
 
@@ -78,7 +78,7 @@ final class Confirm
 
             $view->addFlash(
                 'is-success',
-                $app->get('user.messageHeader'),
+                $settings->getMessageHeader(),
                 'Your user has been confirmed.'
             );
         }

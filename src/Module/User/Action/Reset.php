@@ -8,8 +8,8 @@ use RuntimeException;
 use App\Module\User\Entity\User;
 use App\Module\User\Entity\Token;
 use App\Module\User\Form\Reset as ResetForm;
+use App\Module\User\Repository\ModuleSettings as ModuleSettingsRepository;
 use App\Module\User\Repository\TokenRepository;
-use App\Service\Parameters;
 use App\Service\View;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -20,11 +20,11 @@ use Yiisoft\Router\UrlGeneratorInterface;
 final class Reset
 {
     public function reset(
-        Parameters $app,
         IdentityRepositoryInterface $identityRepository,
         ServerRequestInterface $request,
         ResetForm $resetForm,
         DataResponseFactoryInterface $responseFactory,
+        ModuleSettingsRepository $settings,
         TokenRepository $tokenRepository,
         UrlGeneratorInterface $url,
         View $view
@@ -51,11 +51,11 @@ final class Reset
         if (
             $user === null ||
             !$token instanceof Token ||
-            $token->isExpired(0, $app->get('user.tokenRecoverWithin'))
+            $token->isExpired(0, $settings->getTokenRecoverWithin())
         ) {
             $view->addflash(
                 'is-danger',
-                $app->get('user.messageHeader'),
+                $settings->getMessageHeader(),
                 'The requested page does not exist.'
             );
 
@@ -70,7 +70,7 @@ final class Reset
             && $resetForm->validate()
             && $user !== null
             && $token instanceof Token
-            && !$token->isExpired(0, $app->get('user.tokenRecoverWithin'))
+            && !$token->isExpired(0, $settings->getTokenRecoverWithin())
         ) {
             $token->delete();
 
@@ -79,7 +79,7 @@ final class Reset
 
             $view->addFlash(
                 'is-success',
-                $app->get('user.messageHeader'),
+                $settings->getMessageHeader(),
                 'Your password has been changed.'
             );
 

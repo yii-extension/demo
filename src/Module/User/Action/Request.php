@@ -6,8 +6,8 @@ namespace App\Module\User\Action;
 
 use RuntimeException;
 use App\Module\User\Form\Request as RequestForm;
+use App\Module\User\Repository\ModuleSettings as ModuleSettingsRepository;
 use App\Module\User\Service\Request as RequestService;
-use App\Service\Parameters;
 use App\Service\View;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,12 +18,12 @@ use Yiisoft\Router\UrlGeneratorInterface;
 final class Request
 {
     public function request(
-        Parameters $app,
         IdentityRepositoryInterface $identityRepository,
         RequestForm $requestForm,
         ServerRequestInterface $request,
         RequestService $requestService,
         DataResponseFactoryInterface $responseFactory,
+        ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
         View $view
     ): ResponseInterface {
@@ -38,7 +38,7 @@ final class Request
         ) {
             $view->addFlash(
                 'is-info',
-                $app->get('user.messageHeader'),
+                $settings->getMessageHeader(),
                 'Please check your email to change your password.'
             );
 
@@ -47,7 +47,7 @@ final class Request
                 ->withHeader('Location', $url->generate('index'));
         }
 
-        if ($app->get('user.passwordRecovery')) {
+        if ($settings->isPasswordRecovery()) {
             return $view
                 ->viewPath('@user/resources/views')
                 ->renderWithLayout('/recovery/request', ['data' => $requestForm]);

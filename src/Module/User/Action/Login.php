@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Module\User\Action;
 
 use App\Module\User\Form\Login as LoginForm;
+use App\Module\User\Repository\ModuleSettings as ModuleSettingsRepository;
 use App\Module\User\Service\Login as LoginService;
-use App\Service\Parameters;
 use App\Service\View;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -17,12 +17,12 @@ use Yiisoft\Router\UrlGeneratorInterface;
 final class Login
 {
     public function login(
-        Parameters $app,
         IdentityRepositoryInterface $identityRepository,
         LoginForm $loginForm,
         LoginService $loginService,
         ServerRequestInterface $request,
         DataResponseFactoryInterface $responseFactory,
+        ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
         View $view
     ): ResponseInterface {
@@ -38,7 +38,7 @@ final class Login
         ) {
             $view->addFlash(
                 'is-success',
-                $app->get('user.messageHeader'),
+                $settings->getMessageHeader(),
                 'Sign in successful - ' . date("F j, Y, g:i a")
             );
 
@@ -49,6 +49,6 @@ final class Login
 
         return $view
             ->viewPath('@user/resources/views')
-            ->renderWithLayout('auth/login', ['body' => $body, 'data' => $loginForm]);
+            ->renderWithLayout('auth/login', ['body' => $body, 'data' => $loginForm, 'settings' => $settings]);
     }
 }

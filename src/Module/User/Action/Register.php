@@ -6,7 +6,7 @@ namespace App\Module\User\Action;
 
 use RuntimeException;
 use App\Module\User\Repository\UserRepository;
-use App\Service\Parameters;
+use App\Module\User\Repository\ModuleSettings as ModuleSettingsRepository;
 use App\Service\View;
 use App\Module\User\Form\Register as RegisterForm;
 use Psr\Http\Message\ResponseInterface;
@@ -18,11 +18,11 @@ use Yiisoft\Router\UrlGeneratorInterface;
 final class Register
 {
     public function register(
-        Parameters $app,
         IdentityRepositoryInterface $identityRepository,
         RegisterForm $registerForm,
         ServerRequestInterface $request,
         DataResponseFactoryInterface $responseFactory,
+        ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
         View $view
     ): ResponseInterface {
@@ -41,8 +41,8 @@ final class Register
             if ($identityRepository->sendMailer()) {
                 $view->addFlash(
                     'is-info',
-                    $app->get('user.messageHeader'),
-                    $app->get('user.confirmation')
+                    $settings->getMessageHeader(),
+                    $settings->isConfirmation()
                         ? 'Please check your email to activate your username.'
                         : 'Your account has been created.'
                 );
@@ -54,15 +54,15 @@ final class Register
 
             $view->addFlash(
                 'is-error',
-                $app->get('user.messageHeader'),
+                $settings->getMessageHeader(),
                 'The email could not be sent, please check your settings.'
             );
         }
 
-        if ($app->get('user.register')) {
+        if ($settings->isRegister()) {
             return $view
                 ->viewPath('@user/resources/views')
-                ->renderWithLayout('/registration/register', ['data' => $registerForm]);
+                ->renderWithLayout('/registration/register', ['data' => $registerForm, 'settings' => $settings]);
         }
 
         throw new RuntimeException('Module register user is disabled in the application configuration.');

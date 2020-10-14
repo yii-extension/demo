@@ -6,7 +6,7 @@ namespace App\Module\User\Action;
 
 use App\Module\User\Form\Resend as ResendForm;
 use App\Module\User\Service\Resend as ResendService;
-use App\Service\Parameters;
+use App\Module\User\Repository\ModuleSettings as ModuleSettingsRepository;
 use App\Service\View;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -17,12 +17,12 @@ use Yiisoft\Router\UrlGeneratorInterface;
 final class Resend
 {
     public function resend(
-        Parameters $app,
         IdentityRepositoryInterface $identityRepository,
         ResendForm $resendForm,
         ResendService $resendService,
         DataResponseFactoryInterface $responseFactory,
         ServerRequestInterface $request,
+        ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
         View $view
     ): ResponseInterface {
@@ -37,7 +37,7 @@ final class Resend
         ) {
             $view->addFlash(
                 'is-warning',
-                $app->get('user.messageHeader'),
+                $settings->getMessageHeader(),
                 'Please check your email to activate your username.'
             );
 
@@ -48,6 +48,6 @@ final class Resend
 
         return $view
             ->viewPath('@user/resources/views')
-            ->renderWithLayout('/registration/resend', ['data' => $resendForm]);
+            ->renderWithLayout('/registration/resend', ['data' => $resendForm, 'settings' => $settings]);
     }
 }

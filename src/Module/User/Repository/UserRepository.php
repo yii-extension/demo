@@ -6,10 +6,10 @@ namespace App\Module\User\Repository;
 
 use RuntimeException;
 use App\Service\Mailer;
-use App\Service\Parameters;
 use App\Module\User\Entity\User;
 use App\Module\User\Entity\Token;
 use App\Module\User\Form\Register as RegisterForm;
+use App\Module\User\Repository\ModuleSettings;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\ActiveRecord\ActiveRecord;
 use Yiisoft\ActiveRecord\ActiveRecordInterface;
@@ -32,56 +32,36 @@ use function str_split;
 
 final class UserRepository implements IdentityRepositoryInterface
 {
-    private Parameters $app;
     private Aliases $aliases;
     private ConnectionInterface $db;
     private Mailer $mailer;
     private RegisterForm $registerForm;
+    private ModuleSettings $settings;
     private Token $token;
     private User $user;
     private ?ActiveQueryInterface $userQuery = null;
     private UrlGeneratorInterface $url;
 
     public function __construct(
-        Parameters $app,
         Aliases $aliases,
         ConnectionInterface $db,
         Mailer $mailer,
         RegisterForm $registerForm,
+        ModuleSettings $settings,
         Token $token,
         User $user,
         UrlGeneratorInterface $url
     ) {
-        $this->app = $app;
         $this->aliases = $aliases;
         $this->db = $db;
         $this->mailer = $mailer;
         $this->token = $token;
         $this->registerForm = $registerForm;
+        $this->settings = $settings;
         $this->user = $user;
         $this->url = $url;
         $this->userQuery();
     }
-
-    public function apiUserAll(): ?array
-    {
-        $rows = $this->userQuery->all();
-
-        foreach ($rows as $row) {
-            $items[] = [
-                'id' => $row['id'],
-                'username' => $row['username'],
-                'email' => $row['email'],
-                'registration_ip' => $row['registration_ip'],
-                'created_at' => date('Y-m-d G:i:s', (int) $row['created_at']),
-                'last_login_at' => date('Y-m-d G:i:s', (int) $row['last_login_at']),
-                'blocked_at' => $row['blocked_at'] === null ? 'No Blocked' : 'Blocked'
-            ];
-        }
-
-        return $items;
-    }
-
 
     /** @psalm-suppress InvalidReturnType, InvalidReturnStatement */
     public function findIdentity(string $id): ?IdentityInterface
@@ -93,6 +73,16 @@ final class UserRepository implements IdentityRepositoryInterface
     public function findIdentityByToken(string $token, ?string $type = null): ?IdentityInterface
     {
         return $this->findUserbyWhere(['auth_key' => $token]);
+    }
+
+    /**
+     * @param string[] $condition
+     *
+     * @return array
+     */
+    public function findUserAll(): array
+    {
+        return $this->userQuery->all();
     }
 
     /**
@@ -137,7 +127,7 @@ final class UserRepository implements IdentityRepositoryInterface
     {
         $url = null;
 
-        if ($this->app->get('user.confirmation') === true) {
+        if ($this->settings->isConfirmation() === true) {
             $url = $this->url->generateAbsolute(
                 $this->token->toUrl(),
                 [
@@ -177,7 +167,7 @@ final class UserRepository implements IdentityRepositoryInterface
                 return false;
             }
 
-            if ($this->app->get('user.confirmation') === true) {
+            if ($this->settings->isConfirmation() === true) {
                 $this->token->setAttribute('type', Token::TYPE_CONFIRMATION);
 
                 $this->token->deleteAll(
@@ -208,14 +198,14 @@ final class UserRepository implements IdentityRepositoryInterface
     {
         return $this->mailer->run(
             $this->user->getAttribute('email'),
-            $this->app->get('user.subjectWelcome'),
+            $this->settings->getSubjectWelcome(),
             $this->aliases->get('@user/resources/mail'),
             ['html' => 'welcome', 'text' => 'text/welcome'],
             [
                 'username' => $this->user->getAttribute('username'),
                 'password' => $this->user->getPassword(),
                 'url' => $this->getMailUrlToken(),
-                'showPassword' => $this->app->get('user.generatingPassword')
+                'showPassword' => $this->settings->isGeneratingPassword()
             ]
         );
     }
@@ -268,7 +258,7 @@ final class UserRepository implements IdentityRepositoryInterface
 
     private function insertRecordFromFormModel(): void
     {
-        $password = $this->app->get('user.generatingPassword')
+        $password = $this->settings->isGeneratingPassword()
             ? $this->generate(8)
             : $this->registerForm->getAttributeValue('password');
 
@@ -280,7 +270,7 @@ final class UserRepository implements IdentityRepositoryInterface
         $this->user->authKey();
         $this->user->registrationIp($this->registerForm->getAttributeValue('ip'));
 
-        if ($this->app->get('user.confirmation') === false) {
+        if ($this->settings->isConfirmation() === false) {
             $this->user->confirmedAt();
         }
 

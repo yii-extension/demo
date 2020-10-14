@@ -12,12 +12,9 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\View\Theme;
 use Yiisoft\View\WebView;
 
-$params = new Params();
-
 return [
     /** component webview */
     WebView::class => static function (ContainerInterface $container) use ($params) {
-        $defaultParameters = [];
         $aliases = $container->get(Aliases::class);
 
         $webView = new WebView(
@@ -26,12 +23,6 @@ return [
             $container->get(EventDispatcherInterface::class),
             $container->get(LoggerInterface::class)
         );
-
-        foreach ($params->getViewDefaultParameters() as $key => $value) {
-            $defaultParameters[$key] = $container->get($value);
-        }
-
-        $webView->setDefaultParameters($defaultParameters);
 
         return $webView;
     }

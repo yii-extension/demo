@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\User\Form;
 
-use App\Service\Parameters;
+use App\Module\User\Repository\ModuleSettings;
 use Yiisoft\Form\FormModel;
 use Yiisoft\Validator\ValidatorFactoryInterface;
 use Yiisoft\Validator\Rule\Email;
@@ -18,11 +18,11 @@ final class Register extends FormModel
     private string $username = '';
     private string $password = '';
     private string $ip = '';
-    private Parameters $app;
+    private ModuleSettings $settings;
 
-    public function __construct(Parameters $app, ValidatorFactoryInterface $validator)
+    public function __construct(ModuleSettings $settings, ValidatorFactoryInterface $validator)
     {
-        $this->app = $app;
+        $this->settings = $settings;
 
         parent::__construct($validator);
     }
@@ -56,7 +56,7 @@ final class Register extends FormModel
             'username' => [
                 new Required(),
                 (new HasLength())->min(3)->max(255)->tooShortMessage('Username should contain at least 3 characters.'),
-                new MatchRegularExpression($this->app->get('user.usernameRegExp'))
+                new MatchRegularExpression($this->settings->getUsernameRegExp())
             ],
             'password' => $this->passwordRules()
         ];
@@ -66,7 +66,7 @@ final class Register extends FormModel
     {
         $result = [];
 
-        if ($this->app->get('user.generatingPassword') === false) {
+        if ($this->settings->isGeneratingPassword() === false) {
             $result = [
                 new Required(),
                 (new HasLength())->min(6)->max(72)->tooShortMessage('Password should contain at least 6 characters.')

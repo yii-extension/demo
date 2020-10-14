@@ -7,15 +7,19 @@ namespace App\Module\User\Service;
 use App\Module\User\Entity\User;
 use App\Module\User\Entity\Token;
 use App\Module\User\Form\Resend as ResendForm;
+use App\Module\User\Repository\ModuleSettings;
 use App\Module\User\Repository\TokenRepository;
 use App\Module\User\Repository\UserRepository;
 use Yiisoft\Auth\IdentityRepositoryInterface;
 
 final class Resend
 {
+    private ModuleSettings $settings;
     private TokenRepository $tokenRepository;
 
-    public function __construct(TokenRepository $tokenRepository) {
+    public function __construct(ModuleSettings $settings, TokenRepository $tokenRepository)
+    {
+        $this->settings = $settings;
         $this->tokenRepository = $tokenRepository;
     }
 
@@ -46,11 +50,11 @@ final class Resend
             !$identity->isConfirmed()
             && $this->tokenRepository->register($identity->getAttribute('id'), Token::TYPE_CONFIRMATION)
         ) {
-            $result = $this->tokenRepository->sendEmail(
+            $result = $this->tokenRepository->sendMailer(
                 $identity->getAttribute('id'),
                 $identity->getAttribute('email'),
                 $identity->getAttribute('username'),
-                'user.subjectConfirm',
+                $this->settings->getSubjectConfirm(),
                 ['html' => 'confirmation', 'text' => 'text/confirmation'],
             );
         }

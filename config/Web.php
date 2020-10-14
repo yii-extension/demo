@@ -27,6 +27,7 @@ final class Web
             require(__DIR__ . '/Component/Validator.php'),
             require(__DIR__ . '/Component/Psr17.php'),
             require(__DIR__ . '/Component/DataResponse.php'),
+            require(__DIR__ . '/Component/Fields.php'),
             require(__DIR__ . '/Component/Session.php'),
             require(__DIR__ . '/Component/Db.php'),
             require(__DIR__ . '/Component/Repository.php')

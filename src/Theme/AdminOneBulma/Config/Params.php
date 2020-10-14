@@ -16,6 +16,7 @@ final class Params
                         ['label' => 'Login', 'url' => '/auth/login'],
                     ],
                     'logged' => [
+                        ['label' => 'Admin Manager', 'url' => '/admin/index'],
                         [
                             'label' => '<div class = "is-user-avatar">{logo}</div>' .
                                        '<div class = "is-user-name"><span>{username}</span></div><span class="icon"></span>',

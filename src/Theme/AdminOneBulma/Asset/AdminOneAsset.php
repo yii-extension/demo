@@ -13,7 +13,7 @@ final class AdminOneAsset extends AssetBundle
 {
     public ?string $basePath = '@assets';
     public ?string $baseUrl = '@assetsUrl';
-    public ?string $sourcePath = '@resources/asset/adminonebulma';
+    public ?string $sourcePath = '@npm/admin-one-bulma-dashboard/demo';
 
     public array $css = [
         'css/main.css'

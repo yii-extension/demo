@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Module\User\Asset\Register as RegisterAsset;
 use App\Module\User\Form\Register;
-use App\Service\Parameters;
+use App\Module\User\Repository\ModuleSettings as ModuleSettingsRepository;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Form\Widget\Field;
 use Yiisoft\Form\Widget\Form;
@@ -16,13 +16,15 @@ $this->setTitle('Register');
 
 
  /**
-  * @var Parameters $app
   * @var AssetManager $assetManager
   * @var string|null $csrf
   * @var Register $data
+  * @var Field $field
+  * @var ModuleSettingsRepository $settings
   * @var UrlGeneratorInterface $url
   * @var UrlMatcherInterface $urlMatcher
   */
+
 $assetManager->register([
     RegisterAsset::class
 ]);
@@ -48,12 +50,12 @@ $assetManager->register([
         )
         ->start() ?>
 
-        <?= Field::Widget($app->get('user.field'))->config($data, 'email') ?>
+        <?= $field->config($data, 'email') ?>
 
-        <?= Field::Widget($app->get('user.field'))->config($data, 'username') ?>
+        <?= $field->config($data, 'username') ?>
 
-        <?php if ($app->get('user.generatingPassword') === false) : ?>
-            <?= Field::Widget($app->get('user.field'))->config($data, 'password')->passwordInput() ?>
+        <?php if ($settings->isGeneratingPassword() === false) : ?>
+            <?= $field->config($data, 'password')->passwordInput() ?>
         <?php endif ?>
 
         <div class = 'flex items-center justify-between'>

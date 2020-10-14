@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yii;
 
 use Psr\Log\LogLevel;
-use Yiisoft\Assets\AssetManager;
+use Yiisoft\Form\Widget\Field;
 
 use function dirname;
 
@@ -29,7 +29,7 @@ final class Params
             '@AdminOneLayout' => '@root/src/Theme/AdminOneBulma/resources/layout',
 
             /** config yii-db-migration */
-            '@yiisoft/yii/db/migration' => '@vendor/yii-db-migration',
+            '@yiisoft/yii/db/migration' => '@vendor/yiisoft/yii-db-migration',
 
             /** config module-user */
             '@user' => '@root/src/Module/User'
@@ -109,6 +109,15 @@ final class Params
         return [];
     }
 
+    public function getFieldconfig()
+    {
+        return [
+            'labelOptions()' => [['label' => '']],
+            'inputOptions()' => [['class' => 'field input']],
+            'errorOptions()' => [['class' => 'has-text-left has-text-danger is-italic']]
+        ];
+    }
+
     public function getFileMailerStorage(): string
     {
         return dirname(__DIR__) . '/runtime/mail';
@@ -157,13 +166,6 @@ final class Params
     {
         return [
             '@layout' => '@AdminOneLayout',
-        ];
-    }
-
-    public function getViewDefaultParameters(): array
-    {
-        return [
-            'assetManager' => AssetManager::class
         ];
     }
 }

@@ -10,7 +10,6 @@ use App\Theme\AdminOneBulma\Config\Params as ThemeParams;
 use Yii\Params;
 
 $params = new Params();
-$userParams = new UserParams();
 $themeParams = new ThemeParams();
 
 return [
@@ -20,8 +19,7 @@ return [
         '__construct()' => [
             array_merge_recursive(
                 $params->getApplicationConfig(),
-                $themeParams->getParams(),
-                $userParams->getParams()
+                $themeParams->getParams()
             )
         ]
     ]
