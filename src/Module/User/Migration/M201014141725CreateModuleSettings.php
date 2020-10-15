@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yii\Migration;
+namespace App\Module\User\Migration;
 
 use Yiisoft\Yii\Db\Migration\Migration;
 use Yiisoft\Yii\Db\Migration\RevertibleMigrationInterface;

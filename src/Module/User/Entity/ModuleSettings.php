@@ -8,7 +8,7 @@ use Yiisoft\ActiveRecord\ActiveRecord;
 use Yiisoft\ActiveRecord\ActiveQuery;
 
 /**
- * Token Active Record model.
+ * Module Setting Active Record - Module AR User.
  *
  * Database fields:
  * @property integer $id

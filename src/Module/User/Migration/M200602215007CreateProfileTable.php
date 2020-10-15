@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Yii\Migration;
+namespace App\Module\User\Migration;
 
 use Yiisoft\Yii\Db\Migration\Migration;
 
 /**
- * Handles the creation of table `token`.
+ * Handles the creation of table `profile`.
  */
-final class M200605195559CreateTokenTable extends Migration
+final class M200602215007CreateProfileTable extends Migration
 {
     public function up(): void
     {
@@ -19,21 +19,23 @@ final class M200605195559CreateTokenTable extends Migration
         }
 
         $this->createTable(
-            'token',
+            'profile',
             [
                 'user_id' => $this->primaryKey(),
-                'code' => $this->string(32),
-                'created_at' => $this->integer(),
-                'type' => $this->smallInteger(),
+                'name' => $this->string(255),
+                'public_email' => $this->string(255),
+                'location' => $this->string(255),
+                'website' => $this->string(255),
+                'bio' => $this->text(),
+                'timezone' => $this->string(40),
+                'avatar' => $this->text()
             ],
             $tableOptions
         );
 
-        $this->createIndex('token_unique', 'token', ['user_id', 'code', 'type'], true);
-
         $this->addForeignKey(
-            'fk_user_token',
-            'token',
+            'fk_user_profile',
+            'profile',
             ['user_id'],
             'user',
             ['id'],
@@ -44,6 +46,6 @@ final class M200605195559CreateTokenTable extends Migration
 
     public function down(): void
     {
-        $this->dropTable('token');
+        $this->dropTable('profile');
     }
 }

@@ -10,7 +10,7 @@ use Yiisoft\Security\PasswordHasher;
 use Yiisoft\Security\Random;
 
 /**
- * Entity User.
+ * User Active Record - Module AR User.
  *
  * User ActiveRecord:
  * @property bool $isAdmin
@@ -82,6 +82,11 @@ final class User extends ActiveRecord implements IdentityInterface
     public function getPasswordHash(): ?string
     {
         return $this->getAttribute('password_hash');
+    }
+
+    public function getProfile()
+    {
+        return $this->hasOne(Profile::class, ['user_id' => 'id']);
     }
 
     public function getUnconfirmedEmail(): ?string

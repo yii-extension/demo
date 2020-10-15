@@ -48,7 +48,10 @@ final class ParamsConsole
 
     public function getMigrationUpdateNameSpace(): array
     {
-        return ['Yii\\Migration'];
+        return [
+            'App\\Module\\User\\Migration',
+            'App\\Module\\Rbac\\Migration'
+        ];
     }
 
     public function getViewPath(): string
