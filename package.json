@@ -7,6 +7,7 @@
     "dependencies": {
         "admin-one-bulma-dashboard": "github:vikdiesel/admin-one-bulma-dashboard",
         "axios": "^0.20.0",
-        "buefy": "^0.9.3"
+        "buefy": "^0.9.3",
+        "vue": "^2.6.10"
     }
 }
