@@ -54,8 +54,7 @@ final class LoginCest
 
         $I->expectTo('see logged index page.');
 
-        $I->seeLink('Manage User');
-        $I->seeLink('Manage Item');
+        $I->seeLink('admin');
     }
 
     /**
@@ -70,7 +69,6 @@ final class LoginCest
 
         $I->expectTo('see logged index page.');
 
-        $I->seeLink('Manage User');
-        $I->seeLink('Manage Item');
+        $I->seeLink('admin');
     }
 }
