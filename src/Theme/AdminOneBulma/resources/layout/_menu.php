@@ -47,7 +47,7 @@ if (isset($identity) && $identity->getId() !== null) {
 
     foreach ($menuItems as $key => $item) {
         $label = strtr($item['label'], [
-            '{logo}' => Html::img('/images/icon-avatar.png'),
+            '{logo}' => $identity->getIdentity()->profile->avatar,
             '{username}' => $identity->getIdentity()->username
         ]);
 

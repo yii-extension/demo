@@ -49,11 +49,6 @@ final class ContactForm
                 ->withHeader('Location', $url->generate('index'));
         }
 
-        return $view->renderWithLayout(
-            'contact/contact',
-            [
-                'form' => $form
-            ]
-        );
+        return $view->renderWithLayout('contact/contact', ['form' => $form, 'url' => $url]);
     }
 }

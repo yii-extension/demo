@@ -22,12 +22,12 @@ final class M201015154349CreateItem extends Migration implements RevertibleMigra
         $this->createTable(
             'item',
             [
-                'id' => $this->primaryKey(),
-                'name' => $this->string(255),
+                'id' => $this->primaryKey()->notNull(),
+                'name' => $this->string(255)->notNull(),
                 'description' => $this->string(255),
-                'type' => $this->string(10),
-                'created_at' => $this->integer(),
-                'updated_at' => $this->integer()
+                'type' => $this->string(10)->notNull(),
+                'created_at' => $this->integer()->notNull(),
+                'updated_at' => $this->integer()->notNull()
             ],
             $tableOptions
         );

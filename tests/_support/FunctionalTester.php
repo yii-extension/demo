@@ -68,6 +68,15 @@ class FunctionalTester extends \Codeception\Actor
                 'created_at' => $time
             ]
         );
+
+        $this->haveInDatabase(
+            'profile',
+            [
+                'user_id'      => 3,
+                'name'         => 'Joe Dow',
+                'public_email' => 'joedow@example.com'
+            ]
+        );
     }
 
     public function unconfirmedTokenExpiredUser(): void

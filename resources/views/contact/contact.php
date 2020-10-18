@@ -17,8 +17,12 @@ use Yiisoft\Html\Html;
 
 <div class="column is-4 is-offset-4">
 
+    <p class="title has-text-black">
+        Contact.
+    </p>
+
     <p class="subtitle has-text-black">
-        Please fill out the following to Contact.
+        Please fill out the following.
     </p>
 
     <?= Form::begin()

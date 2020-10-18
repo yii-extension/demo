@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yii\Component;
 
 use App\Module\User\Config\Routes as UserRoutes;
+use App\Module\Rbac\Config\Routes as RbacRoutes;
 use Psr\Container\ContainerInterface;
 use Yii\Routes;
 use Yiisoft\DataResponse\Middleware\FormatDataResponse;
@@ -29,13 +30,14 @@ return [
     UrlMatcherInterface::class => static function (ContainerInterface $container) {
         $routes = new Routes();
         $userRoutes = new UserRoutes();
+        $rbacRoutes = new RbacRoutes();
 
         $collector = $container->get(RouteCollectorInterface::class);
 
         $collector->addGroup(
             Group::create(
                 null,
-                array_merge($routes->getRoutes(), $userRoutes->getRoutes())
+                array_merge($routes->getRoutes(), $userRoutes->getRoutes(), $rbacRoutes->getRoutes())
             )->addMiddleware(FormatDataResponse::class)
         );
 

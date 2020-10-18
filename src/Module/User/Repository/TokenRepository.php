@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace App\Module\User\Repository;
 
-use App\Module\User\Entity\Token;
+use App\Module\User\ActiveRecord\TokenAR;
 use App\Service\Mailer;
+use RuntimeException;
 use Yiisoft\ActiveRecord\ActiveQuery;
 use Yiisoft\ActiveRecord\ActiveQueryInterface;
 use Yiisoft\ActiveRecord\ActiveRecordInterface;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Db\Connection\ConnectionInterface;
+use Yiisoft\Db\Exception\Exception;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Security\Random;
 
@@ -19,15 +21,15 @@ final class TokenRepository
     private Aliases $aliases;
     private ConnectionInterface $db;
     private Mailer $mailer;
-    private Token $token;
-    private ?ActiveQueryInterface $tokenQuery = null;
+    private TokenAR $token;
+    private ?ActiveQuery $tokenQuery = null;
     private UrlGeneratorInterface $url;
 
     public function __construct(
         Aliases $aliases,
         ConnectionInterface $db,
         Mailer $mailer,
-        Token $token,
+        TokenAR $token,
         UrlGeneratorInterface $url
     ) {
         $this->aliases = $aliases;
@@ -38,48 +40,58 @@ final class TokenRepository
         $this->tokenQuery();
     }
 
-    /**
-     * @return array|bool
-     *
-     * @param (int|string)[] $condition
-     */
-    public function findTokenbyWhere(array $condition)
+    public function findTokenByCondition(array $condition): ?ActiveRecordInterface
     {
-        return $this->tokenQuery->where($condition)->one();
+        return $this->tokenQuery()->findOne($condition);
     }
 
-    /**
-     * @return array|bool
-     */
-    public function findTokenById(int $id)
+    public function findTokenById(int $id): ?ActiveRecordInterface
     {
-        return $this->findTokenByWhere(['user_id' => $id]);
+        return $this->findTokenByCondition(['user_id' => $id]);
     }
 
-    /**
-     * @return array|bool
-     */
-    public function findTokenByParams(int $id, string $code, int $type)
+    public function findTokenByParams(int $id, string $code, int $type): ?ActiveRecordInterface
     {
-        return $this->findTokenByWhere(['user_id' => $id, 'code' => $code, 'type' => $type]);
+        return $this->findTokenByCondition(['user_id' => $id, 'code' => $code, 'type' => $type]);
     }
 
     public function register(int $id, int $token): bool
     {
-        $this->token->setAttribute('user_id', $id);
-        $this->token->setAttribute('type', $token);
+        $result = false;
 
-        $this->token->deleteAll(
-            [
-                'user_id' => $this->token->getAttribute('user_id'),
-                'type' => $this->token->getAttribute('type')
-            ]
-        );
+        if ($this->token->getIsNewRecord() === false) {
+            throw new RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
+        }
 
-        $this->token->setAttribute('created_at', time());
-        $this->token->setAttribute('code', Random::string());
+        /** @psalm-suppress UndefinedInterfaceMethod */
+        $transaction = $this->db->beginTransaction();
 
-        return $this->token->save();
+        try {
+            $this->token->setAttribute('user_id', $id);
+            $this->token->setAttribute('type', $token);
+            $this->token->setAttribute('created_at', time());
+            $this->token->setAttribute('code', Random::string());
+
+            if (!$this->token->save()) {
+                $transaction->rollBack();
+            } else {
+                $this->token->deleteAll(
+                    [
+                        'user_id' => $this->token->getAttribute('user_id'),
+                        'type' => $this->token->getAttribute('type')
+                    ]
+                );
+
+                $transaction->commit();
+
+                $result = true;
+            }
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
+
+        return $result;
     }
 
     public function sendMailer(
@@ -89,7 +101,7 @@ final class TokenRepository
         string $subjectMessage,
         array $template
     ): bool {
-        /** @var Token $query */
+        /** @var TokenAR $query */
         $query = $this->findTokenById($id);
 
         return $this->mailer->run(
@@ -110,7 +122,7 @@ final class TokenRepository
     private function tokenQuery(): ActiveQueryInterface
     {
         if ($this->tokenQuery === null) {
-            $this->tokenQuery = new ActiveQuery(Token::class, $this->db);
+            $this->tokenQuery = new ActiveQuery(TokenAR::class, $this->db);
         }
 
         return $this->tokenQuery;

@@ -10,7 +10,7 @@ use Yiisoft\Yii\Widgets\FragmentCache;
 
 $this->params['breadcrumbs'] = '/';
 
-$this->setTitle($app->get('app.name'));
+$this->setTitle('My Project');
 
 $cache = FragmentCache::begin()->id('index');
 

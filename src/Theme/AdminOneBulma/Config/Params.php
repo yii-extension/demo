@@ -8,6 +8,16 @@ final class Params
 {
     public function getParams(): array
     {
+        $htmlLabel = <<<HTML
+            <div class = 'is-user-avatar'>
+                {logo}
+            </div>
+            <div class = 'is-user-name'>
+                <span>{username}</span>
+            </div>
+            <span class= 'icon'></span>
+        HTML;
+
         return [
             'app' => [
                 'nav' => [
@@ -16,10 +26,8 @@ final class Params
                         ['label' => 'Login', 'url' => '/auth/login'],
                     ],
                     'logged' => [
-                        ['label' => 'Admin Manager', 'url' => '/admin/index'],
                         [
-                            'label' => '<div class = "is-user-avatar">{logo}</div>' .
-                                       '<div class = "is-user-name"><span>{username}</span></div><span class="icon"></span>',
+                            'label' => $htmlLabel,
                             'items' => [
                                 [
                                     'label' => 'Logout',
@@ -29,7 +37,7 @@ final class Params
                                 ]
                             ],
                             'options' => ['class' => 'has-dropdown-with-icons has-divider has-user-avatar'],
-                            'encode' => false,
+                            'encode' => false
                         ]
                     ]
                 ]

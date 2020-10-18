@@ -68,6 +68,7 @@ final class ResetCest
         $I->amOnPage('/recovery/reset/' . $id[0] . '/' . $token[0]);
 
         $I->fillField('#reset-password', 'newpass');
+
         $I->click('Reset Password', '#form-recovery-reset');
 
         $I->amGoingTo('see recovery reset validation message.');

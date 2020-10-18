@@ -15,7 +15,9 @@ final class ContactPageCest
 
     public function testContactPage(AcceptanceTester $I): void
     {
-        $I->see('Please fill out the following to Contact.');
+        $I->expectTo('see contact page.');
+        $I->see('Contact.');
+        $I->see('Please fill out the following.');
     }
 
     public function testContactFormCanBeSubmitted(AcceptanceTester $I): void

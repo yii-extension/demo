@@ -1,7 +1,12 @@
 {
+    "name": "demo",
+    "version": "1.0.0",
+    "description": "Assets for yii-extension/demo.",
+    "author": "yii-extension",
+    "license": "BSD-3-Clause",
     "dependencies": {
         "admin-one-bulma-dashboard": "github:vikdiesel/admin-one-bulma-dashboard",
         "axios": "^0.20.0",
-        "vue-tables-2": "^2.1.46"
+        "buefy": "^0.9.3"
     }
 }

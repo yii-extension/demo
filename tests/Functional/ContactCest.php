@@ -15,14 +15,17 @@ final class ContactCest
 
     public function testOpenContactPage(FunctionalTester $I): void
     {
-        $I->see('Please fill out the following to Contact.');
+        $I->see('Contact.');
+        $I->see('Please fill out the following.');
     }
 
     public function testSubmitEmptyForm(FunctionalTester $I): void
     {
         $I->submitForm('#form-contact', []);
+
         $I->expectTo('see validations errors');
-        $I->see('Please fill out the following to Contact.');
+        $I->see('Contact.');
+        $I->see('Please fill out the following.');
         $I->see('Value cannot be blank.');
         $I->see('Value cannot be blank.');
         $I->see('Value cannot be blank.');
@@ -38,6 +41,7 @@ final class ContactCest
             'ContactForm[body]' => 'test content',
             'ContactForm[verifyCode]' => 'testme',
         ]);
+
         $I->expectTo('see that email address is wrong');
         $I->see('This value is not a valid email address.');
     }

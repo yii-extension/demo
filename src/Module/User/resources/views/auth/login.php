@@ -2,27 +2,26 @@
 
 declare(strict_types=1);
 
-use App\Module\User\Asset\Login as LoginAsset;
-use App\Module\User\Form\Login;
-use App\Module\User\Repository\ModuleSettings as ModuleSettingsRepository;
+use App\Module\User\Asset\LoginAsset;
+use App\Module\User\Form\LoginForm;
+use App\Module\User\Repository\ModuleSettingsRepository;
 use Yii\Extension\Fontawesome\Dev\Css\NpmAllAsset;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Form\Widget\Field;
 use Yiisoft\Form\Widget\Form;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Router\UrlMatcherInterface;
 
 $this->setTitle('Login');
 
 /**
+ * @var string $action
  * @var AssetManager $assetManager
  * @var string|null $csrf
- * @var Login $data
+ * @var LoginForm $data
  * @var Field $field
  * @var ModuleSettingsRepository $settings
  * @var UrlGeneratorInterface $url
- * @var UrlMatcherInterface $urlMatcher
  */
 
 $assetManager->register([
@@ -34,8 +33,12 @@ $assetManager->register([
 
 <div class = 'column is-4 is-offset-4'>
 
-    <p class = 'subtitle has-text-black'>
-        Please fill out the following to Login.
+    <p class="title has-text-black">
+        Login.
+    </p>
+
+    <p class="subtitle has-text-black">
+        Please fill out the following.
     </p>
 
     <div class = 'box'>
@@ -63,7 +66,7 @@ $assetManager->register([
         </div>
 
         <?= Form::begin()
-            ->action($url->generate('auth/login'))
+            ->action($action)
             ->options(
                 [
                     'id' => 'form-security-login',
@@ -72,16 +75,16 @@ $assetManager->register([
             )
             ->start() ?>
 
-            <?= $field->config($data, 'login') ?>
+            <?= $field->config($data, 'login')->textInput(['tabindex' => '1']) ?>
 
-            <?= $field->config($data, 'password')->passwordInput() ?>
+            <?= $field->config($data, 'password')->passwordInput(['tabindex' => '2']) ?>
 
             <?= Html::submitButton(
                 'Login ' . html::tag('i', '', ['class' => 'fas fa-sign-in-alt', 'aria-hidden' => 'true']),
                 [
                     'class' => 'button is-block is-info is-fullwidth',
                     'id' => 'login-button',
-                    'tabindex' => '4'
+                    'tabindex' => '3'
                 ]
             ) ?>
 
@@ -89,12 +92,20 @@ $assetManager->register([
 
         <?php if ($settings->isPasswordRecovery() === true) : ?>
             <p class = 'has-text-grey has-margin-top-10'>
-                <?= Html::a('Forgot Password', $url->generate('recovery/request')) ?>
+                <?= Html::a(
+                    'Forgot Password',
+                    $url->generate('recovery/request'),
+                    ['tabindex' => '4']
+                ) ?>
             </p>
         <?php endif ?>
 
         <p class = 'has-text-grey'>
-            <?= Html::a('Didn\'t receive confirmation message', $url->generate('registration/resend')) ?>
+            <?= Html::a(
+                'Didn\'t receive confirmation message',
+                $url->generate('registration/resend'),
+                ['tabindex' => '5']
+            ) ?>
         </p>
 
     </div>

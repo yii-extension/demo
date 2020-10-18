@@ -15,8 +15,10 @@ final class ResendCest
 
     public function testResendPage(AcceptanceTester $I): void
     {
-        $I->see('Please fill out the following fields Resend confirmation message.');
-        $I->see('Continue', '#form-registration-resend');
+        $I->expectTo('see resend page.');
+        $I->see('Resend confirmation');
+        $I->see('message.');
+        $I->see('Please fill out the following.');
     }
 
     public function testResendEmptyDataTest(AcceptanceTester $I): void

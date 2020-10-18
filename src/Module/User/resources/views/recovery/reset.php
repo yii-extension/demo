@@ -2,27 +2,24 @@
 
 declare(strict_types=1);
 
-use App\Module\User\Asset\Reset as ResetAsset;
-use App\Module\User\Form\Reset;
+use App\Module\User\Asset\ResetAsset;
+use App\Module\User\Form\ResetForm;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Form\Widget\Field;
 use Yiisoft\Form\Widget\Form;
 use Yiisoft\Html\Html;
-use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Router\UrlMatcherInterface;
 
 $this->params['breadcrumbs'] = 'Reset your password.';
 $this->setTitle($this->params['breadcrumbs']);
 
 /**
- * @var string $id
- * @var string $code
+ * @var string $action
  * @var AssetManager $assetManager
+ * @var string $code
  * @var string|null $csrf
- * @var Reset $data
+ * @var ResetForm $data
  * @var Field $field
- * @var UrlGeneratorInterface $url
- * @var UrlMatcherInterface $urlMatcher
+ * @var string $id
  */
 
 $assetManager->register([
@@ -33,14 +30,18 @@ $assetManager->register([
 
 <div class = 'column is-4 is-offset-4'>
 
-    <p class = 'subtitle has-text-black'>
-        Please fill out the following fields to <br/> Reset your password.
+    <p class="title has-text-black">
+        Reset your password.
     </p>
 
-    <hr class = 'mb-2'></hr>
+    <p class="subtitle has-text-black">
+        Please fill out the following.
+    </p>
+
+    <hr class='mb-2'/>
 
     <?= Form::begin()
-        ->action($url->generate('recovery/reset', ['id' => $id, 'code' => $code]))
+        ->action($action)
         ->options(
             [
                 'id' => 'form-recovery-reset',
@@ -50,7 +51,7 @@ $assetManager->register([
         )
         ->start() ?>
 
-        <?= $field->config($data, 'password')->passwordInput() ?>
+        <?= $field->config($data, 'password')->passwordInput(['tabindex' => '1']) ?>
 
         <?= Html::submitButton('Reset Password', [
             'class' => 'button is-block is-info is-fullwidth',

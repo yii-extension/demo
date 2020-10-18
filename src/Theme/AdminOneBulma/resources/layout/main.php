@@ -31,7 +31,7 @@ $class = [
 ];
 $route = $urlMatcher->getCurrentRoute()->getName();
 
-if (isset($this->params['breadcrumbs']) && $url->generate($urlMatcher->getCurrentRoute()->getName()) !== '/') {
+if (isset($this->params['breadcrumbs']) && $url->generate($route) !== '/') {
     $breadCrumbsItems = [
         ['label' => $this->params['breadcrumbs']]
     ];
@@ -58,7 +58,10 @@ if (isset($identity) && $identity->getId() !== null) {
                 <div id = 'app'>
 
                     <?php if (isset($identity) && $identity->getId() !== null) : ?>
-                        <?= $this->render('_sidebar', ['app' => $app, 'url' => $url, 'urlMatcher' => $urlMatcher]) ?>
+                        <?= $this->render(
+                            '_sidebar',
+                            ['app' => $app, 'id' => $id ?? null, 'url' => $url, 'urlMatcher' => $urlMatcher]
+                        ) ?>
                     <?php endif ?>
 
                     <section class="hero is-fullheight is-light">
@@ -89,14 +92,13 @@ if (isset($identity) && $identity->getId() !== null) {
                                         ]
                                     )
                                     ->links($breadCrumbsItems)
-                                    ->options(['class' => 'has-succeeds-separator is-centered has-margin-top-20'])
-                                ?>
+                                    ->options(['class' => 'has-succeeds-separator is-centered has-margin-top-20']) ?>
                                 <?= FlashMessage::widget() ?>
                             </div>
                         </div>
 
-                        <div class = 'hero-body is-light <?= $route === "admin/index" ? "align-items-flex-start" : ""?>'
-                        >
+                        <div class = 'hero-body is-light <?= ($route === "admin/index" || $route === "admin/info" ||
+                            $route === "item/index") ? "align-items-flex-start" : ""?>'>
                             <div class = 'container has-text-centered'>
                                 <?= $content ?>
                             </div>

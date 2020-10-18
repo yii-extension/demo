@@ -58,28 +58,29 @@ final class View implements ViewContextInterface
         $this->webView = $webView;
     }
 
-    public function renderWithLayout(string $view, array $parameters = []): ResponseInterface
-    {
-        $parameters = array_merge(
-            $parameters,
+    public function renderWithLayout(
+        string $view,
+        array $viewParameters = [],
+        array $layoutParameters = []
+    ): ResponseInterface {
+        $viewParameters = array_merge(
+            $viewParameters,
             [
-                'app' => $this->app,
                 'assetManager' => $this->assetManager,
                 'csrf' => $this->csrf->getValue(),
-                'identity' => $this->user,
                 'field' => $this->field,
-                'url' => $this->url,
-                'urlMatcher' => $this->urlMatcher
             ]
         );
+
+        $layoutParameters = array_merge($layoutParameters, $this->layoutParameters());
 
         $content = $this->webView->render(
             '//layout/main',
             array_merge(
                 [
-                    'content' => $this->webView->render($view, $parameters, $this),
+                    'content' => $this->webView->render($view, $viewParameters, $this),
                 ],
-                $parameters
+                $layoutParameters
             ),
             $this
         );
@@ -113,5 +114,17 @@ final class View implements ViewContextInterface
         $this->viewPath = $viewPath;
 
         return $this;
+    }
+
+    private function layoutParameters(): array
+    {
+        return [
+            'app' => $this->app,
+            'assetManager' => $this->assetManager,
+            'csrf' => $this->csrf->getValue(),
+            'identity' => $this->user,
+            'url' => $this->url,
+            'urlMatcher' => $this->urlMatcher
+        ];
     }
 }

@@ -15,8 +15,9 @@ final class LoginCest
 
     public function testAuthLoginPage(AcceptanceTester $I): void
     {
-        $I->expectTo('see page login.');
-        $I->see('Login', '#form-security-login');
+        $I->expectTo('see login page.');
+        $I->see('Login.');
+        $I->see('Please fill out the following.');
     }
 
     public function testAuthLoginEmptyDataTest(AcceptanceTester $I): void
@@ -33,6 +34,7 @@ final class LoginCest
     {
         $I->fillField('#login-login', 'admin1');
         $I->fillField('#login-password', '1234567');
+
         $I->click('Login', '#form-security-login');
 
         $I->expectTo('see validations errors.');
@@ -47,10 +49,11 @@ final class LoginCest
     {
         $I->fillField('#login-login', 'admin');
         $I->fillField('#login-password', '123456');
+
         $I->click('Login', '#form-security-login');
 
         $I->expectTo('see logged index page.');
-        $I->seeLink('admin');
+        $I->see('Dashboard');
     }
 
     /**
@@ -60,9 +63,10 @@ final class LoginCest
     {
         $I->fillField('#login-login', 'administrator@example.com');
         $I->fillField('#login-password', '123456');
+
         $I->click('Login', '#form-security-login');
 
         $I->expectTo('see logged index page.');
-        $I->seeLink('admin');
+        $I->see('Dashboard');
     }
 }

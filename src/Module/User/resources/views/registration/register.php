@@ -2,27 +2,25 @@
 
 declare(strict_types=1);
 
-use App\Module\User\Asset\Register as RegisterAsset;
-use App\Module\User\Form\Register;
-use App\Module\User\Repository\ModuleSettings as ModuleSettingsRepository;
+use App\Module\User\Asset\RegisterAsset;
+use App\Module\User\Form\RegisterForm;
+use App\Module\User\Repository\ModuleSettingsRepository;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Form\Widget\Field;
 use Yiisoft\Form\Widget\Form;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Router\UrlMatcherInterface;
 
 $this->setTitle('Register');
 
-
  /**
+  * @var string $action
   * @var AssetManager $assetManager
   * @var string|null $csrf
-  * @var Register $data
+  * @var RegisterForm $data
   * @var Field $field
   * @var ModuleSettingsRepository $settings
   * @var UrlGeneratorInterface $url
-  * @var UrlMatcherInterface $urlMatcher
   */
 
 $assetManager->register([
@@ -33,14 +31,18 @@ $assetManager->register([
 
 <div class = 'column is-4 is-offset-4'>
 
-    <p class = 'subtitle has-text-black'>
-        Please fill out the following fields <br/> Sign up
+    <p class="title has-text-black">
+        Sign up.
     </p>
 
-    <hr class = 'mb-2'></hr>
+    <p class="subtitle has-text-black">
+        Please fill out the following.
+    </p>
+
+    <hr class='mb-2'/>
 
     <?= Form::begin()
-        ->action($url->generate('registration/register'))
+        ->action($action)
         ->options(
             [
                 'id' => 'form-registration-register',
@@ -50,12 +52,12 @@ $assetManager->register([
         )
         ->start() ?>
 
-        <?= $field->config($data, 'email') ?>
+        <?= $field->config($data, 'email')->textInput(['tabindex' => '1']) ?>
 
-        <?= $field->config($data, 'username') ?>
+        <?= $field->config($data, 'username')->textInput(['tabindex' => '2']) ?>
 
         <?php if ($settings->isGeneratingPassword() === false) : ?>
-            <?= $field->config($data, 'password')->passwordInput() ?>
+            <?= $field->config($data, 'password')->passwordInput(['tabindex' => '3']) ?>
         <?php endif ?>
 
         <div class = 'flex items-center justify-between'>
@@ -68,10 +70,14 @@ $assetManager->register([
 
         </div>
 
-        <hr class = 'mb-2'></hr>
+        <hr class='mb-2'/>
 
         <div class = 'text-center pt-3'>
-            <?= Html::a('Already registered - Sign in!', $url->generate('auth/login')) ?>
+            <?= Html::a(
+                'Already registered - Sign in!',
+                $url->generate('auth/login'),
+                ['tabindex' => '5']
+            ) ?>
         </div>
 
     <?php Form::end() ?>

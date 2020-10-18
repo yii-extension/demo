@@ -20,6 +20,7 @@ final class RequestCest
 
         $I->amGoingTo('fill form recovery request.');
         $I->fillField('#request-email', 'joe@example.com');
+
         $I->click('Request Password', '#form-recovery-request');
 
         $I->expectTo('see recovery request validation message.');
@@ -30,6 +31,7 @@ final class RequestCest
     {
         $I->amGoingTo('fill form recovery request.');
         $I->fillField('#request-email', 'administrator@example.com');
+
         $I->click('Request Password', '#form-recovery-request');
 
         $I->expectTo('see recovery request validation message.');

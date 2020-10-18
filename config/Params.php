@@ -32,7 +32,10 @@ final class Params
             '@yiisoft/yii/db/migration' => '@vendor/yiisoft/yii-db-migration',
 
             /** config module-user */
-            '@user' => '@root/src/Module/User'
+            '@user' => '@root/src/Module/User',
+
+            /** config module-user */
+            '@rbac' => '@root/src/Module/Rbac',
         ];
     }
 

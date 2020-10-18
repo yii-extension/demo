@@ -2,26 +2,25 @@
 
 declare(strict_types=1);
 
-use App\Module\User\Asset\Request as RequestAsset;
-use App\Module\User\Form\Request;
+use App\Module\User\Asset\RequestAsset;
+use App\Module\User\Form\RequestForm;
 use Yii\Extension\Fontawesome\Dev\Css\NpmAllAsset;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Form\Widget\Field;
 use Yiisoft\Form\Widget\Form;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Router\UrlMatcherInterface;
 
 $this->params['breadcrumbs'] = 'Recover your password.';
 $this->setTitle($this->params['breadcrumbs']);
 
 /**
+ * @var string $action
  * @var AssetManager $assetManager
  * @var string|null $csrf
- * @var Request $data
+ * @var RequestForm $data
  * @var Field $field
  * @var UrlGeneratorInterface $url
- * @var UrlMatcherInterface $urlMatcher
  */
 
 $assetManager->register([
@@ -33,14 +32,18 @@ $assetManager->register([
 
 <div class = 'column is-4 is-offset-4'>
 
-    <p class = 'subtitle has-text-black'>
-        Please fill out the following fields to <br/> Recover your password
+    <p class="title has-text-black">
+        Recover your password.
     </p>
 
-    <hr class = 'mb-2'></hr>
+    <p class="subtitle has-text-black">
+        Please fill out the following.
+    </p>
+
+    <hr class='mb-2'/>
 
     <?= Form::begin()
-        ->action($url->generate('recovery/request'))
+        ->action($action)
         ->options(
             [
                 'id' => 'form-recovery-request',
@@ -50,7 +53,7 @@ $assetManager->register([
         )
         ->start() ?>
 
-        <?= $field->config($data, 'email') ?>
+        <?= $field->config($data, 'email')->textInput(['tabindex' => '1']) ?>
 
         <div class = 'flex items-center justify-between'>
             <?= Html::submitButton(
@@ -62,11 +65,15 @@ $assetManager->register([
                 ]
             ) ?>
 
-            <hr class = 'mb-2'></hr>
+            <hr class='mb-2'/>
         </div>
 
         <div class = 'text-center pt-3'>
-            <?= Html::a('Already registered - Sign in!', $url->generate('auth/login')) ?>
+            <?= Html::a(
+                'Already registered - Sign in!',
+                $url->generate('auth/login'),
+                ['tabindex' => '3']
+            ) ?>
         </div>
 
     <?php Form::end() ?>

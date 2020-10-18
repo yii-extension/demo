@@ -15,8 +15,9 @@ final class RegisterCest
 
     public function testRegisterPage(AcceptanceTester $I): void
     {
-        $I->see('Please fill out the following fields');
+        $I->expectTo('see register page.');
         $I->see('Sign up');
+        $I->see('Please fill out the following.');
     }
 
     public function testRegisterSuccessDataDefaultAccountConfirmationFalse(AcceptanceTester $I): void
@@ -24,6 +25,7 @@ final class RegisterCest
         $I->fillField('#register-email', 'administrator@example.com');
         $I->fillField('#register-username', 'admin');
         $I->fillField('#register-password', '123456');
+
         $I->click('Register', '#form-registration-register');
 
         $I->expectTo('see registration register validation.');
@@ -47,6 +49,7 @@ final class RegisterCest
         $I->fillField('#register-email', 'register');
         $I->fillField('#register-username', 'register');
         $I->fillField('#register-password', '123456');
+
         $I->click('Register', '#form-registration-register');
 
         $I->expectTo('see registration register validation.');
@@ -59,6 +62,7 @@ final class RegisterCest
         $I->fillField('#register-email', 'administrator@example.com');
         $I->fillField('#register-username', 'administrator');
         $I->fillField('#register-password', '123456');
+
         $I->click('Register', '#form-registration-register');
 
         $I->expectTo('see registration register validation.');
@@ -71,6 +75,7 @@ final class RegisterCest
         $I->fillField('#register-email', 'demo@example.com');
         $I->fillField('#register-username', '**admin');
         $I->fillField('#register-password', '123456');
+
         $I->click('Register', '#form-registration-register');
 
         $I->expectTo('see registration register validation.');
@@ -80,8 +85,8 @@ final class RegisterCest
         $I->fillField('#register-email', 'demo@example.com');
         $I->fillField('#register-username', '**');
         $I->fillField('#register-password', '123456');
-        $I->click('Register', '#form-registration-register');
 
+        $I->click('Register', '#form-registration-register');
 
         $I->expectTo('see registration register validation.');
         $I->see('Username should contain at least 3 characters.');
@@ -93,6 +98,7 @@ final class RegisterCest
         $I->fillField('#register-email', 'demo@example.com');
         $I->fillField('#register-username', 'admin');
         $I->fillField('#register-password', '123456');
+
         $I->click('Register', '#form-registration-register');
 
         $I->expectTo('see registration register validation.');
@@ -105,6 +111,7 @@ final class RegisterCest
         $I->fillField('#register-email', 'demo@example.com');
         $I->fillField('#register-username', 'demo');
         $I->fillField('#register-password', '123');
+
         $I->click('Register', '#form-registration-register');
 
         $I->expectTo('see registration register validation.');

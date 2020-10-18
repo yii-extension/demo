@@ -6,12 +6,14 @@ namespace App\Module\User\Repository;
 
 use RuntimeException;
 use App\Service\Mailer;
-use App\Module\User\Entity\User;
-use App\Module\User\Entity\Token;
-use App\Module\User\Form\Register as RegisterForm;
-use App\Module\User\Repository\ModuleSettings;
+use App\Module\User\ActiveRecord\ProfileAR;
+use App\Module\User\ActiveRecord\UserAR;
+use App\Module\User\ActiveRecord\TokenAR;
+use App\Module\User\Form\RegisterForm;
+use LasseRafn\InitialAvatarGenerator\InitialAvatar;
 use Yiisoft\Aliases\Aliases;
-use Yiisoft\ActiveRecord\ActiveRecord;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Yiisoft\ActiveRecord\ActiveRecordInterface;
 use Yiisoft\ActiveRecord\ActiveQuery;
 use Yiisoft\ActiveRecord\ActiveQueryInterface;
@@ -33,88 +35,96 @@ use function str_split;
 final class UserRepository implements IdentityRepositoryInterface
 {
     private Aliases $aliases;
+    private InitialAvatar $avatar;
     private ConnectionInterface $db;
     private Mailer $mailer;
+    private LoggerInterface $logger;
     private RegisterForm $registerForm;
-    private ModuleSettings $settings;
-    private Token $token;
-    private User $user;
-    private ?ActiveQueryInterface $userQuery = null;
+    private ModuleSettingsRepository $settings;
+    private ProfileAR $profile;
+    private TokenAR $token;
+    private UserAR $user;
+    private ?ActiveQuery $userQuery = null;
     private UrlGeneratorInterface $url;
 
     public function __construct(
         Aliases $aliases,
+        InitialAvatar $avatar,
         ConnectionInterface $db,
         Mailer $mailer,
+        LoggerInterface $logger,
         RegisterForm $registerForm,
-        ModuleSettings $settings,
-        Token $token,
-        User $user,
+        ModuleSettingsRepository $settings,
+        ProfileAR $profile,
+        TokenAR $token,
+        UserAR $user,
         UrlGeneratorInterface $url
     ) {
         $this->aliases = $aliases;
+        $this->avatar = $avatar;
         $this->db = $db;
         $this->mailer = $mailer;
+        $this->logger = $logger;
         $this->token = $token;
         $this->registerForm = $registerForm;
         $this->settings = $settings;
+        $this->profile = $profile;
         $this->user = $user;
         $this->url = $url;
         $this->userQuery();
     }
 
-    /** @psalm-suppress InvalidReturnType, InvalidReturnStatement */
+    /**
+     * @param string $id
+     *
+     * @return IdentityInterface|null
+     *
+     * @psalm-suppress InvalidReturnType, InvalidReturnStatement
+     */
     public function findIdentity(string $id): ?IdentityInterface
     {
-        return $this->findUserbyWhere(['id' => $id]);
-    }
-
-    /** @psalm-suppress InvalidReturnType, InvalidReturnStatement */
-    public function findIdentityByToken(string $token, ?string $type = null): ?IdentityInterface
-    {
-        return $this->findUserbyWhere(['auth_key' => $token]);
+        return $this->findUserByCondition(['id' => $id]);
     }
 
     /**
-     * @param string[] $condition
+     * @param string $token
+     * @param string|null $type
      *
-     * @return array
+     * @return IdentityInterface|null
+     *
+     * @psalm-suppress InvalidReturnType, InvalidReturnStatement
      */
+    public function findIdentityByToken(string $token, ?string $type = null): ?IdentityInterface
+    {
+        return $this->findUserByCondition(['auth_key' => $token]);
+    }
+
     public function findUserAll(): array
     {
         return $this->userQuery->all();
     }
 
-    /**
-     * @param string[] $condition
-     *
-     * @return array|bool
-     */
-    public function findUserbyWhere(array $condition)
+    public function findUserAllAsArray(): array
     {
-        return $this->userQuery->where($condition)->one();
+        return $this->userQuery->asArray()->all();
     }
 
-    /**
-     * @return array|bool
-     */
-    public function findUserByEmail(string $email)
+    public function findUserByCondition(array $condition): ?ActiveRecordInterface
     {
-        return $this->findUserbyWhere(['email' => $email]);
+        return $this->userQuery->findOne($condition);
     }
 
-    /**
-     * @return array|bool
-     */
-    public function findUserByUsername(string $username)
+    public function findUserByEmail(string $email): ?ActiveRecordInterface
     {
-        return $this->findUserbyWhere(['username' => $username]);
+        return $this->findUserByCondition(['email' => $email]);
     }
 
-    /**
-     * @return array|bool
-     */
-    public function findUserByUsernameOrEmail(string $usernameOrEmail)
+    public function findUserByUsername(string $username): ?ActiveRecordInterface
+    {
+        return $this->findUserByCondition(['username' => $username]);
+    }
+
+    public function findUserByUsernameOrEmail(string $usernameOrEmail): ?ActiveRecordInterface
     {
         if (filter_var($usernameOrEmail, FILTER_VALIDATE_EMAIL)) {
             return $this->findUserByEmail($usernameOrEmail);
@@ -168,7 +178,7 @@ final class UserRepository implements IdentityRepositoryInterface
             }
 
             if ($this->settings->isConfirmation() === true) {
-                $this->token->setAttribute('type', Token::TYPE_CONFIRMATION);
+                $this->token->setAttribute('type', TokenAR::TYPE_CONFIRMATION);
 
                 $this->token->deleteAll(
                     [
@@ -183,11 +193,27 @@ final class UserRepository implements IdentityRepositoryInterface
                 $this->token->link('user', $this->user);
             }
 
+            $this->profile->setAttribute(
+                'avatar',
+                $this->avatar->name($this->user->getAttribute('username'))
+                    ->length(2)
+                    ->fontSize(0.5)
+                    ->size(28)
+                    ->background('#1e6887')
+                    ->color('#fff')
+                    ->rounded()
+                    ->generateSvg()
+                    ->toXMLString()
+            );
+
+            $this->profile->link('user', $this->user);
+
             $transaction->commit();
 
             $result = true;
         } catch (Exception $e) {
             $transaction->rollBack();
+            $this->logger->log(LogLevel::WARNING, $e->getMessage());
             throw $e;
         }
 
@@ -279,10 +305,10 @@ final class UserRepository implements IdentityRepositoryInterface
         $this->user->flags(0);
     }
 
-    public function userQuery(): ActiveQueryInterface
+    private function userQuery(): ActiveQueryInterface
     {
         if ($this->userQuery === null) {
-            $this->userQuery = new ActiveQuery(User::class, $this->db);
+            $this->userQuery = new ActiveQuery(UserAR::class, $this->db);
         }
 
         return $this->userQuery;
