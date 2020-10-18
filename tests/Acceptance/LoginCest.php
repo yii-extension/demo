@@ -53,7 +53,9 @@ final class LoginCest
         $I->click('Login', '#form-security-login');
 
         $I->expectTo('see logged index page.');
-        $I->see('Dashboard');
+
+        $I->seeLink('Manage User');
+        $I->seeLink('Manage Item');
     }
 
     /**
@@ -67,6 +69,8 @@ final class LoginCest
         $I->click('Login', '#form-security-login');
 
         $I->expectTo('see logged index page.');
-        $I->see('Dashboard');
+
+        $I->seeLink('Manage User');
+        $I->seeLink('Manage Item');
     }
 }

@@ -34,7 +34,7 @@ $items = [
                 'label' => 'Users',
                 'items' => [
                     [
-                        'label' => 'Manage Users',
+                        'label' => 'Manage User',
                         'url' => '/admin/index',
                         'icon' => 'mdi mdi-account-circle',
                         'iconOptions' => ['class' => 'icon']
