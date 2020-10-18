@@ -12,6 +12,7 @@
             <directory name="vendor" />
             <directory name="src/Theme/AdminOneBulma/resources" />
             <directory name="src/Module/User/resources" />
+            <directory name="src/Module/Rbac/resources" />
         </ignoreFiles>
     </projectFiles>
 </psalm>
