@@ -34,7 +34,7 @@ final class AdminEditAction
             $method === 'POST'
             && $registerForm->load($body)
             && $registerForm->validate()
-            && $userRepository->update($registerForm, $id) === 1
+            && $userRepository->update($registerForm, $id)
         ) {
             if (
                 $userRepository->sendMailer(

@@ -10,6 +10,8 @@ use Yiisoft\ActiveRecord\ActiveQuery;
 use Yiisoft\Security\PasswordHasher;
 use Yiisoft\Security\Random;
 
+use function strtolower;
+
 /**
  * UserAR Active Record - Module AR User.
  *
@@ -101,7 +103,7 @@ final class UserAR extends ActiveRecord implements IdentityInterface
 
     public function email(string $value): void
     {
-        $this->setAttribute('email', $value);
+        $this->setAttribute('email', strtolower($value));
     }
 
     public function unconfirmedEmail(?string $value): void

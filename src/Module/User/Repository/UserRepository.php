@@ -71,6 +71,16 @@ final class UserRepository implements IdentityRepositoryInterface
             throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
         }
 
+        if ($this->findUserByUsernameOrEmail(strtolower($registerForm->getAttributeValue('email')))) {
+            $registerForm->addError('email', 'Email already registered.');
+            return false;
+        }
+
+        if ($this->findUserByUsernameOrEmail($registerForm->getAttributeValue('username'))) {
+            $registerForm->addError('username', 'Username already registered.');
+            return false;
+        }
+
         /** @psalm-suppress UndefinedInterfaceMethod */
         $transaction = $this->db->beginTransaction();
 
@@ -193,7 +203,7 @@ final class UserRepository implements IdentityRepositoryInterface
             throw new RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
         }
 
-        if ($this->findUserByUsernameOrEmail($registerForm->getAttributeValue('email'))) {
+        if ($this->findUserByUsernameOrEmail(strtolower($registerForm->getAttributeValue('email')))) {
             $registerForm->addError('email', 'Email already registered.');
             return false;
         }
