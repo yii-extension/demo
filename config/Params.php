@@ -171,8 +171,8 @@ final class Params
             'host' => 'smtp.example.com',
             'port' => 25,
             'encryption' => null,
-            'username' => 'admin@server.yiipeople.site',
-            'password' => 'Pykis112??'
+            'username' => '',
+            'password' => ''
         ];
     }
 
