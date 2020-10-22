@@ -7,24 +7,24 @@ namespace App\Module\User\Action;
 use RuntimeException;
 use App\Module\User\Form\RequestForm;
 use App\Module\User\Repository\ModuleSettingsRepository;
+use App\Module\User\Repository\UserRepository;
 use App\Module\User\Service\RequestService;
 use App\Service\View;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
-use Yiisoft\Auth\IdentityRepositoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 final class RequestAction
 {
     public function request(
-        IdentityRepositoryInterface $identityRepository,
         RequestForm $requestForm,
         ServerRequestInterface $request,
         RequestService $requestService,
         DataResponseFactoryInterface $responseFactory,
         ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
+        UserRepository $userRepository,
         View $view
     ): ResponseInterface {
         $body = $request->getParsedBody();
@@ -34,7 +34,7 @@ final class RequestAction
             $method === 'POST'
             && $requestForm->load($body)
             && $requestForm->validate()
-            && $requestService->run($requestForm, $identityRepository)
+            && $requestService->run($requestForm, $userRepository)
         ) {
             $view->addFlash(
                 'is-info',

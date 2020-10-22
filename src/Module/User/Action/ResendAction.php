@@ -7,6 +7,7 @@ namespace App\Module\User\Action;
 use App\Module\User\Form\ResendForm;
 use App\Module\User\Service\ResendService;
 use App\Module\User\Repository\ModuleSettingsRepository;
+use App\Module\User\Repository\UserRepository;
 use App\Service\View;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -17,13 +18,13 @@ use Yiisoft\Router\UrlGeneratorInterface;
 final class ResendAction
 {
     public function resend(
-        IdentityRepositoryInterface $identityRepository,
         ResendForm $resendForm,
         ResendService $resendService,
         DataResponseFactoryInterface $responseFactory,
         ServerRequestInterface $request,
         ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
+        UserRepository $userRepository,
         View $view
     ): ResponseInterface {
         $body = $request->getParsedBody();
@@ -33,7 +34,7 @@ final class ResendAction
             $method === 'POST'
             && $resendForm->load($body)
             && $resendForm->validate()
-            && $resendService->run($resendForm, $identityRepository)
+            && $resendService->run($resendForm, $userRepository)
         ) {
             $view->addFlash(
                 'is-warning',

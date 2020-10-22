@@ -25,7 +25,7 @@ final class UserApi
                 'id' => $row['id'],
                 'username' => $row['username'],
                 'email' => $row['email'],
-                'registration_ip' => $row['registration_ip'],
+                'registration_ip' => empty($row['registration_ip']) ? '-' : $row['registration_ip'],
                 'created_at' => date('Y-m-d', (int) $row['created_at']),
                 'last_login_at' => $this->lastLogin($row['last_login_at']),
                 'confirm' => $row['confirmed_at'],

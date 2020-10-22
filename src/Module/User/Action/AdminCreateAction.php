@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace App\Module\User\Action;
 
-use App\Module\User\Form\LoginForm;
+use App\Module\User\Form\RegisterForm;
 use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\UserRepository;
-use App\Module\User\Service\LoginService;
 use App\Service\View;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 
-final class LoginAction
+final class AdminCreateAction
 {
-    public function login(
-        LoginForm $loginForm,
-        LoginService $loginService,
+    public function create(
+        RegisterForm $registerForm,
         ServerRequestInterface $request,
         DataResponseFactoryInterface $responseFactory,
         ModuleSettingsRepository $settings,
@@ -28,19 +26,26 @@ final class LoginAction
     ): ResponseInterface {
         $body = $request->getParsedBody();
         $method = $request->getMethod();
-        $ip = $request->getServerParams()['REMOTE_ADDR'];
 
         if (
             $method === 'POST'
-            && $loginForm->load($body)
-            && $loginForm->validate()
-            && $loginService->isLogin($userRepository, $ip)
+            && $registerForm->load($body)
+            && $registerForm->validate()
+            && $userRepository->create($registerForm)
         ) {
-            $view->addFlash(
-                'is-success',
-                $settings->getMessageHeader(),
-                'Sign in successful - ' . date("F j, Y, g:i a")
-            );
+            if (
+                $userRepository->sendMailer(
+                    $url,
+                    $settings->getSubjectWelcome(),
+                    ['html' => 'welcome', 'text' => 'text/welcome']
+                )
+            ) {
+                $view->addFlash(
+                    'is-info',
+                    'System Notification - Yii Demo User Module AR.',
+                    'The account has been created.'
+                );
+            }
 
             return $responseFactory
                 ->createResponse(302)
@@ -50,14 +55,8 @@ final class LoginAction
         return $view
             ->viewPath('@user/resources/views')
             ->renderWithLayout(
-                'auth/login',
-                [
-                    'action' => $url->generate('auth/login'),
-                    'body' => $body,
-                    'data' => $loginForm,
-                    'settings' => $settings,
-                    'url' => $url
-                ]
+                '/admin/_form',
+                ['action' => $url->generate('admin/create'), 'data' => $registerForm, 'title' => 'Create user.']
             );
     }
 }

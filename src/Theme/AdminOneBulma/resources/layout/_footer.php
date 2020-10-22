@@ -36,7 +36,7 @@
         <span class="icon">
             <a href="https://t.me/yii3ru" target="_blank" rel="noopener">
                 <i class="fab fa-telegram-plane fa-inverse"></i>
-                </a>
+            </a>
         </span>
     </div>
 </div>

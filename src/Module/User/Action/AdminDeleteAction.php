@@ -2,31 +2,46 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Rbac\Action;
+namespace App\Module\User\Action;
 
+use App\Module\User\ActiveRecord\UserAr;
+use App\Module\User\Repository\UserRepository;
 use App\Service\View;
-use App\Module\Rbac\Repository\ItemRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Yii\Web\User\User;
 
-final class ItemDeleteAction
+final class AdminDeleteAction
 {
     public function delete(
-        ItemRepository $itemRepository,
+        User $identity,
         ServerRequestInterface $request,
         DataResponseFactoryInterface $responseFactory,
         UrlGeneratorInterface $url,
+        UserRepository $userRepository,
         View $view
     ): ResponseInterface {
         $body = $request->getParsedBody();
         $method = $request->getMethod();
         $id = $request->getAttribute('id');
 
-        $item = $itemRepository->findItemById($id);
+        if ($identity->getId() === $id) {
+            $view->addFlash(
+                'is-danger',
+                'System Notification - Yii Demo User Module AR.',
+                'You cannot delete your own user.'
+            );
 
-        $item->delete();
+            return $responseFactory
+                ->createResponse(302)
+                ->withHeader('Location', $url->generate('admin/index'));
+        }
+
+        $user = $userRepository->findUserById($id);
+
+        $user->delete();
 
         $view->addFlash(
             'is-danger',
@@ -36,6 +51,6 @@ final class ItemDeleteAction
 
         return $responseFactory
             ->createResponse(302)
-            ->withHeader('Location', $url->generate('item/index'));
+            ->withHeader('Location', $url->generate('admin/index'));
     }
 }

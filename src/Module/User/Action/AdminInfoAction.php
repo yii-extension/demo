@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Module\User\Action;
 
 use App\Module\User\ActiveRecord\UserAR;
-use App\Service\View;
 use App\Module\User\Repository\UserRepository;
+use App\Service\View;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -28,7 +28,7 @@ final class AdminInfoAction
         $id = $request->getAttribute('id');
 
         /** @var UserAR $user */
-        $user = $userRepository->findIdentity($id);
+        $user = $userRepository->findUserById($id);
 
         return $view
             ->viewPath('@user/resources/views')

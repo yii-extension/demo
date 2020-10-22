@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Module\User\Action;
 
 use App\Module\User\Service\LogoutService;
+use App\Module\User\Repository\UserRepository;
 use Psr\Http\Message\ResponseInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -16,9 +17,10 @@ final class LogoutAction
         DataResponseFactoryInterface $responseFactory,
         LogoutService $logoutService,
         UrlGeneratorInterface $url,
-        User $userIdentity
+        User $identity,
+        UserRepository $userRepository
     ): ResponseInterface {
-        $logoutService->run($userIdentity);
+        $logoutService->run($userRepository, $identity);
 
         return $responseFactory
             ->createResponse(302)

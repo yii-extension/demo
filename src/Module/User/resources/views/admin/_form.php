@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Module\User\Asset\RegisterAsset;
+use App\Module\User\Asset\AdminCreateAsset;
 use App\Module\User\Form\RegisterForm;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Form\Widget\Field;
@@ -18,23 +18,23 @@ use Yiisoft\Router\UrlMatcherInterface;
  * @var Field $field
  */
 $assetManager->register([
-    ItemCreateAsset::class
+    AdminCreateAsset::class
 ]);
 
 $this->setTitle($title);
 ?>
 
+<p class = 'title has-text-black'>
+    <?= $title ?>
+</p>
+
+<p class="subtitle has-text-black">
+    Please fill out the following.
+</p>
+
+<hr class = 'mb-2'></hr>
+
 <div class = 'column is-4 is-offset-4'>
-
-    <p class = 'title has-text-black'>
-        <?= $title ?>
-    </p>
-
-    <p class="subtitle has-text-black">
-        Please fill out the following.
-    </p>
-
-    <hr class = 'mb-2'></hr>
 
     <?= Form::begin()
         ->action($action)
@@ -47,6 +47,31 @@ $this->setTitle($title);
         )
         ->start() ?>
 
-    <?php Form::end() ?>
+        <?= $field->config($data, 'email')->textInput(['tabindex' => '1']) ?>
+
+        <?= $field->config($data, 'username')->textInput(['tabindex' => '2']) ?>
+
+        <?= $field->config($data, 'password')
+            ->passwordInput(['tabindex' => '3'])
+            ->hint('Password will be generated automatically if not provided.')
+        ?>
+
+        <hr class = 'mb-2'></hr>
+
+        <div class = 'flex items-center justify-between'>
+            <?= Html::submitButton(
+                'Save',
+                [
+                    'class' => 'button is-block is-info is-fullwidth', 'id' => 'save-button', 'tabindex' => '4'
+                ]
+            ) ?>
+
+        </div>
+
+        <div class='notification is-success is-light'>
+            Credentials will be sent to the user by email.
+        </div>
+
+    <?= Form::end() ?>
 
 </div>

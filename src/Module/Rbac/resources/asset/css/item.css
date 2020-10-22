@@ -1,3 +1,7 @@
 .table-wrapper {
     font-size: 14px !important;
 }
+
+.perPage {
+    border: 0.25px black solid !important;
+}

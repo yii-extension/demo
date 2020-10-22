@@ -20,20 +20,22 @@ $assetManager->register([
 ?>
 
 <div class = 'column'>
-    <div id='items' class='container'>
-        <b-field grouped position="is-right">
-            <b-select v-model='defaultSortDirection'>
-                <option value='asc'>Sort: ASC</option>
-                <option value='desc'>Sort: DESC</option>
-            </b-select>
 
-            <b-select v-model='perPage' :disabled='!isPaginated'>
-                <option value='5'>5</option>
+    <div id='items' class='container'>
+
+        <b-field grouped position="is-right">
+
+            <span class='perPage mr-4'>
+                <b-select v-model='perPage' :disabled='!isPaginated'>
+                    <option value='5'>5</option>
                     <option value='10'>10</option>
                     <option value='15'>15</option>
                     <option value='20'>20</option>
-            </b-select>
+                </b-select>
+            </span>
+
             <?= Html::a('Add Item', '/item/create', ['class' => 'button is-link']) ?>
+
         </b-field>
 
         <b-table
@@ -83,14 +85,15 @@ $assetManager->register([
                     <i class="fas fa-circle fa-stack-2x"></i>
                     <i class="fas fa-edit fa-stack-1x fa-inverse"></i>
                 </a>
-                <a class='fa-stack has-text-danger' :href="'/item/delete/' + props.row.id"
-                    onclick="return confirm('Are you sure to delete this item ?');"
-                >
+
+                <a class='fa-stack has-text-danger' href="javascript:void(0)" @click="confirmDelete(props.row.id)">
                     <i class="fas fa-circle fa-stack-2x"></i>
                     <i class="fas fa-trash fa-stack-1x fa-inverse"></i>
                 </a>
-            </div>
+            </b-table-column>
 
         </b-table>
+
     </div>
+
 </div>

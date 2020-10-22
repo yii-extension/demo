@@ -11,8 +11,7 @@ use Yiisoft\Form\Widget\Form;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
 
-$this->params['breadcrumbs'] = 'Recover your password.';
-$this->setTitle($this->params['breadcrumbs']);
+$this->setTitle('Recover your password.');
 
 /**
  * @var string $action
@@ -30,17 +29,17 @@ $assetManager->register([
 
 ?>
 
+<p class="title has-text-black">
+    Recover your password.
+</p>
+
+<p class="subtitle has-text-black">
+    Please fill out the following.
+</p>
+
+<hr class='mb-2'/>
+
 <div class = 'column is-4 is-offset-4'>
-
-    <p class="title has-text-black">
-        Recover your password.
-    </p>
-
-    <p class="subtitle has-text-black">
-        Please fill out the following.
-    </p>
-
-    <hr class='mb-2'/>
 
     <?= Form::begin()
         ->action($action)

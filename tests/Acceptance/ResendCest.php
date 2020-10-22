@@ -16,8 +16,7 @@ final class ResendCest
     public function testResendPage(AcceptanceTester $I): void
     {
         $I->expectTo('see resend page.');
-        $I->see('Resend confirmation');
-        $I->see('message.');
+        $I->see('Resend confirmation message.');
         $I->see('Please fill out the following.');
     }
 
@@ -43,7 +42,7 @@ final class ResendCest
         $I->click('Continue', '#form-registration-resend');
 
         $I->expectTo('see validations errors.');
-        $I->see('Email not registered.');
+        $I->see('Thank you. If said email is registered, you will get a password reset.');
     }
 
     public function testResendUserIsActive(AcceptanceTester $I): void

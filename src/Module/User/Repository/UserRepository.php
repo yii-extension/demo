@@ -39,13 +39,10 @@ final class UserRepository implements IdentityRepositoryInterface
     private ConnectionInterface $db;
     private Mailer $mailer;
     private LoggerInterface $logger;
-    private RegisterForm $registerForm;
-    private ModuleSettingsRepository $settings;
     private ProfileAR $profile;
     private TokenAR $token;
     private UserAR $user;
     private ?ActiveQuery $userQuery = null;
-    private UrlGeneratorInterface $url;
 
     public function __construct(
         Aliases $aliases,
@@ -53,12 +50,9 @@ final class UserRepository implements IdentityRepositoryInterface
         ConnectionInterface $db,
         Mailer $mailer,
         LoggerInterface $logger,
-        RegisterForm $registerForm,
-        ModuleSettingsRepository $settings,
         ProfileAR $profile,
         TokenAR $token,
-        UserAR $user,
-        UrlGeneratorInterface $url
+        UserAR $user
     ) {
         $this->aliases = $aliases;
         $this->avatar = $avatar;
@@ -66,12 +60,40 @@ final class UserRepository implements IdentityRepositoryInterface
         $this->mailer = $mailer;
         $this->logger = $logger;
         $this->token = $token;
-        $this->registerForm = $registerForm;
-        $this->settings = $settings;
         $this->profile = $profile;
         $this->user = $user;
-        $this->url = $url;
         $this->userQuery();
+    }
+
+    public function create(RegisterForm $registerForm): bool
+    {
+        if ($this->user->getIsNewRecord() === false) {
+            throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
+        }
+
+        /** @psalm-suppress UndefinedInterfaceMethod */
+        $transaction = $this->db->beginTransaction();
+
+        try {
+            $this->insertRecordFromAdminFormAR($registerForm);
+
+            if (!$this->user->save()) {
+                $transaction->rollBack();
+                return false;
+            }
+
+            $this->insertProfile();
+
+            $transaction->commit();
+
+            $result = true;
+
+            return true;
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            $this->logger->log(LogLevel::WARNING, $e->getMessage());
+            throw $e;
+        }
     }
 
     /**
@@ -114,6 +136,11 @@ final class UserRepository implements IdentityRepositoryInterface
         return $this->userQuery->findOne($condition);
     }
 
+    public function findUserById(string $id): ?UserAR
+    {
+        return $this->findUserByCondition(['id' => $id]);
+    }
+
     public function findUserByEmail(string $email): ?ActiveRecordInterface
     {
         return $this->findUserByCondition(['email' => $email]);
@@ -133,12 +160,12 @@ final class UserRepository implements IdentityRepositoryInterface
         return $this->findUserByUsername($usernameOrEmail);
     }
 
-    public function getMailUrlToken(): ?string
+    public function generateUrlTokenMailer(UrlGeneratorInterface $url, bool $isConfirmation): ?string
     {
-        $url = null;
+        $urlToken = null;
 
-        if ($this->settings->isConfirmation() === true) {
-            $url = $this->url->generateAbsolute(
+        if ($isConfirmation === true) {
+            $urlToken = $url->generateAbsolute(
                 $this->token->toUrl(),
                 [
                     'id' => $this->token->getAttribute('user_id'),
@@ -147,22 +174,32 @@ final class UserRepository implements IdentityRepositoryInterface
             );
         }
 
-        return $url;
+        return $urlToken;
     }
 
-    public function register(): bool
+    public function loadData(RegisterForm $registerForm, string $id): void
+    {
+        /** @var UserAR $aqClass */
+        $this->user = $this->findUserById($id);
+
+        $registerForm->setAttribute('email', $this->user->getEmail());
+        $registerForm->setAttribute('username', $this->user->getUsername());
+    }
+
+
+    public function register(RegisterForm $registerForm, bool $isConfirmation, bool $isGeneratingPassword): bool
     {
         if ($this->user->getIsNewRecord() === false) {
             throw new RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
         }
 
-        if ($this->findUserByUsernameOrEmail($this->registerForm->getAttributeValue('email'))) {
-            $this->registerForm->addError('email', 'Email already registered.');
+        if ($this->findUserByUsernameOrEmail($registerForm->getAttributeValue('email'))) {
+            $registerForm->addError('email', 'Email already registered.');
             return false;
         }
 
-        if ($this->findUserByUsernameOrEmail($this->registerForm->getAttributeValue('username'))) {
-            $this->registerForm->addError('username', 'Username already registered.');
+        if ($this->findUserByUsernameOrEmail($registerForm->getAttributeValue('username'))) {
+            $registerForm->addError('username', 'Username already registered.');
             return false;
         }
 
@@ -170,43 +207,18 @@ final class UserRepository implements IdentityRepositoryInterface
         $transaction = $this->db->beginTransaction();
 
         try {
-            $this->insertRecordFromFormModel();
+            $this->insertRecordFromFormAR($registerForm, $isConfirmation, $isGeneratingPassword);
 
             if (!$this->user->save()) {
                 $transaction->rollBack();
                 return false;
             }
 
-            if ($this->settings->isConfirmation() === true) {
-                $this->token->setAttribute('type', TokenAR::TYPE_CONFIRMATION);
-
-                $this->token->deleteAll(
-                    [
-                        'user_id' => $this->token->getAttribute('user_id'),
-                        'type' => $this->token->getAttribute('type')
-                    ]
-                );
-
-                $this->token->setAttribute('created_at', time());
-                $this->token->setAttribute('code', Random::string());
-
-                $this->token->link('user', $this->user);
+            if ($isConfirmation === true) {
+                $this->insertToken();
             }
 
-            $this->profile->setAttribute(
-                'avatar',
-                $this->avatar->name($this->user->getAttribute('username'))
-                    ->length(2)
-                    ->fontSize(0.5)
-                    ->size(28)
-                    ->background('#1e6887')
-                    ->color('#fff')
-                    ->rounded()
-                    ->generateSvg()
-                    ->toXMLString()
-            );
-
-            $this->profile->link('user', $this->user);
+            $this->insertProfile();
 
             $transaction->commit();
 
@@ -220,20 +232,52 @@ final class UserRepository implements IdentityRepositoryInterface
         return $result;
     }
 
-    public function sendMailer(): bool
+    /**
+     * resetPassword
+     *
+     * generates a new password and sends it to the user
+     */
+    public function resetPassword(string $id): bool
     {
+        $this->user = $this->findUserById($id);
+
+        $this->user->password($this->generate(8));
+
+        return $this->user->save();
+    }
+
+    public function sendMailer(
+        UrlGeneratorInterface $url,
+        string $subjectWelcome,
+        array $layout,
+        bool $isConfirmation = false,
+        bool $showPassword = true
+    ): bool {
         return $this->mailer->run(
             $this->user->getAttribute('email'),
-            $this->settings->getSubjectWelcome(),
+            $subjectWelcome,
             $this->aliases->get('@user/resources/mail'),
-            ['html' => 'welcome', 'text' => 'text/welcome'],
+            $layout,
             [
                 'username' => $this->user->getAttribute('username'),
                 'password' => $this->user->getPassword(),
-                'url' => $this->getMailUrlToken(),
-                'showPassword' => $this->settings->isGeneratingPassword()
+                'url' => $this->generateUrlTokenMailer($url, $isConfirmation),
+                'showPassword' => $showPassword
             ]
         );
+    }
+
+    /**
+     * @param $registerForm $itemForm
+     * @param string $id
+     *
+     * @return bool
+     */
+    public function update(RegisterForm $registerForm, string $id): bool
+    {
+        $this->insertRecordFromAdminFormAR($registerForm);
+
+        return $this->user->save();
     }
 
     public function validatePassword(FormModelInterface $form, string $password, string $password_hash): bool
@@ -282,27 +326,84 @@ final class UserRepository implements IdentityRepositoryInterface
         return $password;
     }
 
-    private function insertRecordFromFormModel(): void
+    private function insertProfile(): void
     {
-        $password = $this->settings->isGeneratingPassword()
-            ? $this->generate(8)
-            : $this->registerForm->getAttributeValue('password');
+        $this->profile->setAttribute(
+            'avatar',
+            $this->avatar->name($this->user->getAttribute('username'))
+                ->length(2)
+                ->fontSize(0.5)
+                ->size(28)
+                ->background('#1e6887')
+                ->color('#fff')
+                ->rounded()
+                ->generateSvg()
+                ->toXMLString()
+        );
 
-        $this->user->username($this->registerForm->getAttributeValue('username'));
-        $this->user->email($this->registerForm->getAttributeValue('email'));
+        $this->profile->link('user', $this->user);
+    }
+
+    private function insertRecordFromAdminFormAR(RegisterForm $registerForm): void
+    {
+        $password = empty($registerForm->getAttributeValue('password'))
+            ? $this->generate(8)
+            : $registerForm->getAttributeValue('password');
+
+        $this->user->username($registerForm->getAttributeValue('username'));
+        $this->user->email($registerForm->getAttributeValue('email'));
         $this->user->unconfirmedEmail(null);
         $this->user->password($password);
         $this->user->passwordHash($password);
         $this->user->authKey();
-        $this->user->registrationIp($this->registerForm->getAttributeValue('ip'));
+        $this->user->registrationIp($registerForm->getAttributeValue('ip'));
+        $this->user->confirmedAt();
+        $this->user->createdAt();
+        $this->user->updatedAt();
+        $this->user->flags(0);
+    }
 
-        if ($this->settings->isConfirmation() === false) {
+    private function insertRecordFromFormAR(
+        RegisterForm $registerForm,
+        bool $isConfirmation,
+        bool $isGeneratingPassword
+    ): void {
+        $password = $isGeneratingPassword
+            ? $this->generate(8)
+            : $registerForm->getAttributeValue('password');
+
+        $this->user->username($registerForm->getAttributeValue('username'));
+        $this->user->email($registerForm->getAttributeValue('email'));
+        $this->user->unconfirmedEmail(null);
+        $this->user->password($password);
+        $this->user->passwordHash($password);
+        $this->user->authKey();
+        $this->user->registrationIp($registerForm->getAttributeValue('ip'));
+
+        if ($isConfirmation === false) {
             $this->user->confirmedAt();
         }
 
         $this->user->createdAt();
         $this->user->updatedAt();
         $this->user->flags(0);
+    }
+
+    private function insertToken(): void
+    {
+        $this->token->setAttribute('type', TokenAR::TYPE_CONFIRMATION);
+
+        $this->token->deleteAll(
+            [
+                'user_id' => $this->token->getAttribute('user_id'),
+                'type' => $this->token->getAttribute('type')
+            ]
+        );
+
+        $this->token->setAttribute('created_at', time());
+        $this->token->setAttribute('code', Random::string());
+
+        $this->token->link('user', $this->user);
     }
 
     private function userQuery(): ActiveQueryInterface

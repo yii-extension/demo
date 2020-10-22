@@ -8,7 +8,6 @@ declare(strict_types=1);
  * @var Yiisoft\Router\UrlMatcherInterface $urlMatcher
  * @var User $identity
  */
-
 use App\Service\Parameters;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\Bulma\Nav;

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Asset\BulmaPluginNavBarAsset;
 use App\Theme\AdminOneBulma\Asset\AdminOneAsset;
 use App\Widget\FlashMessage;
 use Yiisoft\Yii\Bulma\Breadcrumbs;
@@ -17,10 +18,18 @@ use Yiisoft\Html\Html;
  * @var string|null $csrf
  * @var string $content
  */
+$assets = [
+    AdminOneAsset::class,
+    BulmaPluginNavBarAsset::class
+];
 
-$assetManager->register([
-    AdminOneAsset::class
-]);
+if ($identity->getId() !== null) {
+    $assets = [
+        AdminOneAsset::class
+    ];
+}
+
+$assetManager->register($assets);
 
 $this->setCssFiles($assetManager->getCssFiles());
 $this->setJsFiles($assetManager->getJsFiles());
@@ -64,8 +73,8 @@ if (isset($identity) && $identity->getId() !== null) {
                         ) ?>
                     <?php endif ?>
 
-                    <section class="hero is-fullheight is-light">
-                        <div class = 'hero-head'>
+                    <section class = 'hero is-light is-fullheight'>
+                        <div class='hero-head'>
                             <header class = <?= (isset($identity) && $identity->getId() !== null)
                                 ? 'navbar' : 'has-background-black' ?>>
                                 <div class="container">

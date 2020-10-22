@@ -5,40 +5,49 @@ declare(strict_types=1);
 namespace App\Module\User\Action;
 
 use RuntimeException;
-use App\Module\User\Repository\UserRepository;
 use App\Module\User\Repository\ModuleSettingsRepository;
+use App\Module\User\Repository\UserRepository;
 use App\Service\View;
 use App\Module\User\Form\RegisterForm;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Yiisoft\Auth\IdentityRepositoryInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 final class RegisterAction
 {
     public function register(
-        IdentityRepositoryInterface $identityRepository,
         RegisterForm $registerForm,
         ServerRequestInterface $request,
         DataResponseFactoryInterface $responseFactory,
         ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
+        UserREpository $userRepository,
         View $view
     ): ResponseInterface {
         $body = $request->getParsedBody();
         $method = $request->getMethod();
         $registerForm->ip($request->getServerParams()['REMOTE_ADDR']);
 
-        /** @var UserRepository $identityRepository */
         if (
             $method === 'POST'
             && $registerForm->load($body)
             && $registerForm->validate()
-            && $identityRepository->register()
+            && $userRepository->register(
+                $registerForm,
+                $settings->isConfirmation(),
+                $settings->isGeneratingPassword()
+            )
         ) {
-            /** @var UserRepository $identityRepository */
-            if ($identityRepository->sendMailer()) {
+            if (
+                $userRepository->sendMailer(
+                    $url,
+                    $settings->getSubjectWelcome(),
+                    ['html' => 'welcome', 'text' => 'text/welcome'],
+                    $settings->isConfirmation(),
+                    $settings->isGeneratingPassword()
+                )
+            ) {
                 $view->addFlash(
                     'is-info',
                     $settings->getMessageHeader(),

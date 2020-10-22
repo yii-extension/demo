@@ -8,24 +8,24 @@ use App\Module\User\ActiveRecord\UserAR;
 use App\Module\User\ActiveRecord\TokenAR;
 use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\TokenRepository;
+use App\Module\User\Repository\UserRepository;
 use App\Module\User\Service\LoginService;
 use App\Service\View;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Yiisoft\Auth\IdentityRepositoryInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 final class ConfirmAction
 {
     public function confirm(
-        IdentityRepositoryInterface $identityRepository,
         LoginService $loginService,
         ServerRequestInterface $request,
         DataResponseFactoryInterface $responseFactory,
         ModuleSettingsRepository $settings,
         TokenRepository $tokenRepository,
         UrlGeneratorInterface $url,
+        UserRepository $userRepository,
         View $view
     ): ResponseInterface {
         $id = $request->getAttribute('id');
@@ -35,7 +35,7 @@ final class ConfirmAction
         $token = null;
 
         if ($id !== null) {
-            $user = $identityRepository->findIdentity($id);
+            $user = $userRepository->findUserById($id);
         }
 
         if ($user !== null && $code !== null) {
@@ -63,7 +63,7 @@ final class ConfirmAction
         }
 
         if (
-            $loginService->isLoginConfirm($identityRepository, $id, $ip)
+            $loginService->isLoginConfirm($userRepository, $id, $ip)
             && !$token->isExpired($settings->getTokenConfirmWithin())
         ) {
             $token->delete();

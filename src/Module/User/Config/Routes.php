@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace App\Module\User\Config;
 
 use App\Module\User\Action\AdminAction;
+use App\Module\User\Action\AdminCreateAction;
+use App\Module\User\Action\AdminDeleteAction;
+use App\Module\User\Action\AdminEditAction;
 use App\Module\User\Action\AdminInfoAction;
+use App\Module\User\Action\AdminResetPasswordAction;
 use App\Module\User\Action\ConfirmAction;
 use App\Module\User\Action\LoginAction;
 use App\Module\User\Action\LogoutAction;
@@ -25,14 +29,21 @@ final class Routes
             /** auth actions */
             Route::methods(['GET', 'POST'], '/auth/login', [LoginAction::class, 'login'])
             ->name('auth/login'),
-
             Route::get('/auth/logout', [LogoutAction::class, 'logout'])->name('auth/logout'),
 
             /** admin actions */
             Route::methods(['GET', 'POST'], '/admin/index', [AdminAction::class, 'index'])
                 ->name('admin/index'),
+            Route::methods(['GET', 'POST'], '/admin/create', [AdminCreateAction::class, 'create'])
+                ->name('admin/create'),
+            Route::methods(['GET', 'POST'], '/admin/delete[/{id}]', [AdminDeleteAction::class, 'delete'])
+                ->name('admin/delete'),
+            Route::methods(['GET', 'POST'], '/admin/edit[/{id}]', [AdminEditAction::class, 'edit'])
+                ->name('admin/edit'),
             Route::methods(['GET', 'POST'], '/admin/info[/{id}]', [AdminInfoAction::class, 'info'])
                 ->name('admin/info'),
+            Route::methods(['GET', 'POST'], '/admin/reset[/{id}]', [AdminResetPasswordAction::class, 'reset'])
+                ->name('admin/reset'),
 
             /** api users */
             Route::get('/users', [UserApiAction::class, 'index'])

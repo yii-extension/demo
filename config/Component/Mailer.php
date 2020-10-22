@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Yii\Component;
 
 use Swift_Transport;
+use Swift_Plugins_LoggerPlugin;
+use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Yii\Params;
@@ -14,6 +16,7 @@ use Yiisoft\Mailer\FileMailer;
 use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Mailer\MessageFactory;
 use Yiisoft\Mailer\MessageFactoryInterface;
+use Yiisoft\Mailer\SwiftMailer\Logger;
 use Yiisoft\Mailer\SwiftMailer\Mailer;
 use Yiisoft\Mailer\SwiftMailer\Message;
 use Yiisoft\View\WebView;
@@ -61,5 +64,27 @@ return [
         ]
     ],
 
-    MailerInterface::class => FileMailer::class
+    MailerInterface::class => static function (ContainerInterface $container) use ($params) {
+        if ($params->writetoFiles()) {
+            return $container->get(FileMailer::class);
+        }
+
+        $mailer = new Mailer(
+            Reference::to(MessageFactoryInterface::class),
+            Reference::to(Composer::class),
+            Reference::to(EventDispatcherInterface::class),
+            Reference::to(LoggerInterface::class),
+            Reference::to(Swift_Transport::class)
+        );
+
+        $mailer->registerPlugin(
+            new Swift_Plugins_LoggerPlugin(
+                new Logger(
+                    Reference::to(LoggerInterface::class),
+                )
+            )
+        );
+
+        return $mailer;
+    }
 ];

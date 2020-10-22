@@ -6,6 +6,7 @@ namespace App\Module\User\ActiveRecord;
 
 use Yiisoft\Auth\IdentityInterface;
 use Yiisoft\ActiveRecord\ActiveRecord;
+use Yiisoft\ActiveRecord\ActiveQuery;
 use Yiisoft\Security\PasswordHasher;
 use Yiisoft\Security\Random;
 
@@ -83,7 +84,7 @@ final class UserAR extends ActiveRecord implements IdentityInterface
         return $this->getAttribute('password_hash');
     }
 
-    public function getProfile()
+    public function getProfile(): ActiveQuery
     {
         return $this->hasOne(ProfileAR::class, ['user_id' => 'id']);
     }

@@ -30,18 +30,17 @@ $this->setTitle($title);
 
 ?>
 
+<p class = 'title has-text-black'>
+    <?= $title ?>
+</p>
+
+<p class="subtitle has-text-black">
+    Please fill out the following.
+</p>
+
+<hr class = 'mb-2'></hr>
+
 <div class = 'column is-4 is-offset-4'>
-
-    <p class = 'title has-text-black'>
-        <?= $title ?>
-    </p>
-
-    <p class="subtitle has-text-black">
-        Please fill out the following.
-    </p>
-
-
-    <hr class = 'mb-2'></hr>
 
     <?= Form::begin()
         ->action($action)

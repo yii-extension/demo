@@ -165,10 +165,26 @@ final class Params
         ];
     }
 
+    public function getMailerConfig(): array
+    {
+        return [
+            'host' => 'smtp.example.com',
+            'port' => 25,
+            'encryption' => null,
+            'username' => 'admin@server.yiipeople.site',
+            'password' => 'Pykis112??'
+        ];
+    }
+
     public function getThemePathMap(): array
     {
         return [
             '@layout' => '@AdminOneLayout',
         ];
+    }
+
+    public function writetoFiles(): bool
+    {
+        return true;
     }
 }

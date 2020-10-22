@@ -15,15 +15,17 @@ use Yiisoft\Html\Html;
 
 ?>
 
-<div class="column is-4 is-offset-4">
-
-    <p class="title has-text-black">
+<p class="title has-text-black">
         Contact.
-    </p>
+</p>
 
-    <p class="subtitle has-text-black">
-        Please fill out the following.
-    </p>
+<p class="subtitle has-text-black">
+    Please fill out the following.
+</p>
+
+<hr class = 'mb-2'></hr>
+
+<div class="column is-4 is-offset-4">
 
     <?= Form::begin()
         ->action($url->generate('contact'))

@@ -8,8 +8,6 @@ use App\Service\Mailer;
 use App\Module\User\ActiveRecord\ProfileAR;
 use App\Module\User\ActiveRecord\UserAR;
 use App\Module\User\ActiveRecord\TokenAR;
-use App\Module\User\Form\RegisterForm;
-use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\UserRepository;
 use LasseRafn\InitialAvatarGenerator\InitialAvatar;
 use Psr\Log\LoggerInterface;
@@ -28,8 +26,6 @@ return [
             Reference::to(ConnectionInterface::class),
             Reference::to(Mailer::class),
             Reference::to(LoggerInterface::class),
-            Reference::to(RegisterForm::class),
-            Reference::to(ModuleSettingsRepository::class),
             Reference::to(ProfileAR::class),
             Reference::to(TokenAR::class),
             Reference::to(UserAR::class),

@@ -10,7 +10,6 @@ use App\Module\User\Form\ResendForm;
 use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\TokenRepository;
 use App\Module\User\Repository\UserRepository;
-use Yiisoft\Auth\IdentityRepositoryInterface;
 
 final class ResendService
 {
@@ -23,37 +22,35 @@ final class ResendService
         $this->tokenRepository = $tokenRepository;
     }
 
-    public function run(ResendForm $resendForm, IdentityRepositoryInterface $identityRepository): bool
+    public function run(ResendForm $resendForm, UserRepository $userRepository): bool
     {
         $result = false;
 
         $email = $resendForm->getAttributeValue('email');
+        $user = $userRepository->findUserByUsernameOrEmail($email);
 
-        /** @var UserRepository $identityRepository */
-        $identity = $identityRepository->findUserByUsernameOrEmail($email);
-
-        if ($identity === null) {
-            $resendForm->addError('email', 'Email not registered.');
+        if ($user === null) {
+            $resendForm->addError('email', 'Thank you. If said email is registered, you will get a password reset.');
 
             return $result;
         }
 
-        /** @var UserAR $identity */
-        if ($identity->getAttribute('confirmed_at') !== null) {
+        /** @var UserAR $user */
+        if ($user->getAttribute('confirmed_at') !== null) {
             $resendForm->addError('email', 'User is active.');
 
             return $result;
         }
 
-        /** @var UserAR $identity */
+        /** @var UserAR $user */
         if (
-            !$identity->isConfirmed()
-            && $this->tokenRepository->register($identity->getAttribute('id'), TokenAR::TYPE_CONFIRMATION)
+            !$user->isConfirmed()
+            && $this->tokenRepository->register($user->getAttribute('id'), TokenAR::TYPE_CONFIRMATION)
         ) {
             $result = $this->tokenRepository->sendMailer(
-                $identity->getAttribute('id'),
-                $identity->getAttribute('email'),
-                $identity->getAttribute('username'),
+                $user->getAttribute('id'),
+                $user->getAttribute('email'),
+                $user->getAttribute('username'),
                 $this->settings->getSubjectConfirm(),
                 ['html' => 'confirmation', 'text' => 'text/confirmation'],
             );

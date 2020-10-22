@@ -84,9 +84,13 @@ $this->setTitle('Information details.');
 
             <div class = "column is-9">
 
-                <?php if ($data->registration_ip !== null) : ?>
+                <?php if (!empty($data->registration_ip)) : ?>
                     <div class='notification is-info has-text-left'>
                         <?= $data->registration_ip ?>
+                    </div>
+                <?php else : ?>
+                    <div class='notification is-warning has-text-left'>
+                        No register
                     </div>
                 <?php endif ?>
 

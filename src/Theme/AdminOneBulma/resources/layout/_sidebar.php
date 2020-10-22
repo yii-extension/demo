@@ -40,12 +40,31 @@ $items = [
                         'iconOptions' => ['class' => 'icon']
                     ],
                     [
+                        'label' => 'Create',
+                        'url' => $url->generate('admin/create'),
+                        'options' => ['class' => 'pl-6'],
+                        'visible' => in_array(
+                            $currentRoute,
+                            ['index', 'admin/index', 'item/index', 'item/create', 'item/edit']
+                        ) ? false : true
+                    ],
+                    [
+                        'label' => 'Edit',
+                        'url' => $id !== null ? $url->generate('admin/edit', ['id' => $id]) : '#',
+                        'options' => ['class' => 'pl-6'],
+                        'visible' => in_array(
+                            $currentRoute,
+                            ['index', 'admin/index', 'admin/create', 'item/index', 'item/create', 'item/edit']
+                        ) ? false : true
+                    ],
+                    [
                         'label' => 'Information',
                         'url' => $id !== null ? $url->generate('admin/info', ['id' => $id]) : '#',
                         'options' => ['class' => 'pl-6'],
-                        'visible' => in_array($currentRoute, ['admin/index', 'item/index', 'item/create', 'item/edit'])
-                            ? false
-                            : true
+                        'visible' => in_array(
+                            $currentRoute,
+                            ['index', 'admin/index', 'admin/create', 'item/index', 'item/create', 'item/edit']
+                        ) ? false : true
                     ],
                 ]
             ],
@@ -62,15 +81,19 @@ $items = [
                         'label' => 'Create',
                         'url' => $url->generate('item/create'),
                         'options' => ['class' => 'pl-6'],
-                        'visible' => in_array($currentRoute, ['admin/index', 'item/index', 'admin/info']) ? false : true
+                        'visible' => in_array(
+                            $currentRoute,
+                            ['index', 'admin/index', 'admin/create', 'admin/edit', 'admin/info', 'item/index']
+                        ) ? false : true
                     ],
                     [
                         'label' => 'Edit',
                         'url' => $id !== null ? $url->generate('item/edit', ['id' => $id]) : '#',
                         'options' => ['class' => 'pl-6'],
-                        'visible' => in_array($currentRoute, ['admin/index', 'item/index', 'item/create', 'admin/info'])
-                            ? false
-                            : true
+                        'visible' => in_array(
+                            $currentRoute,
+                            ['index', 'admin/index', 'admin/create', 'admin/edit', 'admin/info', 'item/index', 'item/create']
+                        ) ? false : true
                     ],
                     [
                         'label' => 'Rule',

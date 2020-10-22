@@ -17,5 +17,5 @@ declare(strict_types=1);
 </p>
 
 <p class = 'mail-new_password'>
-    'If you did not make this request you can ignore this email.
+    If you did not make this request you can ignore this email.
 </p>

@@ -9,23 +9,23 @@ use App\Module\User\ActiveRecord\TokenAR;
 use App\Module\User\Form\ResetForm;
 use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\TokenRepository;
+use App\Module\User\Repository\UserRepository;
 use App\Service\View;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Yiisoft\Auth\IdentityRepositoryInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 final class ResetAction
 {
     public function reset(
-        IdentityRepositoryInterface $identityRepository,
         ServerRequestInterface $request,
         ResetForm $resetForm,
         DataResponseFactoryInterface $responseFactory,
         ModuleSettingsRepository $settings,
         TokenRepository $tokenRepository,
         UrlGeneratorInterface $url,
+        UserRepository $userRepository,
         View $view
     ): ResponseInterface {
         $body = $request->getParsedBody();
@@ -36,7 +36,7 @@ final class ResetAction
         $token = null;
 
         if ($id !== null) {
-            $user = $identityRepository->findIdentity($id);
+            $user = $userRepository->findUserById($id);
         }
 
         if ($user !== null && $code !== null) {

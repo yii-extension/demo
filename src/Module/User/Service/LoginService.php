@@ -7,8 +7,8 @@ namespace App\Module\User\Service;
 use App\Module\User\ActiveRecord\UserAR;
 use App\Module\User\Form\LoginForm;
 use App\Module\User\Repository\UserRepository;
+use Yiisoft\Auth\IdentityInterface;
 use Yiisoft\Yii\Web\User\User;
-use Yiisoft\Auth\IdentityRepositoryInterface;
 
 final class LoginService
 {
@@ -19,34 +19,31 @@ final class LoginService
     {
         $this->loginForm = $loginForm;
         $this->user = $user;
-
     }
 
-    public function isLogin(IdentityRepositoryInterface $identityRepository, string $ip): bool
+    public function isLogin(UserRepository $userRepository, string $ip): bool
     {
         $login = $this->loginForm->getAttributeValue('login');
         $password = $this->loginForm->getAttributeValue('password');
+        $user = $userRepository->findUserByUsernameOrEmail($login);
 
-        /** @var UserRepository $identityRepository */
-        $identity = $identityRepository->findUserByUsernameOrEmail($login);
-
-        if ($identity === null) {
+        if ($user === null) {
             $this->loginForm->addError('password', 'Unregistered user/Invalid password.');
         }
 
-        /** @var UserAR $identity */
         if (
-            $identity
-            && $identityRepository->validatePassword(
+            $user
+            && $userRepository->validatePassword(
                 $this->loginForm,
                 $password,
-                $identity->getAttribute('password_hash')
+                $user->getAttribute('password_hash')
             )
-            && $this->validateConfirmed($identity)
+            && $this->validateConfirmed($user)
         ) {
-            $this->updateAttributeLogin($identity, $ip);
+            $this->updateAttributeLogin($user, $ip);
 
-            $result = $this->user->login($identity);
+            /** @var IdentityInterface $user */
+            $result = $this->user->login($user);
         } else {
             $this->loginForm->addError('password', 'Unregistered user/Invalid password.');
             $result = false;
@@ -55,25 +52,25 @@ final class LoginService
         return $result;
     }
 
-    public function isLoginConfirm(IdentityRepositoryInterface $identityRepository, string $id, string $ip): bool
+    public function isLoginConfirm(UserRepository $userRepository, string $id, string $ip): bool
     {
-        $identity = $identityRepository->findIdentity($id);
+        $user = $userRepository->findUserById($id);
 
-        $this->updateAttributeLogin($identity, $ip);
+        $this->updateAttributeLogin($user, $ip);
 
-        return $this->user->login($identity);
+        return $this->user->login($user);
     }
 
-    private function updateAttributeLogin(UserAR $identity, string $ip): void
+    private function updateAttributeLogin(UserAR $user, string $ip): void
     {
-        $identity->updateAttributes(['ip_last_login' => $ip, 'last_login_at' => time()]);
+        $user->updateAttributes(['ip_last_login' => $ip, 'last_login_at' => time()]);
     }
 
-    private function validateConfirmed(UserAR $identity): bool
+    private function validateConfirmed(UserAR $user): bool
     {
         $result = true;
 
-        if ($identity->getAttribute('confirmed_at') === null) {
+        if ($user->getAttribute('confirmed_at') === null) {
             $this->loginForm->addError('password', 'Please check your email to activate your account.');
             $result = false;
         }

@@ -6,6 +6,7 @@ namespace App\Module\User\Form;
 
 use App\Module\User\Repository\ModuleSettingsRepository;
 use Yiisoft\Form\FormModel;
+use Yiisoft\Router\UrlMatcherInterface;
 use Yiisoft\Validator\ValidatorFactoryInterface;
 use Yiisoft\Validator\Rule\Email;
 use Yiisoft\Validator\Rule\HasLength;
@@ -19,10 +20,15 @@ final class RegisterForm extends FormModel
     private string $password = '';
     private string $ip = '';
     private ModuleSettingsRepository $settings;
+    private UrlMatcherInterface $urlMatcher;
 
-    public function __construct(ModuleSettingsRepository $settings, ValidatorFactoryInterface $validator)
-    {
+    public function __construct(
+        ModuleSettingsRepository $settings,
+        UrlMatcherInterface $urlMatcher,
+        ValidatorFactoryInterface $validator
+    ) {
         $this->settings = $settings;
+        $this->urlMatcher = $urlMatcher;
 
         parent::__construct($validator);
     }
@@ -64,9 +70,10 @@ final class RegisterForm extends FormModel
 
     private function passwordRules(): array
     {
+        $route = $this->urlMatcher->getCurrentRoute()->getName();
         $result = [];
 
-        if ($this->settings->isGeneratingPassword() === false) {
+        if ($this->settings->isGeneratingPassword() === false &&  $route === 'registration/register') {
             $result = [
                 new Required(),
                 (new HasLength())->min(6)->max(72)->tooShortMessage('Password should contain at least 6 characters.')

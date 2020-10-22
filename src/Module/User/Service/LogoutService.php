@@ -5,25 +5,17 @@ declare(strict_types=1);
 namespace App\Module\User\Service;
 
 use App\Module\User\ActiveRecord\UserAR;
+use App\Module\User\Repository\UserRepository;
 use Yiisoft\Yii\Web\User\User;
-use Yiisoft\Auth\IdentityRepositoryInterface;
 
 final class LogoutService
 {
-    private IdentityRepositoryInterface $identityRepository;
-
-    public function __construct(IdentityRepositoryInterface $identityRepository)
+    public function run(UserRepository $userRepository, User $identity): bool
     {
-        $this->identityRepository = $identityRepository;
-    }
+        $user = $userRepository->findUserById($identity->getId());
 
-    public function run(User $user): bool
-    {
-        $identity = $this->identityRepository->findIdentity($user->getId());
+        $user->updateAttributes(['last_logout_at' => time()]);
 
-        /** @var UserAR $identity */
-        $identity->updateAttributes(['last_logout_at' => time()]);
-
-        return $user->logout();
+        return $identity->logout();
     }
 }

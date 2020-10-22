@@ -31,15 +31,17 @@ $assetManager->register([
 
 ?>
 
+<p class="title has-text-black">
+    Login.
+</p>
+
+<p class="subtitle has-text-black">
+    Please fill out the following.
+</p>
+
+<hr class='mb-2'/>
+
 <div class = 'column is-4 is-offset-4'>
-
-    <p class="title has-text-black">
-        Login.
-    </p>
-
-    <p class="subtitle has-text-black">
-        Please fill out the following.
-    </p>
 
     <div class = 'box'>
 

@@ -53,6 +53,11 @@ final class ModuleSettingsRepository
         return $this->settings->getAttribute('subjectConfirm');
     }
 
+    public function getSubjectPassword(): string
+    {
+        return $this->settings->getAttribute('subjectPassword');
+    }
+
     public function getSubjectWelcome(): string
     {
         return $this->settings->getAttribute('subjectWelcome');
