@@ -183,8 +183,8 @@ final class Params
         ];
     }
 
-    public function writetoFiles(): bool
+    public function writeToFiles(): bool
     {
-        return false;
+        return true;
     }
 }

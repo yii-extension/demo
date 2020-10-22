@@ -65,7 +65,7 @@ return [
     ],
 
     MailerInterface::class => static function (ContainerInterface $container) use ($params) {
-        if ($params->writetoFiles()) {
+        if ($params->writeToFiles()) {
             return $container->get(FileMailer::class);
         }
 
