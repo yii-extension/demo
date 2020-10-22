@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yii\Component;
 
-use Swift_Transport;
+use Swift_SmtpTransport;
 use Swift_Plugins_LoggerPlugin;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -70,17 +70,17 @@ return [
         }
 
         $mailer = new Mailer(
-            Reference::to(MessageFactoryInterface::class),
-            Reference::to(Composer::class),
-            Reference::to(EventDispatcherInterface::class),
-            Reference::to(LoggerInterface::class),
-            Reference::to(Swift_Transport::class)
+            $container->get(MessageFactoryInterface::class),
+            $container->get(Composer::class),
+            $container->get(EventDispatcherInterface::class),
+            $container->get(LoggerInterface::class),
+            $container->get(Swift_SmtpTransport::class)
         );
 
         $mailer->registerPlugin(
             new Swift_Plugins_LoggerPlugin(
                 new Logger(
-                    Reference::to(LoggerInterface::class),
+                    $container->get(LoggerInterface::class),
                 )
             )
         );

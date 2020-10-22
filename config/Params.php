@@ -185,6 +185,6 @@ final class Params
 
     public function writetoFiles(): bool
     {
-        return true;
+        return false;
     }
 }
