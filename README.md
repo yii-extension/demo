@@ -81,16 +81,24 @@ php -S 127.0.0.1:8080 -t public
 http://localhost:8080
 ~~~
 
-## Implemented functions
+## Includes the following features:
 
 - [x] Admin Panel Dashboard.
-- [x] /auth/login
-- [x] /auth/logout
-- [x] /recovery/request
-- [x] /recovery/reset[/{id}/{code}]
-- [x] /registration/confirm[/{id}/{token}
-- [x] /registration/register
-- [x] /registration/resend
+- [x] /auth/login - Display login form.
+- [x] /auth/logout - Logs the user out.
+- [x] /recovery/request - Displays recovery request form.
+- [x] /recovery/reset[/{id}/{code}] - Displays password reset form (requires id and token query params).
+- [x] /registration/confirm[/{id}/{token}] - Confirms a user (requires id and token query params).
+- [x] /registration/register - Displays registration form.
+- [x] /registration/resend - Displays resend form.
+- [x] /admin/index - Displays user management interface.
+- [x] /admin/create - Display form register user.
+- [x] /admin/block[/{id}] - Allows you to block or unblock a user.
+- [x] /admin/confirm[/{id}] - Confirms a user (requires id).
+- [x] /admin/delete[/{id}] - Delete a user (requires id).
+- [x] /admin/edit[/{id}] - Display form edit user (requires id).
+- [x] /admin/info[/{id}] - Display info user (requires id).
+- [x] /admin/reset[/{id}] - Send email resend password (requires id).
 
 Note: check the directory `/runtime/mail`, the emails are stored in it.
 
