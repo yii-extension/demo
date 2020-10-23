@@ -20,27 +20,6 @@ class FunctionalTester extends \Codeception\Actor
 {
     use _generated\FunctionalTesterActions;
 
-    /**
-     * Define custom actions here
-     */
-    public function confirmedUser(): void
-    {
-        $this->haveInDatabase(
-            'user',
-            [
-                'id' => 1,
-                'username'        => 'admin',
-                'email'           => 'administrator@example.com',
-                'password_hash'   => '$argon2i$v=19$m=65536,t=4,p=1$ZVlUZk1NS2wwdi45d0t6dw$pn/0BLB3EzYtNdm3NSj6Yntk9lUT1pEOFsd85xV3Ig4',
-                'auth_key'        => 'pjvxHoTbCuJ4JH9puYqJbgMibqqWpNTg',
-                'registration_ip' => '127.0.0.1',
-                'created_at'      => 1564590107,
-                'updated_at'      => 1564590107,
-                'confirmed_at'    => 1564590137
-            ]
-        );
-    }
-
     public function unconfirmedUser(): void
     {
         $time = time();

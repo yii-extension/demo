@@ -23,7 +23,7 @@ final class LoginService
 
     public function isLogin(UserRepository $userRepository, string $ip): bool
     {
-        $login = $this->loginForm->getAttributeValue('login');
+        $login = $this->loginForm->getLogin();
         $password = $this->loginForm->getAttributeValue('password');
         $user = $userRepository->findUserByUsernameOrEmail($login);
 

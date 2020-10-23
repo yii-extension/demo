@@ -6,7 +6,7 @@ namespace App\Tests\Acceptance;
 
 use App\Tests\AcceptanceTester;
 
-final class LoginCest
+final class LoginPageCest
 {
     public function _before(AcceptanceTester $I): void
     {
@@ -43,7 +43,7 @@ final class LoginCest
     }
 
     /**
-     * @depends App\Tests\Acceptance\RegisterCest:testRegisterSuccessDataDefaultAccountConfirmationFalse
+     * @depends App\Tests\Acceptance\RegisterPageCest:testRegisterSuccessDataDefaultAccountConfirmationFalse
      */
     public function testAuthLoginUsernameSubmitFormSuccessData(AcceptanceTester $I): void
     {
@@ -53,12 +53,11 @@ final class LoginCest
         $I->click('Login', '#form-security-login');
 
         $I->expectTo('see logged index page.');
-
         $I->seeLink('admin');
     }
 
     /**
-     * @depends App\Tests\Acceptance\RegisterCest:testRegisterSuccessDataDefaultAccountConfirmationFalse
+     * @depends App\Tests\Acceptance\RegisterPageCest:testRegisterSuccessDataDefaultAccountConfirmationFalse
      */
     public function testAuthLoginEmailSubmitFormSuccessData(AcceptanceTester $I): void
     {
@@ -68,7 +67,12 @@ final class LoginCest
         $I->click('Login', '#form-security-login');
 
         $I->expectTo('see logged index page.');
-
         $I->seeLink('admin');
+    }
+
+    public function testAuthLoginSettingsPasswordRecoveryTrue(AcceptanceTester $I): void
+    {
+        $I->expectTo('see link forgot password');
+        $I->seeLink('Forgot Password');
     }
 }

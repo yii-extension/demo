@@ -21,8 +21,8 @@ final class ConfirmCest
     {
         $I->amGoingTo('register fixture unconfirmed user.');
         $I->unconfirmedUser();
-        $id = $I->grabColumnFromDatabase('token', 'user_id');
-        $token = $I->grabColumnFromDatabase('token', 'code');
+        $id = $I->grabColumnFromDatabase('token', 'user_id', ['user_id' => 3]);
+        $token = $I->grabColumnFromDatabase('token', 'code', ['user_id' => 3]);
 
         $I->amGoingTo('page recovery confirm.');
         $I->amOnPage('/registration/confirm/' . $id[0] . '/' . $token[0]);
@@ -35,7 +35,7 @@ final class ConfirmCest
     {
         $I->amGoingTo('register fixture unconfirmed user.');
         $I->unconfirmedUser();
-        $token = $I->grabColumnFromDatabase('token', 'code');
+        $token = $I->grabColumnFromDatabase('token', 'code', ['user_id' => 3]);
 
         $I->amGoingTo('page recovery confirm.');
         $I->amOnPage('/registration/confirm/4/' . $token[0]);
@@ -48,8 +48,8 @@ final class ConfirmCest
     {
         $I->amGoingTo('register fixture unconfirmed user.');
         $I->unconfirmedUser();
-        $id = $I->grabColumnFromDatabase('token', 'user_id');
-        $token = $I->grabColumnFromDatabase('token', 'code');
+        $id = $I->grabColumnFromDatabase('token', 'user_id', ['user_id' => 3]);
+        $token = $I->grabColumnFromDatabase('token', 'code', ['user_id' => 3]);
 
         $I->amGoingTo('page recovery confirm.');
         $I->amOnPage('/registration/confirm/' . $id[0] . '/NO2aCmBIjFQX624xmAc3VBu7Th3NJoa7');
@@ -62,8 +62,8 @@ final class ConfirmCest
     {
         $I->amGoingTo('register fixture unconfirmed user with token expired.');
         $I->unconfirmedTokenExpiredUser();
-        $id = $I->grabColumnFromDatabase('token', 'user_id');
-        $token = $I->grabColumnFromDatabase('token', 'code');
+        $id = $I->grabColumnFromDatabase('token', 'user_id', ['user_id' => 4]);
+        $token = $I->grabColumnFromDatabase('token', 'code', ['user_id' => 4]);
 
         $I->amGoingTo('page recovery confirm.');
         $I->amOnPage('/registration/confirm/' . $id[0] . '/' . $token[0]);

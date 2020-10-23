@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Module\User\Action;
 
 use App\Module\User\ActiveRecord\UserAr;
+use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\UserRepository;
 use App\Service\View;
 use Psr\Http\Message\ResponseInterface;
@@ -19,6 +20,7 @@ final class AdminDeleteAction
         User $identity,
         ServerRequestInterface $request,
         DataResponseFactoryInterface $responseFactory,
+        ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
         UserRepository $userRepository,
         View $view
@@ -30,7 +32,7 @@ final class AdminDeleteAction
         if ($identity->getId() === $id) {
             $view->addFlash(
                 'is-danger',
-                'System Notification - Yii Demo User Module AR.',
+                $settings->getMessageHeader(),
                 'You cannot delete your own user.'
             );
 
@@ -45,7 +47,7 @@ final class AdminDeleteAction
 
         $view->addFlash(
             'is-danger',
-            'System Notification - Yii Demo User Module AR.',
+            $settings->getMessageHeader(),
             'The data has been delete.'
         );
 

@@ -42,7 +42,7 @@ final class AdminCreateAction
             ) {
                 $view->addFlash(
                     'is-info',
-                    'System Notification - Yii Demo User Module AR.',
+                    $settings->getMessageHeader(),
                     'The account has been created.'
                 );
             }

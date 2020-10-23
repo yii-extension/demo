@@ -71,12 +71,12 @@ final class UserRepository implements IdentityRepositoryInterface
             throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
         }
 
-        if ($this->findUserByUsernameOrEmail(strtolower($registerForm->getAttributeValue('email')))) {
+        if ($this->findUserByUsernameOrEmail($registerForm->getEmail())) {
             $registerForm->addError('email', 'Email already registered.');
             return false;
         }
 
-        if ($this->findUserByUsernameOrEmail($registerForm->getAttributeValue('username'))) {
+        if ($this->findUserByUsernameOrEmail($registerForm->getUsername())) {
             $registerForm->addError('username', 'Username already registered.');
             return false;
         }
@@ -203,12 +203,12 @@ final class UserRepository implements IdentityRepositoryInterface
             throw new RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
         }
 
-        if ($this->findUserByUsernameOrEmail(strtolower($registerForm->getAttributeValue('email')))) {
+        if ($this->findUserByUsernameOrEmail($registerForm->getEmail())) {
             $registerForm->addError('email', 'Email already registered.');
             return false;
         }
 
-        if ($this->findUserByUsernameOrEmail($registerForm->getAttributeValue('username'))) {
+        if ($this->findUserByUsernameOrEmail($registerForm->getUsername())) {
             $registerForm->addError('username', 'Username already registered.');
             return false;
         }
@@ -360,8 +360,8 @@ final class UserRepository implements IdentityRepositoryInterface
             ? $this->generate(8)
             : $registerForm->getAttributeValue('password');
 
-        $this->user->username($registerForm->getAttributeValue('username'));
-        $this->user->email($registerForm->getAttributeValue('email'));
+        $this->user->username($registerForm->getUsername());
+        $this->user->email($registerForm->getEmail());
         $this->user->unconfirmedEmail(null);
         $this->user->password($password);
         $this->user->passwordHash($password);
@@ -382,8 +382,8 @@ final class UserRepository implements IdentityRepositoryInterface
             ? $this->generate(8)
             : $registerForm->getAttributeValue('password');
 
-        $this->user->username($registerForm->getAttributeValue('username'));
-        $this->user->email($registerForm->getAttributeValue('email'));
+        $this->user->username($registerForm->getUsername());
+        $this->user->email($registerForm->getEmail());
         $this->user->unconfirmedEmail(null);
         $this->user->password($password);
         $this->user->passwordHash($password);

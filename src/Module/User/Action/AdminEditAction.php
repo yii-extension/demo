@@ -27,6 +27,7 @@ final class AdminEditAction
         $body = $request->getParsedBody();
         $method = $request->getMethod();
         $id = $request->getAttribute('id');
+        $registerForm->ip($request->getServerParams()['REMOTE_ADDR']);
 
         $userRepository->loadData($registerForm, $id);
 
@@ -45,7 +46,7 @@ final class AdminEditAction
             ) {
                 $view->addFlash(
                     'is-info',
-                    'System Notification - Yii Demo User Module AR.',
+                    $settings->getMessageHeader(),
                     'The account has been updated.'
                 );
             }

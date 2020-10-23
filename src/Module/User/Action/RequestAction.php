@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Module\User\Action;
 
-use RuntimeException;
 use App\Module\User\Form\RequestForm;
 use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\UserRepository;
@@ -61,6 +60,14 @@ final class RequestAction
                 );
         }
 
-        throw new RuntimeException('Module no enabled');
+        $view->addFlash(
+            'is-danger',
+            $settings->getMessageHeader(),
+            'Module password recovery user is disabled in the application configuration.'
+        );
+
+        return $responseFactory
+            ->createResponse(302)
+            ->withHeader('Location', $url->generate('index'));
     }
 }

@@ -61,8 +61,9 @@ final class ResetCest
     {
         $I->amGoingTo('register fixture user recovery.');
         $I->recoveryResetUser();
-        $id = $I->grabColumnFromDatabase('token', 'user_id');
-        $token = $I->grabColumnFromDatabase('token', 'code');
+        $id = $I->grabColumnFromDatabase('token', 'user_id', ['user_id' => 7]);
+
+        $token = $I->grabColumnFromDatabase('token', 'code', ['user_id' => 7]);
 
         $I->amGoingTo('page recovery reset.');
         $I->amOnPage('/recovery/reset/' . $id[0] . '/' . $token[0]);

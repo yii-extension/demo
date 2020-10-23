@@ -19,11 +19,11 @@ final class AdminResetPasswordAction
 {
     public function reset(
         User $identity,
-        ModuleSettingsRepository $settings,
         RegisterForm $registerForm,
         ServerRequestInterface $request,
         ResendService $resendService,
         DataResponseFactoryInterface $responseFactory,
+        ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
         UserRepository $userRepository,
         View $view
@@ -35,7 +35,7 @@ final class AdminResetPasswordAction
         if ($identity->getId() === $id) {
             $view->addFlash(
                 'is-danger',
-                'System Notification - Yii Demo User Module AR.',
+                $settings->getMessageHeader(),
                 'You cannot resend the password your own user.'
             );
 
@@ -53,7 +53,7 @@ final class AdminResetPasswordAction
 
             $view->addFlash(
                 'is-success',
-                'System Notification - Yii Demo User Module AR.',
+                $settings->getMessageHeader(),
                 'The password has been changed.'
             );
         }

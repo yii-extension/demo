@@ -37,6 +37,7 @@ final class M201014141725CreateModuleSettings extends Migration implements Rever
                 'subjectWelcome' => $this->string(100),
                 'tokenConfirmWithin' => $this->integer(),
                 'tokenRecoverWithin' => $this->integer(),
+                'usernameCaseSensitive' => $this->boolean(),
                 'usernameRegExp' => $this->string(25)
             ],
             $tableOptions
@@ -60,6 +61,7 @@ final class M201014141725CreateModuleSettings extends Migration implements Rever
                 'subjectWelcome',
                 'tokenConfirmWithin',
                 'tokenRecoverWithin',
+                'usernameCaseSensitive',
                 'usernameRegExp'
             ],
             [
@@ -77,6 +79,7 @@ final class M201014141725CreateModuleSettings extends Migration implements Rever
                     'Welcome.',
                     86400,
                     86400,
+                    true,
                     '/^[-a-zA-Z0-9_\.@]+$/'
                 ]
             ]

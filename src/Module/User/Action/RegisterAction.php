@@ -62,7 +62,7 @@ final class RegisterAction
             }
 
             $view->addFlash(
-                'is-error',
+                'is-danger',
                 $settings->getMessageHeader(),
                 'The email could not be sent, please check your settings.'
             );
@@ -83,6 +83,14 @@ final class RegisterAction
                 );
         }
 
-        throw new RuntimeException('Module register user is disabled in the application configuration.');
+        $view->addFlash(
+            'is-danger',
+            $settings->getMessageHeader(),
+            'Module registration register user is disabled in the application configuration.'
+        );
+
+        return $responseFactory
+            ->createResponse(302)
+            ->withHeader('Location', $url->generate('index'));
     }
 }

@@ -13,6 +13,8 @@ use Yiisoft\Validator\Rule\HasLength;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\MatchRegularExpression;
 
+use function strtolower;
+
 final class RegisterForm extends FormModel
 {
     private string $email = '';
@@ -45,6 +47,20 @@ final class RegisterForm extends FormModel
     public function formName(): string
     {
         return 'Register';
+    }
+
+    public function getEmail(): string
+    {
+        return strtolower($this->email);
+    }
+
+    public function getUsername(): string
+    {
+        if ($this->settings->getUsernameCaseSensitive()) {
+            $this->username = strtolower($this->username);
+        }
+
+        return $this->username;
     }
 
     public function ip(string $value): void

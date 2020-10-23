@@ -78,6 +78,11 @@ final class ModuleSettingsRepository
         return $this->settings->getAttribute('tokenRecoverWithin');
     }
 
+    public function getUsernameCaseSensitive(): bool
+    {
+        return $this->settings->getAttribute('usernameCaseSensitive');
+    }
+
     public function getUsernameRegExp(): string
     {
         return $this->settings->getAttribute('usernameRegExp');

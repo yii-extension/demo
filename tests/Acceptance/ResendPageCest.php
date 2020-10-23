@@ -6,7 +6,7 @@ namespace App\Tests\Acceptance;
 
 use App\Tests\AcceptanceTester;
 
-final class ResendCest
+final class ResendPageCest
 {
     public function _before(AcceptanceTester $I): void
     {
