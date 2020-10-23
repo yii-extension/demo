@@ -9,6 +9,7 @@ use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\UserRepository;
 use App\Module\User\Service\RequestService;
 use App\Service\View;
+use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -24,7 +25,8 @@ final class RequestAction
         ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
         UserRepository $userRepository,
-        View $view
+        View $view,
+        WebControllerService $webController
     ): ResponseInterface {
         $body = $request->getParsedBody();
         $method = $request->getMethod();
@@ -35,15 +37,13 @@ final class RequestAction
             && $requestForm->validate()
             && $requestService->run($requestForm, $userRepository)
         ) {
-            $view->addFlash(
-                'is-info',
-                $settings->getMessageHeader(),
-                'Please check your email to change your password.'
-            );
-
-            return $responseFactory
-                ->createResponse(302)
-                ->withHeader('Location', $url->generate('index'));
+            return $webController
+                ->withFlash(
+                    'is-info',
+                    $settings->getMessageHeader(),
+                    'Please check your email to change your password.'
+                )
+                ->redirectResponse('index');
         }
 
         if ($settings->isPasswordRecovery()) {
@@ -60,14 +60,12 @@ final class RequestAction
                 );
         }
 
-        $view->addFlash(
-            'is-danger',
-            $settings->getMessageHeader(),
-            'Module password recovery user is disabled in the application configuration.'
-        );
-
-        return $responseFactory
-            ->createResponse(302)
-            ->withHeader('Location', $url->generate('index'));
+        return $webController
+            ->withFlash(
+                'is-danger',
+                $settings->getMessageHeader(),
+                'Module password recovery user is disabled in the application configuration.'
+            )
+            ->redirectResponse('index');
     }
 }

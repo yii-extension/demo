@@ -11,6 +11,7 @@ use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\TokenRepository;
 use App\Module\User\Repository\UserRepository;
 use App\Service\View;
+use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -26,7 +27,8 @@ final class ResetAction
         TokenRepository $tokenRepository,
         UrlGeneratorInterface $url,
         UserRepository $userRepository,
-        View $view
+        View $view,
+        WebControllerService $webController
     ): ResponseInterface {
         $body = $request->getParsedBody();
         $method = $request->getMethod();
@@ -35,32 +37,24 @@ final class ResetAction
         $user = null;
         $token = null;
 
-        if ($id !== null) {
-            $user = $userRepository->findUserById($id);
+        if ($id === null || ($user = $userRepository->findUserById($id)) === null || $code === null) {
+            return $webController->notFoundResponse();
         }
 
-        if ($user !== null && $code !== null) {
-            $token = $tokenRepository->findTokenByParams(
-                (int) $user->getId(),
-                $request->getAttribute('code'),
-                TokenAR::TYPE_RECOVERY
-            );
-        }
+        $token = $tokenRepository->findTokenByParams(
+            (int) $user->getId(),
+            $request->getAttribute('code'),
+            TokenAR::TYPE_RECOVERY
+        );
 
-        if (
-            $user === null ||
-            !$token instanceof TokenAR ||
-            $token->isExpired(0, $settings->getTokenRecoverWithin())
-        ) {
-            $view->addflash(
-                'is-danger',
-                $settings->getMessageHeader(),
-                'The requested page does not exist.'
-            );
-
-            return $responseFactory
-                ->createResponse(302)
-                ->withHeader('Location', $url->generate('index'));
+        if ($token === null || $token->isExpired(0, $settings->getTokenRecoverWithin())) {
+            return $webController
+                ->withFlash(
+                    'is-danger',
+                    $settings->getMessageHeader(),
+                    'The requested page does not exist.'
+                )
+                ->redirectResponse('index');
         }
 
         if (
@@ -74,15 +68,13 @@ final class ResetAction
             /** @var UserAR $user */
             $user->passwordHashUpdate($resetForm->getAttributeValue('password'));
 
-            $view->addFlash(
-                'is-success',
-                $settings->getMessageHeader(),
-                'Your password has been changed.'
-            );
-
-            return $responseFactory
-                ->createResponse(302)
-                ->withHeader('Location', $url->generate('index'));
+            return $webController
+                ->withFlash(
+                    'is-success',
+                    $settings->getMessageHeader(),
+                    'Your password has been changed.'
+                )
+                ->redirectResponse('index');
         }
 
         return $view

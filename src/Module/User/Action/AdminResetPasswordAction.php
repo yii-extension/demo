@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Module\User\Action;
 
 use App\Service\View;
+use App\Service\WebControllerService;
 use App\Module\User\Form\RegisterForm;
 use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\UserRepository;
@@ -26,40 +27,43 @@ final class AdminResetPasswordAction
         ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
         UserRepository $userRepository,
-        View $view
+        View $view,
+        WebControllerService $webController
     ): ResponseInterface {
-        $body = $request->getParsedBody();
-        $method = $request->getMethod();
         $id = $request->getAttribute('id');
 
-        if ($identity->getId() === $id) {
-            $view->addFlash(
-                'is-danger',
-                $settings->getMessageHeader(),
-                'You cannot resend the password your own user.'
-            );
-
-            return $responseFactory
-                ->createResponse(302)
-                ->withHeader('Location', $url->generate('admin/index'));
+        if ($id === null || $identity->getId() === $id || ($user = $userRepository->findUserById($id)) === null) {
+            return $webController
+                ->notFoundResponse(
+                    $identity->getId() === $id ? 'You cannot resend the password your own user.' : null
+                );
         }
 
-        if ($userRepository->resetPassword($id)) {
+        if ($userRepository->resetPassword($user)) {
             $userRepository->sendMailer(
                 $url,
                 $settings->getSubjectPassword(),
-                ['html' => 'newpassword', 'text' => 'text/newpassword']
+                ['html' => 'newpassword', 'text' => 'text/newpassword'],
+                false,
+                true,
+                $user
             );
 
-            $view->addFlash(
-                'is-success',
-                $settings->getMessageHeader(),
-                'The password has been changed.'
-            );
+            return $webController
+                ->withFlash(
+                    'is-success',
+                    $settings->getMessageHeader(),
+                    'The password has been changed.'
+                )
+                ->redirectResponse('admin/index');
         }
 
-        return $responseFactory
-            ->createResponse(302)
-            ->withHeader('Location', $url->generate('admin/index'));
+        return $webController
+            ->withFlash(
+                'is-danger',
+                $settings->getMessageHeader(),
+                'The password could not be changed.'
+            )
+            ->redirectResponse('admin/index');
     }
 }

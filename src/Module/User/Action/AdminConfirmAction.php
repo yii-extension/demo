@@ -8,6 +8,7 @@ use App\Module\User\ActiveRecord\UserAR;
 use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\UserRepository;
 use App\Service\View;
+use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -23,34 +24,23 @@ final class AdminConfirmAction
         UserRepository $userRepository,
         UrlGeneratorInterface $url,
         UrlMatcherInterface $urlMatcher,
-        View $view
+        View $view,
+        WebControllerService $webController
     ): ResponseInterface {
         $id = $request->getAttribute('id');
 
-        if ($id !== null) {
-            $user = $userRepository->findUserById($id);
+        if ($id !== null && ($user = $userRepository->findUserById($id)) !== null) {
+            $userRepository->confirm($user);
 
-            if ($userRepository->confirm($user)) {
-                $view->addFlash(
+            return $webController
+                ->withFlash(
                     'is-success',
                     $settings->getMessageHeader(),
                     'Your user has been confirmed.'
-                );
-
-                return $responseFactory
-                    ->createResponse(302)
-                    ->withHeader('Location', $url->generate('admin/index'));
-            }
+                )
+                ->redirectResponse('admin/index');
         }
 
-        $view->addFlash(
-            'is-danger',
-            $settings->getMessageHeader(),
-            'The requested page does not exist.'
-        );
-
-        return $responseFactory
-            ->createResponse(302)
-            ->withHeader('Location', $url->generate('admin/index'));
+        return $webController->notFoundResponse();
     }
 }

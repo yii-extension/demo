@@ -200,15 +200,11 @@ final class UserRepository implements IdentityRepositoryInterface
         return $urlToken;
     }
 
-    public function loadData(RegisterForm $registerForm, string $id): void
+    public function loadData(UserAR $user, RegisterForm $registerForm): void
     {
-        /** @var UserAR $aqClass */
-        $this->user = $this->findUserById($id);
-
-        $registerForm->setAttribute('email', $this->user->getEmail());
-        $registerForm->setAttribute('username', $this->user->getUsername());
+        $registerForm->setAttribute('email', $user->getEmail());
+        $registerForm->setAttribute('username', $user->getUsername());
     }
-
 
     public function register(RegisterForm $registerForm, bool $isConfirmation, bool $isGeneratingPassword): bool
     {
@@ -260,30 +256,31 @@ final class UserRepository implements IdentityRepositoryInterface
      *
      * generates a new password and sends it to the user
      */
-    public function resetPassword(string $id): bool
+    public function resetPassword(UserAR $user): bool
     {
-        $this->user = $this->findUserById($id);
+        $user->password($this->generate(8));
 
-        $this->user->password($this->generate(8));
-
-        return $this->user->save();
+        return $user->save();
     }
 
     public function sendMailer(
-        UrlGeneratorInterface $url,
-        string $subjectWelcome,
-        array $layout,
+        UrlGeneratorInterface $url = null,
+        string $subjectWelcome = '',
+        array $layout = [],
         bool $isConfirmation = false,
-        bool $showPassword = true
+        bool $showPassword = true,
+        UserAR $user = null
     ): bool {
+        $user = $user ?? $this->user;
+
         return $this->mailer->run(
-            $this->user->getAttribute('email'),
+            $user->getAttribute('email'),
             $subjectWelcome,
             $this->aliases->get('@user/resources/mail'),
             $layout,
             [
-                'username' => $this->user->getAttribute('username'),
-                'password' => $this->user->getPassword(),
+                'username' => $user->getAttribute('username'),
+                'password' => $user->getPassword(),
                 'url' => $this->generateUrlTokenMailer($url, $isConfirmation),
                 'showPassword' => $showPassword
             ]
@@ -296,11 +293,11 @@ final class UserRepository implements IdentityRepositoryInterface
      *
      * @return bool
      */
-    public function update(RegisterForm $registerForm, string $id): bool
+    public function update(UserAr $user, RegisterForm $registerForm): bool
     {
-        $this->insertRecordFromAdminFormAR($registerForm);
+        $this->updateRecordFromAdminFormAR($user, $registerForm);
 
-        return $this->user->save();
+        return $user->save();
     }
 
     public function unblock(UserAr $user): bool
@@ -415,6 +412,25 @@ final class UserRepository implements IdentityRepositoryInterface
         $this->user->createdAt();
         $this->user->updatedAt();
         $this->user->flags(0);
+    }
+
+    private function updateRecordFromAdminFormAR(UserAR $user, RegisterForm $registerForm): void
+    {
+        $password = empty($registerForm->getAttributeValue('password'))
+            ? $this->generate(8)
+            : $registerForm->getAttributeValue('password');
+
+        $user->username($registerForm->getUsername());
+        $user->email($registerForm->getEmail());
+        $user->unconfirmedEmail(null);
+        $user->password($password);
+        $user->passwordHash($password);
+        $user->authKey();
+        $user->registrationIp($registerForm->getAttributeValue('ip'));
+        $user->confirmedAt();
+        $user->createdAt();
+        $user->updatedAt();
+        $user->flags(0);
     }
 
     private function insertToken(): void

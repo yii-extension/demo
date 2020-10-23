@@ -8,6 +8,7 @@ use App\Module\User\Form\RegisterForm;
 use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\UserRepository;
 use App\Service\View;
+use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -22,7 +23,8 @@ final class AdminCreateAction
         ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
         UserRepository $userRepository,
-        View $view
+        View $view,
+        WebControllerService $webController
     ): ResponseInterface {
         $body = $request->getParsedBody();
         $method = $request->getMethod();
@@ -40,16 +42,14 @@ final class AdminCreateAction
                     ['html' => 'welcome', 'text' => 'text/welcome']
                 )
             ) {
-                $view->addFlash(
-                    'is-info',
-                    $settings->getMessageHeader(),
-                    'The account has been created.'
-                );
+                return $webController
+                    ->withFlash(
+                        'is-info',
+                        $settings->getMessageHeader(),
+                        'The account has been created.'
+                    )
+                    ->redirectResponse('admin/index');
             }
-
-            return $responseFactory
-                ->createResponse(302)
-                ->withHeader('Location', $url->generate('admin/index'));
         }
 
         return $view

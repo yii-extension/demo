@@ -154,6 +154,11 @@ final class Params
         return dirname(__DIR__) . '/runtime/logs/app.log';
     }
 
+    public function getLoginUrl(): string
+    {
+        return '/auth/login';
+    }
+
     public function getLogLevels(): array
     {
         return [

@@ -10,6 +10,7 @@ use App\Module\Rbac\Action\ItemDeleteAction;
 use App\Module\Rbac\Action\ItemEditAction;
 use App\Module\Rbac\Action\ItemsApiAction;
 use Yiisoft\DataResponse\Middleware\FormatDataResponseAsJson;
+use Yiisoft\Auth\Middleware\Authentication;
 use Yiisoft\Router\Route;
 
 final class Routes
@@ -19,18 +20,22 @@ final class Routes
         return [
             /** item actions */
             Route::methods(['GET', 'POST'], '/item/index', [ItemAction::class, 'index'])
-            ->name('item/index'),
+                ->addMiddleware(Authentication::class)
+                ->name('item/index'),
             Route::methods(['GET', 'POST'], '/item/create', [ItemCreateAction::class, 'create'])
-            ->name('item/create'),
+                ->addMiddleware(Authentication::class)
+                ->name('item/create'),
             Route::methods(['GET', 'POST'], '/item/edit[/{id}]', [ItemEditAction::class, 'edit'])
+                ->addMiddleware(Authentication::class)
                 ->name('item/edit'),
             Route::methods(['GET', 'POST'], '/item/delete[/{id}]', [ItemDeleteAction::class, 'delete'])
+                ->addMiddleware(Authentication::class)
                 ->name('item/delete'),
 
             /** items api actions */
             Route::get('/items', [ItemsApiAction::class, 'index'])
-                ->addMiddleware(FormatDataResponseAsJson::class)
-                ->name('items/index'),
+                ->name('items/index')
+                ->addMiddleware(FormatDataResponseAsJson::class),
         ];
     }
 }

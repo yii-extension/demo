@@ -8,6 +8,7 @@ use App\Module\User\Form\RegisterForm;
 use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\UserRepository;
 use App\Service\View;
+use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -22,38 +23,44 @@ final class AdminEditAction
         DataResponseFactoryInterface $responseFactory,
         UrlGeneratorInterface $url,
         UserRepository $userRepository,
-        View $view
+        View $view,
+        WebControllerService $webController
     ): ResponseInterface {
         $body = $request->getParsedBody();
         $method = $request->getMethod();
         $id = $request->getAttribute('id');
         $registerForm->ip($request->getServerParams()['REMOTE_ADDR']);
 
-        $userRepository->loadData($registerForm, $id);
+        if ($id === null || ($user = $userRepository->findUserById($id)) === null) {
+            return $webController->notFoundResponse();
+        }
+
+        $userRepository->loadData($user, $registerForm);
 
         if (
             $method === 'POST'
             && $registerForm->load($body)
             && $registerForm->validate()
-            && $userRepository->update($registerForm, $id)
+            && $userRepository->update($user, $registerForm)
         ) {
             if (
                 $userRepository->sendMailer(
                     $url,
                     $settings->getSubjectPassword(),
-                    ['html' => 'newpassword', 'text' => 'text/newpassword']
+                    ['html' => 'newpassword', 'text' => 'text/newpassword'],
+                    false,
+                    true,
+                    $user
                 )
             ) {
-                $view->addFlash(
+                return $webController
+                ->withFlash(
                     'is-info',
                     $settings->getMessageHeader(),
                     'The account has been updated.'
-                );
+                )
+                ->redirectResponse('admin/index');
             }
-
-            return $responseFactory
-                ->createResponse(302)
-                ->withHeader('Location', $url->generate('admin/index'));
         }
 
         return $view

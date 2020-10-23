@@ -26,7 +26,7 @@ final class RequestService
     {
         $result = false;
 
-        $email = $requestForm->getAttributeValue('email');
+        $email = $requestForm->getEmail();
         $user = $userRepository->findUserByUsernameOrEmail($email);
 
         if ($user === null) {

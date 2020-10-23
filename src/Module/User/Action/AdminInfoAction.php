@@ -7,6 +7,7 @@ namespace App\Module\User\Action;
 use App\Module\User\ActiveRecord\UserAR;
 use App\Module\User\Repository\UserRepository;
 use App\Service\View;
+use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -21,14 +22,14 @@ final class AdminInfoAction
         UserRepository $userRepository,
         UrlGeneratorInterface $url,
         UrlMatcherInterface $urlMatcher,
-        View $view
+        View $view,
+        WebControllerService $webController
     ): ResponseInterface {
-        $body = $request->getParsedBody();
-        $method = $request->getMethod();
         $id = $request->getAttribute('id');
 
-        /** @var UserAR $user */
-        $user = $userRepository->findUserById($id);
+        if ($id === null || ($user = $userRepository->findUserById($id)) === null) {
+            return $webController->notFoundResponse();
+        }
 
         return $view
             ->viewPath('@user/resources/views')

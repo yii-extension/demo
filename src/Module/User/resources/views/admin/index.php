@@ -65,7 +65,7 @@ $assetManager->register([
                 sortable
                 searchable
                 v-slot='props'
-                width='100'
+                width='120'
             >
                 {{ props.row.username }}
             </b-table-column>
@@ -76,15 +76,15 @@ $assetManager->register([
                 {{ props.row.email }}
             </b-table-column>
 
-            <b-table-column field='ip' centered label='Ip' sortable searchable v-slot='props' width='100'>
+            <b-table-column field='ip' centered label='Ip' v-slot='props' width='100'>
                 {{ props.row.registration_ip }}
             </b-table-column>
 
-            <b-table-column field='createdAT' centered label='Created' sortable v-slot='props'>
+            <b-table-column field='createdAT' centered label='Created' v-slot='props'>
                 {{ props.row.created_at }}
             </b-table-column>
 
-            <b-table-column field='lastLogin' centered label='Last Login' sortable v-slot='props'>
+            <b-table-column field='lastLogin' centered label='Last Login' v-slot='props'>
                 {{ props.row.last_login_at }}
             </b-table-column>
 
@@ -104,7 +104,7 @@ $assetManager->register([
                 </a>
             </b-table-column>
 
-            <b-table-column field='confirm' centered label='Confirm' sortable v-slot='props'>
+            <b-table-column field='confirm' centered label='Confirm' v-slot='props'>
                 <span slot="confirm" v-if="props.row.confirm > '0'">
                     <p class='has-text-success'><b>Confirm</b></p>
                 </span>

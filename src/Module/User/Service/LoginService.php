@@ -52,10 +52,8 @@ final class LoginService
         return $result;
     }
 
-    public function isLoginConfirm(UserRepository $userRepository, string $id, string $ip): bool
+    public function isLoginConfirm(UserAR $user, UserRepository $userRepository, string $ip): bool
     {
-        $user = $userRepository->findUserById($id);
-
         $this->updateAttributeLogin($user, $ip);
 
         return $this->user->login($user);

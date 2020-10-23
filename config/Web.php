@@ -16,6 +16,7 @@ final class Web
             require(__DIR__ . '/Component/Parameters.php'),
             require(__DIR__ . '/Component/EventDispatcher.php'),
             require(__DIR__ . '/Component/YiiWeb.php'),
+            require(__DIR__ . '/Component/Auth.php'),
             require(__DIR__ . '/Component/MiddlewareDispatcher.php'),
             require(__DIR__ . '/Component/Router.php'),
             require(__DIR__ . '/Component/LogTargetFile.php'),

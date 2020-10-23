@@ -8,6 +8,7 @@ use App\Module\User\ActiveRecord\UserAr;
 use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\UserRepository;
 use App\Service\View;
+use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -23,36 +24,30 @@ final class AdminDeleteAction
         ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
         UserRepository $userRepository,
-        View $view
+        View $view,
+        WebControllerService $webController
     ): ResponseInterface {
         $body = $request->getParsedBody();
         $method = $request->getMethod();
         $id = $request->getAttribute('id');
 
-        if ($identity->getId() === $id) {
-            $view->addFlash(
-                'is-danger',
-                $settings->getMessageHeader(),
-                'You cannot delete your own user.'
-            );
-
-            return $responseFactory
-                ->createResponse(302)
-                ->withHeader('Location', $url->generate('admin/index'));
+        if ($id === null || $identity->getId() === $id || ($user = $userRepository->findUserById($id)) === null) {
+            return $webController
+                ->notFoundResponse(
+                    $identity->getId() === $id ? 'You cannot delete your own user.' : null
+                );
         }
 
         $user = $userRepository->findUserById($id);
 
         $user->delete();
 
-        $view->addFlash(
-            'is-danger',
-            $settings->getMessageHeader(),
-            'The data has been delete.'
-        );
-
-        return $responseFactory
-            ->createResponse(302)
-            ->withHeader('Location', $url->generate('admin/index'));
+        return $webController
+            ->withFlash(
+                'is-danger',
+                $settings->getMessageHeader(),
+                'The data has been delete.'
+            )
+            ->redirectResponse('admin/index');
     }
 }

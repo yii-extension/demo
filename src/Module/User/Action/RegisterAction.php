@@ -8,6 +8,7 @@ use RuntimeException;
 use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\UserRepository;
 use App\Service\View;
+use App\Service\WebControllerService;
 use App\Module\User\Form\RegisterForm;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -22,8 +23,9 @@ final class RegisterAction
         DataResponseFactoryInterface $responseFactory,
         ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
-        UserREpository $userRepository,
-        View $view
+        UserRepository $userRepository,
+        View $view,
+        WebControllerService $webController
     ): ResponseInterface {
         $body = $request->getParsedBody();
         $method = $request->getMethod();
@@ -48,24 +50,24 @@ final class RegisterAction
                     $settings->isGeneratingPassword()
                 )
             ) {
-                $view->addFlash(
-                    'is-info',
-                    $settings->getMessageHeader(),
-                    $settings->isConfirmation()
-                        ? 'Please check your email to activate your username.'
-                        : 'Your account has been created.'
-                );
-
-                return $responseFactory
-                    ->createResponse(302)
-                    ->withHeader('Location', $url->generate('index'));
+                return $webController
+                    ->withFlash(
+                        'is-info',
+                        $settings->getMessageHeader(),
+                        $settings->isConfirmation()
+                            ? 'Please check your email to activate your username.'
+                            : 'Your account has been created.'
+                    )
+                    ->redirectResponse('index');
             }
 
-            $view->addFlash(
-                'is-danger',
-                $settings->getMessageHeader(),
-                'The email could not be sent, please check your settings.'
-            );
+            return $webController
+                ->withFlash(
+                    'is-danger',
+                    $settings->getMessageHeader(),
+                    'The email could not be sent, please check your settings.'
+                )
+                ->redirectResponse('index');
         }
 
         if ($settings->isRegister()) {
@@ -83,14 +85,12 @@ final class RegisterAction
                 );
         }
 
-        $view->addFlash(
-            'is-danger',
-            $settings->getMessageHeader(),
-            'Module registration register user is disabled in the application configuration.'
-        );
-
-        return $responseFactory
-            ->createResponse(302)
-            ->withHeader('Location', $url->generate('index'));
+        return $webController
+            ->withFlash(
+                'is-danger',
+                $settings->getMessageHeader(),
+                'Module registration register user is disabled in the application configuration.'
+            )
+            ->redirectResponse('index');
     }
 }

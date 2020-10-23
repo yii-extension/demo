@@ -9,6 +9,7 @@ use App\Module\User\Service\ResendService;
 use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\UserRepository;
 use App\Service\View;
+use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\Auth\IdentityRepositoryInterface;
@@ -25,7 +26,8 @@ final class ResendAction
         ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
         UserRepository $userRepository,
-        View $view
+        View $view,
+        WebControllerService $webController
     ): ResponseInterface {
         $body = $request->getParsedBody();
         $method = $request->getMethod();
@@ -36,15 +38,13 @@ final class ResendAction
             && $resendForm->validate()
             && $resendService->run($resendForm, $userRepository)
         ) {
-            $view->addFlash(
-                'is-warning',
-                $settings->getMessageHeader(),
-                'Please check your email to activate your username.'
-            );
-
-            return $responseFactory
-                ->createResponse(302)
-                ->withHeader('Location', $url->generate('index'));
+            return $webController
+                ->withFlash(
+                    'is-warning',
+                    $settings->getMessageHeader(),
+                    'Please check your email to activate your username.'
+                )
+                ->redirectResponse('index');
         }
 
         return $view

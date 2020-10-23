@@ -18,6 +18,7 @@
         "yiisoft/active-record": "^3.0@dev",
         "yiisoft/aliases": "^1.0",
         "yiisoft/assets": "^1.0@dev",
+        "yiisoft/auth": "^1.0",
         "yiisoft/cache": "^3.0@dev",
         "yiisoft/cache-file": "^3.0@dev",
         "yiisoft/csrf": "^3.0@dev",

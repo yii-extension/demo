@@ -9,6 +9,7 @@ use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\UserRepository;
 use App\Module\User\Service\LoginService;
 use App\Service\View;
+use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -24,7 +25,8 @@ final class LoginAction
         ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
         UserRepository $userRepository,
-        View $view
+        View $view,
+        WebControllerService $webController
     ): ResponseInterface {
         $body = $request->getParsedBody();
         $method = $request->getMethod();
@@ -36,15 +38,13 @@ final class LoginAction
             && $loginForm->validate()
             && $loginService->isLogin($userRepository, $ip)
         ) {
-            $view->addFlash(
-                'is-success',
-                $settings->getMessageHeader(),
-                'Sign in successful - ' . date("F j, Y, g:i a")
-            );
-
-            return $responseFactory
-                ->createResponse(302)
-                ->withHeader('Location', $url->generate('admin/index'));
+            return $webController
+                ->withFlash(
+                    'is-success',
+                    $settings->getMessageHeader(),
+                    'Sign in successful - ' . date("F j, Y, g:i a")
+                )
+                ->redirectResponse('admin/index');
         }
 
         return $view

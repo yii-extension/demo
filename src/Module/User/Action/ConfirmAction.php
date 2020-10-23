@@ -11,6 +11,7 @@ use App\Module\User\Repository\TokenRepository;
 use App\Module\User\Repository\UserRepository;
 use App\Module\User\Service\LoginService;
 use App\Service\View;
+use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -28,44 +29,29 @@ final class ConfirmAction
         UrlGeneratorInterface $url,
         User $identity,
         UserRepository $userRepository,
-        View $view
+        View $view,
+        WebControllerService $webController
     ): ResponseInterface {
         $id = $request->getAttribute('id');
         $code = $request->getAttribute('code');
         $ip = $request->getServerParams()['REMOTE_ADDR'];
-        $user = null;
-        $token = null;
 
-        if ($id !== null) {
-            $user = $userRepository->findUserById($id);
+        if ($id === null || ($user = $userRepository->findUserById($id)) === null || $code === null) {
+            return $webController->notFoundResponse();
         }
 
-        if ($user !== null && $code !== null) {
-            $token = $tokenRepository->findTokenByParams(
-                (int) $user->getId(),
-                $code,
-                TokenAR::TYPE_CONFIRMATION
-            );
-        }
+        $token = $tokenRepository->findTokenByParams(
+            (int) $user->getId(),
+            $code,
+            TokenAR::TYPE_CONFIRMATION
+        );
 
-        if (
-            $user === null ||
-            !$token instanceof TokenAR ||
-            $token->isExpired($settings->getTokenConfirmWithin())
-        ) {
-            $view->addFlash(
-                'is-danger',
-                $settings->getMessageHeader(),
-                'The requested page does not exist.'
-            );
-
-            return $responseFactory
-                ->createResponse(302)
-                ->withHeader('Location', $url->generate('index'));
+        if ($token === null || $token->isExpired($settings->getTokenConfirmWithin())) {
+            return $webController->notFoundResponse();
         }
 
         if (
-            $loginService->isLoginConfirm($userRepository, $id, $ip)
+            $loginService->isLoginConfirm($user, $userRepository, $ip)
             && !$token->isExpired($settings->getTokenConfirmWithin())
         ) {
             $token->delete();
@@ -76,18 +62,21 @@ final class ConfirmAction
                 'confirmed_at' => time()
             ]);
 
-            $view->addFlash(
-                'is-success',
-                $settings->getMessageHeader(),
-                'Your user has been confirmed.'
-            );
+            return $webController
+                ->withFlash(
+                    'is-success',
+                    $settings->getMessageHeader(),
+                    'Your user has been confirmed.'
+                )
+                ->redirectResponse('admin/index');
         }
 
-        return $responseFactory
-            ->createResponse(302)
-            ->withHeader(
-                'Location',
-                $identity->getId() === null ? $url->generate('index') : $url->generate('admin/index')
-            );
+        return $webController
+            ->withFlash(
+                'is-danger',
+                $settings->getMessageHeader(),
+                'Your username could not be confirmed.'
+            )
+            ->redirectResponse('admin/index');
     }
 }

@@ -40,17 +40,17 @@ final class TokenRepository
         $this->tokenQuery();
     }
 
-    public function findTokenByCondition(array $condition): ?ActiveRecordInterface
+    public function findTokenByCondition(array $condition): ?TokenAR
     {
         return $this->tokenQuery()->findOne($condition);
     }
 
-    public function findTokenById(int $id): ?ActiveRecordInterface
+    public function findTokenById(int $id): ?TokenAR
     {
         return $this->findTokenByCondition(['user_id' => $id]);
     }
 
-    public function findTokenByParams(int $id, string $code, int $type): ?ActiveRecordInterface
+    public function findTokenByParams(int $id, string $code, int $type): ?TokenAR
     {
         return $this->findTokenByCondition(['user_id' => $id, 'code' => $code, 'type' => $type]);
     }
@@ -75,13 +75,6 @@ final class TokenRepository
             if (!$this->token->save()) {
                 $transaction->rollBack();
             } else {
-                $this->token->deleteAll(
-                    [
-                        'user_id' => $this->token->getAttribute('user_id'),
-                        'type' => $this->token->getAttribute('type')
-                    ]
-                );
-
                 $transaction->commit();
 
                 $result = true;

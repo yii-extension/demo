@@ -130,7 +130,7 @@ $this->setTitle('Information details.');
 
                 <?php if ($data->isBlocked()) : ?>
                     <div class='notification is-danger has-text-left'>
-                        <?= 'Blocked at: ', date('Y-m-d H:i:s', $model->blocked_at) ?>
+                        <?= 'Blocked at: ', date('Y-m-d H:i:s', $data->blocked_at) ?>
                     </div>
                 <?php else : ?>
                     <div class='notification is-success has-text-left'>
