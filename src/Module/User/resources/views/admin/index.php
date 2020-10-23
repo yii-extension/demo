@@ -54,9 +54,7 @@ $assetManager->register([
             aria-current-label='Current page'
             >
 
-            <b-table-column
-                field='id' label='Id' width='80' sortable searchable numeric v-slot='props'
-            >
+            <b-table-column field='id' label='Id' sortable searchable numeric v-slot='props' width='80'>
                 {{ props.row.id }}
             </b-table-column>
 
@@ -64,10 +62,10 @@ $assetManager->register([
                 field='username'
                 cell-class='has-text-left'
                 label='UserName'
-                width='140'
                 sortable
                 searchable
                 v-slot='props'
+                width='100'
             >
                 {{ props.row.username }}
             </b-table-column>
@@ -78,7 +76,7 @@ $assetManager->register([
                 {{ props.row.email }}
             </b-table-column>
 
-            <b-table-column field='ip' centered label='Ip' width='100' sortable searchable v-slot='props'>
+            <b-table-column field='ip' centered label='Ip' sortable searchable v-slot='props' width='100'>
                 {{ props.row.registration_ip }}
             </b-table-column>
 
@@ -90,12 +88,29 @@ $assetManager->register([
                 {{ props.row.last_login_at }}
             </b-table-column>
 
+            <b-table-column field='blocked' centered label='Block' v-slot='props' width='20'>
+                <a
+                    class='fa-stack has-text-success'
+                    slot="blocked"
+                    v-if="props.row.blocked > '0'"
+                    @click='unblockUser(props.row.id)'
+                >
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class='fas fa-user-alt fa-stack-1x fa-inverse'></i>
+                </a>
+                <a class='fa-stack has-text-danger' v-else href='javascript:void(0)' @click='blockUser(props.row.id)'>
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class='fas fa-user-lock fa-stack-1x fa-inverse'></i>
+                </a>
+            </b-table-column>
+
             <b-table-column field='confirm' centered label='Confirm' sortable v-slot='props'>
                 <span slot="confirm" v-if="props.row.confirm > '0'">
                     <p class='has-text-success'><b>Confirm</b></p>
                 </span>
-                <a slot="confirm" v-else>
-                    <i class='fas fa-user-times'></i>
+                <a class='fa-stack has-text-info' v-else href='javascript:void(0)' @click='confirmUser(props.row.id)'>
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class='fas fa-user-times fa-stack-1x fa-inverse'></i>
                 </a>
             </b-table-column>
 
@@ -111,7 +126,6 @@ $assetManager->register([
                 <a class='fa-stack has-text-danger' href='javascript:void(0)' @click='confirmDelete(props.row.id)'>
                     <i class="fas fa-circle fa-stack-2x"></i>
                     <i class="fas fa-trash fa-stack-1x fa-inverse"></i>
-                </a>
                 </a>
                 <a class='fa-stack has-text-dark' href='javascript:void(0'  @click='resendPassword(props.row.id)'>
                     <i class="fas fa-circle fa-stack-2x"></i>

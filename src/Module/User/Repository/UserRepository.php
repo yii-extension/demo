@@ -65,6 +65,19 @@ final class UserRepository implements IdentityRepositoryInterface
         $this->userQuery();
     }
 
+    public function block(UserAR $user): bool
+    {
+        return (bool) $user->updateAttributes([
+            'blocked_at' => time(),
+            'auth_key' => Random::string(),
+        ]);
+    }
+
+    public function confirm(UserAR $user): bool
+    {
+        return (bool) $user->updateAttributes(['confirmed_at' => time()]);
+    }
+
     public function create(RegisterForm $registerForm): bool
     {
         if ($this->user->getIsNewRecord() === false) {
@@ -288,6 +301,11 @@ final class UserRepository implements IdentityRepositoryInterface
         $this->insertRecordFromAdminFormAR($registerForm);
 
         return $this->user->save();
+    }
+
+    public function unblock(UserAr $user): bool
+    {
+        return (bool) $user->updateAttributes(['blocked_at' => null]);
     }
 
     public function validatePassword(FormModelInterface $form, string $password, string $password_hash): bool

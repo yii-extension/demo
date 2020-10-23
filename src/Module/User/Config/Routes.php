@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Module\User\Config;
 
 use App\Module\User\Action\AdminAction;
+use App\Module\User\Action\AdminBlockAction;
 use App\Module\User\Action\AdminCreateAction;
+use App\Module\User\Action\AdminConfirmAction;
 use App\Module\User\Action\AdminDeleteAction;
 use App\Module\User\Action\AdminEditAction;
 use App\Module\User\Action\AdminInfoAction;
@@ -34,8 +36,12 @@ final class Routes
             /** admin actions */
             Route::methods(['GET', 'POST'], '/admin/index', [AdminAction::class, 'index'])
                 ->name('admin/index'),
+            Route::methods(['GET', 'POST'], '/admin/block[/{id}]', [AdminBlockAction::class, 'block'])
+                ->name('admin/block'),
             Route::methods(['GET', 'POST'], '/admin/create', [AdminCreateAction::class, 'create'])
                 ->name('admin/create'),
+            Route::methods(['GET', 'POST'], '/admin/confirm[/{id}]', [AdminConfirmAction::class, 'confirm'])
+                ->name('admin/confirm'),
             Route::methods(['GET', 'POST'], '/admin/delete[/{id}]', [AdminDeleteAction::class, 'delete'])
                 ->name('admin/delete'),
             Route::methods(['GET', 'POST'], '/admin/edit[/{id}]', [AdminEditAction::class, 'edit'])

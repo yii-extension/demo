@@ -15,6 +15,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Yii\Web\User\User;
 
 final class ConfirmAction
 {
@@ -25,6 +26,7 @@ final class ConfirmAction
         ModuleSettingsRepository $settings,
         TokenRepository $tokenRepository,
         UrlGeneratorInterface $url,
+        User $identity,
         UserRepository $userRepository,
         View $view
     ): ResponseInterface {
@@ -83,6 +85,9 @@ final class ConfirmAction
 
         return $responseFactory
             ->createResponse(302)
-            ->withHeader('Location', $url->generate('index'));
+            ->withHeader(
+                'Location',
+                $identity->getId() === null ? $url->generate('index') : $url->generate('admin/index')
+            );
     }
 }
