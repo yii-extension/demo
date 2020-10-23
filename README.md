@@ -84,21 +84,32 @@ http://localhost:8080
 ## Includes the following features:
 
 - [x] Admin Panel Dashboard.
-- [x] /auth/login - Display login form.
-- [x] /auth/logout - Logs the user out.
-- [x] /recovery/request - Displays recovery request form.
-- [x] /recovery/reset[/{id}/{code}] - Displays password reset form (requires id and token query params).
-- [x] /registration/confirm[/{id}/{token}] - Confirms a user (requires id and token query params).
-- [x] /registration/register - Displays registration form.
-- [x] /registration/resend - Displays resend form.
-- [x] /admin/index - Displays user management interface.
-- [x] /admin/create - Display form register user.
-- [x] /admin/block[/{id}] - Allows you to block or unblock a user.
-- [x] /admin/confirm[/{id}] - Confirms a user (requires id).
-- [x] /admin/delete[/{id}] - Delete a user (requires id).
-- [x] /admin/edit[/{id}] - Display form edit user (requires id).
-- [x] /admin/info[/{id}] - Display info user (requires id).
-- [x] /admin/reset[/{id}] - Send email resend password (requires id).
+    - [x] /index - Display index page.
+    - [x] /about - Display about page.
+    - [x] /contact - Display contact form page.
+
+- [x] User module:
+    - [x] /auth/login - Display login form.
+    - [x] /auth/logout - Logs the user out.
+    - [x] /recovery/request - Displays recovery request form.
+    - [x] /recovery/reset[/{id}/{code}] - Displays password reset form (requires id and token query params).
+    - [x] /registration/confirm[/{id}/{token}] - Confirms a user (requires id and token query params).
+    - [x] /registration/register - Displays registration form.
+    - [x] /registration/resend - Displays resend form.
+    - [x] /admin/index - Display user management interface.
+    - [x] /admin/create - Display form register user.
+    - [x] /admin/block[/{id}] - Allows you to block or unblock a user.
+    - [x] /admin/confirm[/{id}] - Confirms a user (requires id).
+    - [x] /admin/delete[/{id}] - Delete a user (requires id).
+    - [x] /admin/edit[/{id}] - Display form edit user (requires id).
+    - [x] /admin/info[/{id}] - Display info user (requires id).
+    - [x] /admin/reset[/{id}] - Send email resend password (requires id).
+
+- [x] Rbac Module:
+    - [x] /item/index - Display item management interface.
+    - [x] /item/create - Display form create item.
+    - [x] /item/edit[/{id}] - Display form edit item (requires id).
+    - [x] /item/delete[/{id}] - Delete a item (requires id).
 
 Note: check the directory `/runtime/mail`, the emails are stored in it.
 
