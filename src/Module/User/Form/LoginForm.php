@@ -15,6 +15,7 @@ final class LoginForm extends FormModel
 {
     private string $login = '';
     private string $password = '';
+    private ModuleSettingsRepository $settings;
 
     public function __construct(ModuleSettingsRepository $settings, ValidatorFactoryInterface $validator)
     {
