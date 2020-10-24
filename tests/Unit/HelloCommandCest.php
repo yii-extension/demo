@@ -9,8 +9,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
 use Symfony\Component\Console\Tester\CommandTester;
 use App\Tests\UnitTester;
-use Yii\Console;
-use Yii\ParamsConsole;
+use Yiisoft\Composer\Config\Builder;
 use Yiisoft\Di\Container;
 
 final class HelloCommandCest
@@ -19,19 +18,19 @@ final class HelloCommandCest
 
     public function _before(UnitTester $I): void
     {
-        $params = new Console();
-
-        $this->container = new Container($params->buildConfig());
+        $this->container = new Container(
+            require Builder::path('web-local')
+        );
     }
 
     public function testExecute(UnitTester $I): void
     {
         $app = new Application();
-        $params = new ParamsConsole();
+        $paramsConsole = require Builder::path('params-console-local');
 
         $loader = new ContainerCommandLoader(
             $this->container,
-            $params->getConsoleCommands()
+            $paramsConsole['consoleCommands']
         );
 
         $app->setCommandLoader($loader);
