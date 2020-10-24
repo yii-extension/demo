@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yii\Component;
 
-use App\Service\Mailer;
+use App\Service\MailerService;
 use App\Module\User\ActiveRecord\ProfileAR;
 use App\Module\User\ActiveRecord\UserAR;
 use App\Module\User\ActiveRecord\TokenAR;
@@ -24,7 +24,7 @@ return [
             Reference::to(Aliases::class),
             Reference::to(InitialAvatar::class),
             Reference::to(ConnectionInterface::class),
-            Reference::to(Mailer::class),
+            Reference::to(MailerService::class),
             Reference::to(LoggerInterface::class),
             Reference::to(ProfileAR::class),
             Reference::to(TokenAR::class),

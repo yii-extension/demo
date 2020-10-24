@@ -25,6 +25,7 @@ final class LoginService
     {
         $login = $this->loginForm->getLogin();
         $password = $this->loginForm->getAttributeValue('password');
+        /** @var UserAR $user */
         $user = $userRepository->findUserByUsernameOrEmail($login);
 
         if ($user === null) {
@@ -52,7 +53,7 @@ final class LoginService
         return $result;
     }
 
-    public function isLoginConfirm(UserAR $user, UserRepository $userRepository, string $ip): bool
+    public function isLoginConfirm(UserAR $user, string $ip): bool
     {
         $this->updateAttributeLogin($user, $ip);
 

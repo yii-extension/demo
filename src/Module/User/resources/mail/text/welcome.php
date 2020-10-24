@@ -1,17 +1,12 @@
 <?php
 
-/**
- * @var bool $accountGeneratingPassword
- * @var string $password
- * @var bool $showPassword
- * @var string $tokenUrl
- */
+declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
+/** @var array $params */
 ?>
-
-'Hello',
+Hello,
 
 Your account has been created.
 

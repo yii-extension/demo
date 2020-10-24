@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Module\Rbac\ActiveRecord;
 
 use Yiisoft\ActiveRecord\ActiveRecord;
-use Yiisoft\ActiveRecord\ActiveQuery;
 
 /**
  * Item Active Record - Module Rbac Db.

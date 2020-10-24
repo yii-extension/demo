@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
+use Yiisoft\Html\Html;
+
 /**
  * @var string $name
  * @var string $content
+ * @var array $params
  */
-
-use Yiisoft\Html\Html;
-
 ?>
 
 <?= Html::encode($params['body']) ?>

@@ -10,11 +10,10 @@ use App\Module\User\Form\ResetForm;
 use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\TokenRepository;
 use App\Module\User\Repository\UserRepository;
-use App\Service\View;
+use App\Service\ViewService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 final class ResetAction
@@ -22,12 +21,11 @@ final class ResetAction
     public function reset(
         ServerRequestInterface $request,
         ResetForm $resetForm,
-        DataResponseFactoryInterface $responseFactory,
         ModuleSettingsRepository $settings,
         TokenRepository $tokenRepository,
         UrlGeneratorInterface $url,
         UserRepository $userRepository,
-        View $view,
+        ViewService $view,
         WebControllerService $webController
     ): ResponseInterface {
         $body = $request->getParsedBody();
@@ -41,6 +39,10 @@ final class ResetAction
             return $webController->notFoundResponse();
         }
 
+        /**
+         * @var TokenAR $token
+         * @var UserAR $user
+         */
         $token = $tokenRepository->findTokenByParams(
             (int) $user->getId(),
             $request->getAttribute('code'),

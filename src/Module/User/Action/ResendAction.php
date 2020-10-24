@@ -8,12 +8,10 @@ use App\Module\User\Form\ResendForm;
 use App\Module\User\Service\ResendService;
 use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\UserRepository;
-use App\Service\View;
+use App\Service\ViewService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Yiisoft\Auth\IdentityRepositoryInterface;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 final class ResendAction
@@ -21,12 +19,11 @@ final class ResendAction
     public function resend(
         ResendForm $resendForm,
         ResendService $resendService,
-        DataResponseFactoryInterface $responseFactory,
         ServerRequestInterface $request,
         ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
         UserRepository $userRepository,
-        View $view,
+        ViewService $view,
         WebControllerService $webController
     ): ResponseInterface {
         $body = $request->getParsedBody();

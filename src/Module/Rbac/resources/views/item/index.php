@@ -55,7 +55,7 @@ $assetManager->register([
             >
 
             <b-table-column
-                field='id' label='Id' width='80' sortable searchable numeric v-slot='props'
+                field='id' label='Id' sortable searchable numeric v-slot='props' width='80'
             >
                 {{ props.row.id }}
             </b-table-column>
@@ -72,11 +72,11 @@ $assetManager->register([
                 {{ props.row.type }}
             </b-table-column>
 
-            <b-table-column field='createdAT' centered label='Created' sortable v-slot='props'>
+            <b-table-column field='createdAT' centered label='Created' v-slot='props'>
                 {{ props.row.created_at }}
             </b-table-column>
 
-            <b-table-column field='updateAT' centered label='Updated' sortable v-slot='props'>
+            <b-table-column field='updateAT' centered label='Updated' v-slot='props'>
                 {{ props.row.updated_at }}
             </b-table-column>
 

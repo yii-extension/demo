@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace App\Action;
 
-use App\Form\Contact;
-use App\Service\Mailer;
-use App\Service\View;
+use App\Form\ContactForm;
+use App\Service\MailerService;
+use App\Service\ViewService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 
-final class ContactForm
+final class ContactAction
 {
     public function contact(
-        Contact $form,
+        ContactForm $form,
         DataResponseFactoryInterface $responseFactory,
-        Mailer $mailer,
+        MailerService $mailer,
         UrlGeneratorInterface $url,
         ServerRequestInterface $request,
-        View $view
+        ViewService $view
     ): ResponseInterface {
         $body = $request->getParsedBody();
         $method = $request->getMethod();

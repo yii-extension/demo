@@ -1,8 +1,10 @@
 <?php
 
-?>
+declare(strict_types=1);
 
-Hello',
+/** @var array $params */
+?>
+Hello,
 
 'Your account has a new password.',
 

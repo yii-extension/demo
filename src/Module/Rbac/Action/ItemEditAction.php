@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Module\Rbac\Action;
 
-use App\Service\View;
+use App\Module\User\Repository\ModuleSettingsRepository;
+use App\Service\ViewService;
+use App\Service\WebControllerService;
 use App\Module\Rbac\Form\ItemForm;
 use App\Module\Rbac\Repository\ItemRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 final class ItemEditAction
@@ -18,31 +19,34 @@ final class ItemEditAction
         ItemForm $itemForm,
         ItemRepository $itemRepository,
         ServerRequestInterface $request,
-        DataResponseFactoryInterface $responseFactory,
+        ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
-        View $view
+        ViewService $view,
+        WebControllerService $webController
     ): ResponseInterface {
         $body = $request->getParsedBody();
         $method = $request->getMethod();
         $id = $request->getAttribute('id');
 
-        $itemRepository->loadData($itemForm, $id);
+        if ($id === null || ($item = $itemRepository->findItemById($id)) === null) {
+            return $webController->notFoundResponse();
+        }
+
+        $itemRepository->loadData($item, $itemForm);
 
         if (
             $method === 'POST'
             && $itemForm->load($body)
             && $itemForm->validate()
-            && $itemRepository->update($itemForm, $id) === 1
+            && $itemRepository->update($item, $itemForm)
         ) {
-            $view->addFlash(
-                'is-info',
-                'System Notification - Yii Demo User Module AR.',
-                'The data has been saved.'
-            );
-
-            return $responseFactory
-                ->createResponse(302)
-                ->withHeader('Location', $url->generate('item/index'));
+            return $webController
+                ->withFlash(
+                    'is-info',
+                    $settings->getMessageHeader(),
+                    'The data has been saved.'
+                )
+                ->redirectResponse('item/index');
         }
 
         return $view

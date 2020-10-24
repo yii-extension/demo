@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-/**
- * @var App\Form\ContactForm $form
- * @var Yiisoft\Form\Widget\Field $field
- * @var Yiisoft\Router\UrlGeneratorInterface $url
- * @var string|null $csrf
- */
-
+use App\Form\ContactForm;
 use Yiisoft\Form\Widget\Field;
 use Yiisoft\Form\Widget\Form;
 use Yiisoft\Html\Html;
+use Yiisoft\Router\UrlGeneratorInterface;
 
+/**
+ * @var ContactForm $form
+ * @var Field $field
+ * @var UrlGeneratorInterface $url
+ * @var string|null $csrf
+ */
 ?>
 
 <p class="title has-text-black">
@@ -23,7 +24,7 @@ use Yiisoft\Html\Html;
     Please fill out the following.
 </p>
 
-<hr class = 'mb-2'></hr>
+<hr class='mb-2'/>
 
 <div class="column is-4 is-offset-4">
 

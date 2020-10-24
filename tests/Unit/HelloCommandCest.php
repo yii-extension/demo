@@ -13,7 +13,7 @@ use Yii\Console;
 use Yii\ParamsConsole;
 use Yiisoft\Di\Container;
 
-final class HellowCommandCest
+final class HelloCommandCest
 {
     private ContainerInterface $container;
 
@@ -36,7 +36,7 @@ final class HellowCommandCest
 
         $app->setCommandLoader($loader);
 
-        $command = $app->find('hellow');
+        $command = $app->find('hello');
 
         $commandCreate = new CommandTester($command);
 
@@ -46,6 +46,6 @@ final class HellowCommandCest
 
         $output = $commandCreate->getDisplay(true);
 
-        $I->assertStringContainsString('Hellow Command', $output);
+        $I->assertStringContainsString('Hello Command', $output);
     }
 }

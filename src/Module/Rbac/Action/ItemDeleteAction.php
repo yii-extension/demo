@@ -4,38 +4,34 @@ declare(strict_types=1);
 
 namespace App\Module\Rbac\Action;
 
-use App\Service\View;
+use App\Module\User\Repository\ModuleSettingsRepository;
+use App\Service\WebControllerService;
 use App\Module\Rbac\Repository\ItemRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
-use Yiisoft\Router\UrlGeneratorInterface;
 
 final class ItemDeleteAction
 {
     public function delete(
         ItemRepository $itemRepository,
         ServerRequestInterface $request,
-        DataResponseFactoryInterface $responseFactory,
-        UrlGeneratorInterface $url,
-        View $view
+        ModuleSettingsRepository $settings,
+        WebControllerService $webController
     ): ResponseInterface {
-        $body = $request->getParsedBody();
-        $method = $request->getMethod();
         $id = $request->getAttribute('id');
 
-        $item = $itemRepository->findItemById($id);
+        if ($id === null || ($item = $itemRepository->findItemById($id)) === null) {
+            return $webController->notFoundResponse();
+        }
 
         $item->delete();
 
-        $view->addFlash(
-            'is-danger',
-            'System Notification - Yii Demo User Module AR.',
-            'The data has been delete.'
-        );
-
-        return $responseFactory
-            ->createResponse(302)
-            ->withHeader('Location', $url->generate('item/index'));
+        return $webController
+            ->withFlash(
+                'is-danger',
+                $settings->getMessageHeader(),
+                'The data has been delete.'
+            )
+            ->redirectResponse('item/index');
     }
 }

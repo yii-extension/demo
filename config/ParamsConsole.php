@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yii;
 
+use App\Command\HelloCommand;
 use Yiisoft\Yii\Db\Migration\Command\CreateCommand;
 use Yiisoft\Yii\Db\Migration\Command\ListTablesCommand;
 use Yiisoft\Yii\Db\Migration\Command\DownCommand;
@@ -28,7 +29,7 @@ final class ParamsConsole
     public function getConsoleCommands(): array
     {
         return [
-            'hellow' => \App\Command\Hellow::class,
+            'hello' => HelloCommand::class,
 
             /** yii-db-migration commands */
             'generate/create' => CreateCommand::class,

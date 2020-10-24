@@ -2,15 +2,23 @@
 
 declare(strict_types=1);
 
-/**
- * @var App\ApplicationParameters $app
- * @var Yiisoft\Yii\Web\User\User $user
- * @var array $menuItems
- */
-
+use App\Service\ParameterService;
+use Yiisoft\Aliases\Aliases;
+use Yiisoft\Router\FastRoute\UrlGenerator;
+use Yiisoft\Router\FastRoute\UrlMatcher;
 use Yiisoft\Yii\Bulma\Nav;
 use Yiisoft\Yii\Bulma\NavBar;
 use Yiisoft\Html\Html;
+use Yiisoft\Yii\Web\User\User;
+
+/**
+ * @var Aliases $aliases
+ * @var ParameterService $app
+ * @var User $user
+ * @var array $menuItems
+ * @var UrlGenerator $url
+ * @var UrlMatcher $urlMatcher
+ */
 
 if (isset($identity) && $identity->getId() !== null) {
     if ($app->get('app.nav.logged') !== []) {

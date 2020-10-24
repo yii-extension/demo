@@ -9,6 +9,7 @@ use Yiisoft\Assets\AssetManager;
 use Yiisoft\Html\Html;
 
 /**
+ * @var string $action
  * @var AssetManager $assetManager
  */
 $assetManager->register([
@@ -105,8 +106,8 @@ $assetManager->register([
             </b-table-column>
 
             <b-table-column field='confirm' centered label='Confirm' v-slot='props'>
-                <span slot="confirm" v-if="props.row.confirm > '0'">
-                    <p class='has-text-success'><b>Confirm</b></p>
+                <span class='has-text-success' slot="confirm" v-if="props.row.confirm > '0'">
+                    <b>Confirm</b>
                 </span>
                 <a class='fa-stack has-text-info' v-else href='javascript:void(0)' @click='confirmUser(props.row.id)'>
                     <i class="fas fa-circle fa-stack-2x"></i>

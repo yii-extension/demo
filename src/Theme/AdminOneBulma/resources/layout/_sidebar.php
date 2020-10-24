@@ -2,13 +2,17 @@
 
 declare(strict_types=1);
 
-/**
- * @var App\Service\Parameters $app
- * @var Yiisoft\Router\UrlGeneratorInterface $url
- * @var Yiisoft\Router\UrlMatcherInterface $urlMatcher
- */
-
+use App\Service\ParameterService;
+use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Router\UrlMatcherInterface;
 use Yiisoft\Yii\Bulma\Menu;
+
+/**
+ * @var ParameterService $app
+ * @var string|null $id
+ * @var UrlGeneratorInterface $url
+ * @var UrlMatcherInterface $urlMatcher
+ */
 
 $brand = <<<HTML
 <div class = "aside-tools">

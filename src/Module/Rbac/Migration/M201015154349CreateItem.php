@@ -19,6 +19,7 @@ final class M201015154349CreateItem extends Migration implements RevertibleMigra
         if ($this->db->getDriverName() === 'mysql') {
             $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE=InnoDB';
         }
+
         $this->createTable(
             'item',
             [

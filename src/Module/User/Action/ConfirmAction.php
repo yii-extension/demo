@@ -10,26 +10,18 @@ use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\TokenRepository;
 use App\Module\User\Repository\UserRepository;
 use App\Module\User\Service\LoginService;
-use App\Service\View;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
-use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Yii\Web\User\User;
 
 final class ConfirmAction
 {
     public function confirm(
         LoginService $loginService,
         ServerRequestInterface $request,
-        DataResponseFactoryInterface $responseFactory,
         ModuleSettingsRepository $settings,
         TokenRepository $tokenRepository,
-        UrlGeneratorInterface $url,
-        User $identity,
         UserRepository $userRepository,
-        View $view,
         WebControllerService $webController
     ): ResponseInterface {
         $id = $request->getAttribute('id');
@@ -40,6 +32,10 @@ final class ConfirmAction
             return $webController->notFoundResponse();
         }
 
+        /**
+         * @var TokenAR $token
+         * @var UserAR $user
+         */
         $token = $tokenRepository->findTokenByParams(
             (int) $user->getId(),
             $code,
@@ -51,12 +47,11 @@ final class ConfirmAction
         }
 
         if (
-            $loginService->isLoginConfirm($user, $userRepository, $ip)
+            $loginService->isLoginConfirm($user, $ip)
             && !$token->isExpired($settings->getTokenConfirmWithin())
         ) {
             $token->delete();
 
-            /** @var UserAR $user */
             $user->updateAttributes([
                 'unconfirmed_email' => null,
                 'confirmed_at' => time()

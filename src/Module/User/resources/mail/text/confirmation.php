@@ -1,4 +1,10 @@
-Hello.
+<?php
+
+declare(strict_types=1);
+
+/** @var array $params */
+?>
+Hello,
 
 Thank you for signing up on <?= $params['username'] ?> .
     In order to complete your registration, please click the link below.

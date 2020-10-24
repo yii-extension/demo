@@ -1,8 +1,10 @@
 <?php
 
-?>
+declare(strict_types=1);
 
-'Hello',
+/** @var array $params */
+?>
+Hello,
 
 We have received a request to reset the password for your account,
 

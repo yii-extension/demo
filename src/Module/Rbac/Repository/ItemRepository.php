@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\Rbac\Repository;
 
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use RuntimeException;
 use App\Module\Rbac\ActiveRecord\ItemAR;
 use App\Module\Rbac\Form\ItemForm;
@@ -16,12 +18,14 @@ use Yiisoft\Db\Exception\Exception;
 final class ItemRepository
 {
     private ConnectionInterface $db;
+    private LoggerInterface $logger;
     private ItemAR $item;
     private ?ActiveQuery $itemQuery = null;
 
-    public function __construct(ConnectionInterface $db, ItemAR $item)
+    public function __construct(ConnectionInterface $db, LoggerInterface $logger, ItemAR $item)
     {
         $this->db = $db;
+        $this->logger = $logger;
         $this->item = $item;
         $this->itemQuery();
     }
@@ -46,19 +50,14 @@ final class ItemRepository
         return $this->findItemByCondition(['id' => $condition]);
     }
 
-    public function loadData(ItemForm $itemForm, string $id): void
+    public function loadData(ActiveRecordInterface $item, ItemForm $itemForm): void
     {
-        /** @var ItemAR $aqClass */
-        $aqClass = $this->findItemByCondition(['id' => (int) $id]);
-
-        $itemForm->setAttribute('name', $aqClass->getAttribute('name'));
-        $itemForm->setAttribute('description', $aqClass->getAttribute('description'));
+        $itemForm->setAttribute('name', $item->getAttribute('name'));
+        $itemForm->setAttribute('description', $item->getAttribute('description'));
         $itemForm->setAttribute(
             'type',
-            $aqClass->getAttribute('type') === 'role' ? 1 : 2
+            $item->getAttribute('type') === 'role' ? 1 : 2
         );
-
-        unset($aqClass);
     }
 
     public function create(ItemForm $itemForm): bool
@@ -83,29 +82,22 @@ final class ItemRepository
             $result = true;
         } catch (Exception $e) {
             $transaction->rollBack();
+            $this->logger->log(LogLevel::WARNING, $e->getMessage());
             throw $e;
         }
 
         return $result;
     }
 
-    /**
-     * @param ItemForm $itemForm
-     * @param string $id
-     *
-     * @return bool|int
-     */
-    public function update(ItemForm $itemForm, string $id)
+    public function update(ActiveRecordInterface $item, ItemForm $itemForm): bool
     {
-        /** @var ItemAR $aqClass */
-        $aqClass = $this->findItemByCondition(['id' => (int) $id]);
+        /** @var ItemAR $item */
+        $item->name($itemForm->getAttributeValue('name'));
+        $item->description($itemForm->getAttributeValue('description'));
+        $item->type($itemForm->getAttributeValue('type'));
+        $item->updatedAt();
 
-        $aqClass->name($itemForm->getAttributeValue('name'));
-        $aqClass->description($itemForm->getAttributeValue('description'));
-        $aqClass->type($itemForm->getAttributeValue('type'));
-        $aqClass->updatedAt();
-
-        return $aqClass->update();
+        return $item->save();
     }
 
     private function itemQuery(): ActiveQueryInterface

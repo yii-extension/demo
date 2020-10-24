@@ -14,11 +14,6 @@ final class ItemForm extends FormModel
     private string $description = '';
     private string $type = '';
 
-    public function attributeLabels(): array
-    {
-        return [];
-    }
-
     public function formName(): string
     {
         return 'Item';

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Module\User\Repository;
 
 use App\Module\User\ActiveRecord\TokenAR;
-use App\Service\Mailer;
+use App\Service\MailerService;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use RuntimeException;
 use Yiisoft\ActiveRecord\ActiveQuery;
 use Yiisoft\ActiveRecord\ActiveQueryInterface;
@@ -20,7 +22,8 @@ final class TokenRepository
 {
     private Aliases $aliases;
     private ConnectionInterface $db;
-    private Mailer $mailer;
+    private LoggerInterface $logger;
+    private MailerService $mailer;
     private TokenAR $token;
     private ?ActiveQuery $tokenQuery = null;
     private UrlGeneratorInterface $url;
@@ -28,29 +31,31 @@ final class TokenRepository
     public function __construct(
         Aliases $aliases,
         ConnectionInterface $db,
-        Mailer $mailer,
+        LoggerInterface $logger,
+        MailerService $mailer,
         TokenAR $token,
         UrlGeneratorInterface $url
     ) {
         $this->aliases = $aliases;
         $this->db = $db;
+        $this->logger = $logger;
         $this->mailer = $mailer;
         $this->token = $token;
         $this->url = $url;
         $this->tokenQuery();
     }
 
-    public function findTokenByCondition(array $condition): ?TokenAR
+    public function findTokenByCondition(array $condition): ?ActiveRecordInterface
     {
         return $this->tokenQuery()->findOne($condition);
     }
 
-    public function findTokenById(int $id): ?TokenAR
+    public function findTokenById(int $id): ?ActiveRecordInterface
     {
         return $this->findTokenByCondition(['user_id' => $id]);
     }
 
-    public function findTokenByParams(int $id, string $code, int $type): ?TokenAR
+    public function findTokenByParams(int $id, string $code, int $type): ?ActiveRecordInterface
     {
         return $this->findTokenByCondition(['user_id' => $id, 'code' => $code, 'type' => $type]);
     }
@@ -81,6 +86,7 @@ final class TokenRepository
             }
         } catch (Exception $e) {
             $transaction->rollBack();
+            $this->logger->log(LogLevel::WARNING, $e->getMessage());
             throw $e;
         }
 

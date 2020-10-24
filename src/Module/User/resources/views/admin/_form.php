@@ -8,14 +8,14 @@ use Yiisoft\Assets\AssetManager;
 use Yiisoft\Form\Widget\Field;
 use Yiisoft\Form\Widget\Form;
 use Yiisoft\Html\Html;
-use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Router\UrlMatcherInterface;
 
 /**
+ * @var string $action
  * @var AssetManager $assetManager
  * @var string|null $csrf
  * @var RegisterForm $data
  * @var Field $field
+ * @var string $title
  */
 $assetManager->register([
     AdminCreateAsset::class
@@ -32,7 +32,7 @@ $this->setTitle($title);
     Please fill out the following.
 </p>
 
-<hr class = 'mb-2'></hr>
+<hr class='mb-2'/>
 
 <div class = 'column is-4 is-offset-4'>
 
@@ -56,7 +56,7 @@ $this->setTitle($title);
             ->hint('Password will be generated automatically if not provided.')
         ?>
 
-        <hr class = 'mb-2'></hr>
+        <hr class='mb-2'/>
 
         <div class = 'flex items-center justify-between'>
             <?= Html::submitButton(

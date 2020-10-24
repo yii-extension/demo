@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Module\User\Action;
 
+use App\Module\User\ActiveRecord\UserAR;
 use App\Module\User\Form\RegisterForm;
 use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\UserRepository;
-use App\Service\View;
+use App\Service\ViewService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 final class AdminEditAction
@@ -20,10 +20,9 @@ final class AdminEditAction
         ModuleSettingsRepository $settings,
         RegisterForm $registerForm,
         ServerRequestInterface $request,
-        DataResponseFactoryInterface $responseFactory,
         UrlGeneratorInterface $url,
         UserRepository $userRepository,
-        View $view,
+        ViewService $view,
         WebControllerService $webController
     ): ResponseInterface {
         $body = $request->getParsedBody();
@@ -35,6 +34,7 @@ final class AdminEditAction
             return $webController->notFoundResponse();
         }
 
+        /** @var UserAR $user */
         $userRepository->loadData($user, $registerForm);
 
         if (
@@ -43,24 +43,22 @@ final class AdminEditAction
             && $registerForm->validate()
             && $userRepository->update($user, $registerForm)
         ) {
-            if (
-                $userRepository->sendMailer(
-                    $url,
-                    $settings->getSubjectPassword(),
-                    ['html' => 'newpassword', 'text' => 'text/newpassword'],
-                    false,
-                    true,
-                    $user
-                )
-            ) {
-                return $webController
+            $userRepository->sendMailer(
+                $url,
+                $settings->getSubjectPassword(),
+                ['html' => 'newpassword', 'text' => 'text/newpassword'],
+                false,
+                true,
+                $user
+            );
+
+            return $webController
                 ->withFlash(
                     'is-info',
                     $settings->getMessageHeader(),
                     'The account has been updated.'
                 )
                 ->redirectResponse('admin/index');
-            }
         }
 
         return $view

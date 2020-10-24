@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Action;
 
-use App\Service\View;
+use App\Service\ViewService;
 use Psr\Http\Message\ResponseInterface;
 
-final class About
+final class AboutAction
 {
-    public function about(View $view): ResponseInterface
+    public function about(ViewService $view): ResponseInterface
     {
         return $view->renderWithLayout(
             'site/about'

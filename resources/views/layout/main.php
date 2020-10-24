@@ -2,15 +2,21 @@
 
 declare(strict_types=1);
 
+use App\Asset\AppAsset;
+use App\Service\ParameterService;
+use App\Widget\FlashMessage;
+use Yiisoft\Assets\AssetManager;
+use Yiisoft\Router\FastRoute\UrlGenerator;
+use Yiisoft\Router\FastRoute\UrlMatcher;
+
 /**
- * @var App\ApplicationParameters $app
- * @var Yiisoft\Assets\AssetManager $assetManager
+ * @var ParameterService $app
+ * @var AssetManager $assetManager
  * @var string $csrf
  * @var string $content
+ * @var UrlGenerator $url
+ * @var UrlMatcher $urlMatcher
  */
-
-use App\Asset\AppAsset;
-use App\Widget\FlashMessage;
 
 $assetManager->register([
     AppAsset::class

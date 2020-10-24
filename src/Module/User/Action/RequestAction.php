@@ -8,11 +8,10 @@ use App\Module\User\Form\RequestForm;
 use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\UserRepository;
 use App\Module\User\Service\RequestService;
-use App\Service\View;
+use App\Service\ViewService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 final class RequestAction
@@ -21,11 +20,10 @@ final class RequestAction
         RequestForm $requestForm,
         ServerRequestInterface $request,
         RequestService $requestService,
-        DataResponseFactoryInterface $responseFactory,
         ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
         UserRepository $userRepository,
-        View $view,
+        ViewService $view,
         WebControllerService $webController
     ): ResponseInterface {
         $body = $request->getParsedBody();

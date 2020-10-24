@@ -11,17 +11,17 @@ use Yiisoft\Mailer\Composer;
 use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Mailer\MessageInterface;
 
-final class Mailer
+final class MailerService
 {
     private Aliases $aliases;
-    private Parameters $app;
+    private ParameterService $app;
     private Composer $composer;
     private LoggerInterface $logger;
     private MailerInterface $mailer;
 
     public function __construct(
         Aliases $aliases,
-        Parameters $app,
+        ParameterService $app,
         Composer $composer,
         LoggerInterface $logger,
         MailerInterface $mailer

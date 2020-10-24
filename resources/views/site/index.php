@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-/**
- * @var \App\ApplicationParameters $app
- */
-
+use App\Service\ParameterService;
 use Yiisoft\Yii\Widgets\FragmentCache;
+
+/**
+ * @var ParameterService $app
+ */
 
 $this->params['breadcrumbs'] = '/';
 

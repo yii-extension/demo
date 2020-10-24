@@ -2,17 +2,19 @@
 
 declare(strict_types=1);
 
-/**
- * @var Parameters $app
- * @var Yiisoft\Router\UrlGeneratorInterface $url
- * @var Yiisoft\Router\UrlMatcherInterface $urlMatcher
- * @var User $identity
- */
-use App\Service\Parameters;
-use Yiisoft\Html\Html;
+use App\Service\ParameterService;
+use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Router\UrlMatcherInterface;
 use Yiisoft\Yii\Bulma\Nav;
 use Yiisoft\Yii\Bulma\NavBar;
 use Yiisoft\Yii\Web\User\User;
+
+/**
+ * @var ParameterService $app
+ * @var User $identity
+ * @var UrlGeneratorInterface $url
+ * @var UrlMatcherInterface $urlMatcher
+ */
 
 $menuItems = [];
 

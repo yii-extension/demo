@@ -12,6 +12,7 @@ final class LogoutService
 {
     public function run(UserRepository $userRepository, User $identity): bool
     {
+        /** @var UserAR $user */
         $user = $userRepository->findUserById($identity->getId());
 
         $user->updateAttributes(['last_logout_at' => time()]);

@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-/**
- * @var App\ApplicationParameters $app
- * @var string $csrf
- */
-
+use App\Service\ParameterService;
 use Yiisoft\Html\Html;
 
+/**
+ * @var ParameterService $app
+ * @var string $csrf
+ */
 ?>
-
 <head>
     <meta charset = <?= $app->get('app.charset') ?>>
     <meta http-equiv = 'X-UA-Compatible' content = 'IE=edge'>

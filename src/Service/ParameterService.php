@@ -7,7 +7,7 @@ namespace App\Service;
 use Yiisoft\Arrays\ArrayHelper;
 
 /**
- * Parameters provides a way to get application parameters defined in config/params.php
+ * ParameterService provides a way to get application parameters defined in config/params.php
  *
  * In order to use in a handler or any other place supporting auto-wired injection:
  *
@@ -28,7 +28,7 @@ use Yiisoft\Arrays\ArrayHelper;
  * }
  * ```
  */
-final class Parameters
+final class ParameterService
 {
     private array $parameters;
 

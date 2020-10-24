@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Module\Rbac\Api;
 
-use App\Module\Rbac\ActiveRecord\ItemAR;
 use App\Module\Rbac\Repository\ItemRepository;
 
 final class ItemApi

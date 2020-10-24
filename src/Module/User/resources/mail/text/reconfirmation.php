@@ -1,4 +1,10 @@
-Hellow,
+<?php
+
+declare(strict_types=1);
+
+/** @var array $params */
+?>
+Hello,
 
 We have received a request to change the email address for your account on:
     <?= $params['email'] ?>

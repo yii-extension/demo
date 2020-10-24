@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
+use App\Module\User\ActiveRecord\UserAR;
 use App\Module\User\Asset\AdminInfoAsset;
 use Yiisoft\Assets\AssetManager;
-use Yiisoft\Html\Html;
 
 /**
  * @var AssetManager $assetManager
+ * @var UserAR $data
  */
 $assetManager->register([
     AdminInfoAsset::class

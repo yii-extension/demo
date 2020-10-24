@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace App\Module\User\Action;
 
-use RuntimeException;
 use App\Module\User\Repository\ModuleSettingsRepository;
 use App\Module\User\Repository\UserRepository;
-use App\Service\View;
+use App\Service\ViewService;
 use App\Service\WebControllerService;
 use App\Module\User\Form\RegisterForm;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 final class RegisterAction
@@ -20,11 +18,10 @@ final class RegisterAction
     public function register(
         RegisterForm $registerForm,
         ServerRequestInterface $request,
-        DataResponseFactoryInterface $responseFactory,
         ModuleSettingsRepository $settings,
         UrlGeneratorInterface $url,
         UserRepository $userRepository,
-        View $view,
+        ViewService $view,
         WebControllerService $webController
     ): ResponseInterface {
         $body = $request->getParsedBody();

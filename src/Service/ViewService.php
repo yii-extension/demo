@@ -17,10 +17,10 @@ use Yiisoft\View\ViewContextInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\Web\User\User;
 
-final class View implements ViewContextInterface
+final class ViewService implements ViewContextInterface
 {
     private Aliases $aliases;
-    private Parameters $app;
+    private ParameterService $app;
     private AssetManager $assetManager;
     private CsrfToken $csrf;
     private Flash $flash;
@@ -34,7 +34,7 @@ final class View implements ViewContextInterface
 
     public function __construct(
         Aliases $aliases,
-        Parameters $app,
+        ParameterService $app,
         AssetManager $assetManager,
         CsrfToken $csrf,
         Flash $flash,

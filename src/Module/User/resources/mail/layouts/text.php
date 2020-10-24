@@ -1,12 +1,11 @@
 <?php
 
-/**
- * @var string $content main view render result
- */
-?>
+declare(strict_types=1);
 
-<?php $this->beginPage() ?>
-    <?php $this->beginBody() ?>
-        <?= $content ?>
-    <?php $this->endBody() ?>
-<?php $this->endPage();
+/** @var string $content */
+
+$this->beginPage();
+    $this->beginBody();
+        echo $content;
+    $this->endBody();
+$this->endPage();

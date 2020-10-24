@@ -15,10 +15,12 @@ $this->setTitle('Create Item');
 
 
 /**
+ * @var string $action
  * @var AssetManager $assetManager
  * @var string|null $csrf
  * @var ItemForm $data
  * @var Field $field
+ * @var string $title
  * @var UrlGeneratorInterface $url
  * @var UrlMatcherInterface $urlMatcher
  */
@@ -38,7 +40,7 @@ $this->setTitle($title);
     Please fill out the following.
 </p>
 
-<hr class = 'mb-2'></hr>
+<hr class='mb-2'/>
 
 <div class = 'column is-4 is-offset-4'>
 

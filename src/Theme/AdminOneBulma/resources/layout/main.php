@@ -3,20 +3,24 @@
 declare(strict_types=1);
 
 use App\Asset\BulmaPluginNavBarAsset;
+use App\Service\ParameterService;
 use App\Theme\AdminOneBulma\Asset\AdminOneAsset;
 use App\Widget\FlashMessage;
+use Yiisoft\Assets\AssetManager;
+use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Router\UrlMatcherInterface;
 use Yiisoft\Yii\Bulma\Breadcrumbs;
 use Yiisoft\Html\Html;
+use Yiisoft\Yii\Web\User\User;
 
 /**
- * @var App\Service\Parameters $app
- * @var Yiisoft\Assets\AssetManager $assetManager
- * @var Yiisoft\View\WebView $this
- * @var Yiisoft\Yii\Web\User\User $identity
- * @var Yiisoft\Router\UrlGeneratorInterface $url
- * @var Yiisoft\Router\UrlMatcherInterface $urlMatcher
+ * @var ParameterService $app
+ * @var AssetManager $assetManager
  * @var string|null $csrf
  * @var string $content
+ * @var User $identity
+ * @var UrlGeneratorInterface $url
+ * @var UrlMatcherInterface $urlMatcher
  */
 $assets = [
     AdminOneAsset::class,
