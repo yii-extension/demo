@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yii\Component;
 
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Assets\AssetConverter;
@@ -31,12 +30,12 @@ return [
         ]
     ],
 
-    AssetManager::class => static function (ContainerInterface $container) {
-        $assetManager = new AssetManager($container->get(LoggerInterface::class));
-
-        $assetManager->setConverter($container->get(AssetConverterInterface::class));
-        $assetManager->setPublisher($container->get(AssetPublisherInterface::class));
-
-        return $assetManager;
-    }
+    AssetManager::class => [
+        '__class' => AssetManager::class,
+        '__construct()' => [
+            Reference::to(LoggerInterface::class)
+        ],
+        'setConverter()' => [Reference::to(AssetConverterInterface::class)],
+        'setPublisher()' => [Reference::to(AssetPublisherInterface::class)],
+    ]
 ];

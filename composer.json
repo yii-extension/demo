@@ -22,6 +22,7 @@
         "yiisoft/cache": "^3.0@dev",
         "yiisoft/cache-file": "^3.0@dev",
         "yiisoft/csrf": "^3.0@dev",
+        "yiisoft/composer-config-plugin": "^1.0@dev",
         "yiisoft/data-response": "^3.0@dev",
         "yiisoft/db-sqlite": "^3.0@dev",
         "yiisoft/di": "^3.0@dev",
@@ -65,6 +66,31 @@
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
+        },
+        "config-plugin-output-dir": "runtime/build/config",
+        "config-plugin": {
+            "params-console-local": [
+                "config/ParamsConsole.php"
+            ],
+            "params-local": [
+                "$params-console-local",
+                "config/ParamsLocal.php",
+                "src/Theme/AdminOneBulma/Config/ParamsLocal.php"
+            ],
+            "web-local": [
+                "config/WebLocal.php"
+            ],
+            "console-local": [
+                "config/ConsoleLocal.php"
+            ],
+            "events-local": [
+                "config/EventsLocal.php"
+            ],
+            "routes-local": [
+                "config/RoutesLocal.php",
+                "src/Module/Rbac/Config/RoutesLocal.php",
+                "src/Module/User/Config/RoutesLocal.php"
+            ]
         }
     },
     "config": {

@@ -13,50 +13,18 @@ use Yiisoft\Yii\Db\Migration\Command\NewCommand;
 use Yiisoft\Yii\Db\Migration\Command\RedoCommand;
 use Yiisoft\Yii\Db\Migration\Command\UpdateCommand;
 
-final class ParamsConsole
-{
-    /**
-     * Define console command customs console symphony.
-     *
-     * ```php
-     * [
-     *     'command' => App\Command::class
-     * ]
-     * ```
-     *
-     * @return array
-     */
-    public function getConsoleCommands(): array
-    {
-        return [
-            'hello' => HelloCommand::class,
+return [
+    'consoleCommands' => [
+        'hello' => HelloCommand::class,
 
-            /** yii-db-migration commands */
-            'generate/create' => CreateCommand::class,
-            'database/list' => ListTablesCommand::class,
-            'migrate/down' => DownCommand::class,
-            'migrate/history' => HistoryCommand::class,
-            'migrate/new' => NewCommand::class,
-            'migrate/redo' => RedoCommand::class,
-            'migrate/up' => UpdateCommand::class
-        ];
-    }
-
-    public function getMigrationCreateNameSpace(): string
-    {
-        return 'Yii\\Migration';
-    }
-
-    public function getMigrationUpdateNameSpace(): array
-    {
-        return [
-            'App\\Module\\User\\Migration',
-            'App\\Module\\Rbac\\Migration'
-        ];
-    }
-
-    public function getViewPath(): string
-    {
-        return dirname(__DIR__) . '/resources/views';
-    }
-}
+        /** yii-db-migration commands */
+        'generate/create' => CreateCommand::class,
+        'database/list' => ListTablesCommand::class,
+        'migrate/down' => DownCommand::class,
+        'migrate/history' => HistoryCommand::class,
+        'migrate/new' => NewCommand::class,
+        'migrate/redo' => RedoCommand::class,
+        'migrate/up' => UpdateCommand::class
+    ],
+    'viewPath' => dirname(__DIR__) . '/resources/views'
+];

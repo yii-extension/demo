@@ -9,7 +9,7 @@ actor: FunctionalTester
 modules:
     enabled:
         - Db:
-            dsn: 'sqlite:/config/Database/yiitest.sq3'
+            dsn: 'sqlite:/resources/database/yiitest.sq3'
             user: ''
             password: ''
             cleanup: true

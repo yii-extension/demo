@@ -40,7 +40,7 @@ $this->setJsFiles($assetManager->getJsFiles());
 
 $breadCrumbsItems = [];
 $class = [
-    'lang' => $app->get('app.language')
+    'lang' => $app->get('language')
 ];
 $route = $urlMatcher->getCurrentRoute()->getName();
 

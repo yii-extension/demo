@@ -49,7 +49,7 @@ final class MailerService
                 'params' => $params
             ]
         )
-        ->setFrom($this->app->get('app.mailer.from'))
+        ->setFrom($this->app->get('mailer.from'))
         ->setSubject($subject)
         ->setTo($to);
 

@@ -31,7 +31,7 @@ $brand = <<<HTML
 </div>
 HTML;
 
-$navConfig = $app->get('app.navBar.config');
+$navConfig = $app->get('navBar.config');
 
 if (isset($identity) && $identity->getId() !== null) {
     $navConfig['brand()'] = [$brand];
@@ -40,8 +40,8 @@ if (isset($identity) && $identity->getId() !== null) {
     $navConfig['toggleIcon()'] = ['<span class="icon"><i class="mdi mdi-forwardburger mdi-24px"></i></span>'];
     $navConfig['toggleOptions()'] = [['class' => 'navbar-item is-hidden-desktop jb-aside-mobile-toggle']];
 
-    if ($app->get('app.nav.logged') !== []) {
-        $menuItems = $app->get('app.nav.logged');
+    if ($app->get('nav.logged') !== []) {
+        $menuItems = $app->get('nav.logged');
     }
 
     $label = '';
@@ -57,7 +57,7 @@ if (isset($identity) && $identity->getId() !== null) {
         }
     }
 } else {
-    $menuItems =  $app->get('app.nav.guest');
+    $menuItems =  $app->get('nav.guest');
 }
 ?>
 

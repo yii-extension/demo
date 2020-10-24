@@ -7,12 +7,10 @@ namespace Yii\Component;
 use Yii\Params;
 use Yiisoft\Aliases\Aliases;
 
-$params = new Params();
-
 return [
     /** component aliases */
     Aliases::class => [
         '__class' => Aliases::class,
-        '__construct()' => [$params->getAliases()]
+        '__construct()' => [$params['aliases']]
     ],
 ];

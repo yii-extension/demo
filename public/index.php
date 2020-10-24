@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Yii\Web;
+use Yiisoft\Composer\Config\Builder;
 use Yiisoft\Di\Container;
 use Yiisoft\Http\Method;
 use Yiisoft\Widget\WidgetFactory;
@@ -26,8 +26,9 @@ require_once $autoload;
 /** Don't do it in production, assembling takes it's time */
 $startTime = microtime(true);
 
-$web = new Web();
-$container = new Container($web->buildConfig());
+$container = new Container(
+    require Builder::path('web-local')
+);
 
 $application = $container->get(Application::class);
 

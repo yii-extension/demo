@@ -6,7 +6,7 @@ namespace Yii\Component;
 
 use Psr\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
-use Yii\Params;
+use Yiisoft\Composer\Config\Builder;
 use Yii\Exception\InvalidEventConfigurationFormatException;
 use Yii\Exception\InvalidListenerConfigurationException;
 use Yiisoft\EventDispatcher\Provider\ListenerCollection;
@@ -25,9 +25,7 @@ final class EventProvider
 {
     public function buildConfig(ContainerInterface $container): Provider
     {
-        $params = new Params();
-
-        $eventListeners = $params->getEventListeners();
+        $eventListeners = Builder::require('events');
         $injector = new Injector($container);
         $listenerCollection = new ListenerCollection();
 

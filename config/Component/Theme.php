@@ -9,14 +9,15 @@ use Yii\Params;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\View\Theme;
 
-$params = new Params();
-
 return [
-    Theme::class => static function (ContainerInterface $container) use ($params) {
+    /** component theme */
+    Theme::class => static function (ContainerInterface $container) {
         $aliases = $container->get(Aliases::class);
-        $pathMap = [];
+        $map = ['@layout' => '@AdminOneLayout'];
+        $pathMap = [
+        ];
 
-        foreach ($params->getThemePathMap() as $key => $value) {
+        foreach ($map as $key => $value) {
             $pathMap = [
                 $aliases->get($key) => $aliases->get($value)
             ];

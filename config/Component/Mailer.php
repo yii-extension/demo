@@ -9,7 +9,6 @@ use Swift_Plugins_LoggerPlugin;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
-use Yii\Params;
 use Yiisoft\Factory\Definitions\Reference;
 use Yiisoft\Mailer\Composer;
 use Yiisoft\Mailer\FileMailer;
@@ -21,15 +20,13 @@ use Yiisoft\Mailer\SwiftMailer\Mailer;
 use Yiisoft\Mailer\SwiftMailer\Message;
 use Yiisoft\View\WebView;
 
-$params = new Params();
-
 return [
     /** component mailer */
     Composer::class => [
         '__class' => Composer::class,
         '__construct()' => [
             Reference::to(WebView::class),
-            $params->getComposerView()
+            $params['composerView']
         ]
     ],
 
@@ -42,6 +39,16 @@ return [
 
     MessageFactoryInterface::class => MessageFactory::class,
 
+    Logger::class => [
+        '__class' => Logger::class,
+        '__construct()' => [Reference::to(LoggerInterface::class)]
+    ],
+
+    Swift_Plugins_LoggerPlugin::class => [
+        '__class' => Swift_Plugins_LoggerPlugin::class,
+        '__construct()' => [Reference::to(Logger::class)]
+    ],
+
     Mailer::class => [
         '__class' => Mailer::class,
         '__construct()' => [
@@ -49,8 +56,9 @@ return [
             Reference::to(Composer::class),
             Reference::to(EventDispatcherInterface::class),
             Reference::to(LoggerInterface::class),
-            Reference::to(Swift_Transport::class)
-        ]
+            Reference::to(Swift_SmtpTransport::class)
+        ],
+        'registerPlugin()' => [Reference::to(Swift_Plugins_LoggerPlugin::class)]
     ],
 
     FileMailer::class => [
@@ -60,31 +68,17 @@ return [
             Reference::to(Composer::class),
             Reference::to(EventDispatcherInterface::class),
             Reference::to(LoggerInterface::class),
-            $params->getFileMailerStorage()
+            $params['fileMailerStorage']
         ]
     ],
 
     MailerInterface::class => static function (ContainerInterface $container) use ($params) {
-        if ($params->writeToFiles()) {
+        $writeToFiles = true;
+
+        if ($writeToFiles) {
             return $container->get(FileMailer::class);
         }
 
-        $mailer = new Mailer(
-            $container->get(MessageFactoryInterface::class),
-            $container->get(Composer::class),
-            $container->get(EventDispatcherInterface::class),
-            $container->get(LoggerInterface::class),
-            $container->get(Swift_SmtpTransport::class)
-        );
-
-        $mailer->registerPlugin(
-            new Swift_Plugins_LoggerPlugin(
-                new Logger(
-                    $container->get(LoggerInterface::class),
-                )
-            )
-        );
-
-        return $mailer;
+        return $container->get(Mailer::class);
     }
 ];
