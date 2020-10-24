@@ -3,8 +3,7 @@
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
-use Yii\Console;
-use Yii\ParamsConsole;
+use Yiisoft\Composer\Config\Builder;
 use Yiisoft\Di\Container;
 
 $autoload = __DIR__ . '/vendor/autoload.php';
@@ -15,15 +14,13 @@ if (!is_file($autoload)) {
 
 require_once $autoload;
 
-$params = new ParamsConsole();
+$paramsConsole = require Builder::path('params-console-local');
 
-$console = new Console();
-
-$container = new Container($console->buildConfig());
+$container = new Container(require Builder::path('console-local'));
 
 $loader = new ContainerCommandLoader(
     $container,
-    $params->getConsoleCommands()
+    $paramsConsole['consoleCommands']
 );
 
 $app = new Application();
