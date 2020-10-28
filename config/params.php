@@ -125,6 +125,8 @@ return [
     ],
 
     'yiisoft/view' => [
+        'basePath' => '@views',
+        'defaultParameters' => [],
         'theme' => [
             'pathMap' => [
                 '@layout' => '@AdminOneLayout'
