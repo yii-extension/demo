@@ -9,8 +9,9 @@ use Yiisoft\Session\SessionMiddleware;
 use Yiisoft\Yii\Web\ErrorHandler\ErrorCatcher;
 use Yiisoft\Yii\Web\MiddlewareDispatcher;
 
+/** @var array $params */
+
 return [
-    /** component middleware dispatcher */
     MiddlewareDispatcher::class => static fn (ContainerInterface $container) => (new MiddlewareDispatcher($container))
         ->addMiddleware($container->get(Router::class))
         ->addMiddleware($container->get(SessionMiddleware::class))

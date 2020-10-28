@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 use App\Service\ParameterService;
 
+/** @var array $params */
+
 return [
-    /** component parameters */
     ParameterService::class  => [
         '__class' => ParameterService::class,
         '__construct()' => [

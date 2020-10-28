@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 use Yiisoft\Form\Widget\Field;
 
+/** @var array $params */
+
 return [
-    /** component widget field */
     Field::class => static function () {
         $fieldConfig = [
             'labelOptions()' => [['label' => '']],

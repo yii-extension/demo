@@ -13,8 +13,9 @@ use Yiisoft\Router\UrlMatcherInterface;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\FastRoute\UrlMatcher;
 
+/** @var array $params */
+
 return [
-    /** component router */
     UrlMatcherInterface::class => UrlMatcher::class,
 
     UrlGeneratorInterface::class => UrlGenerator::class,

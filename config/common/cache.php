@@ -9,8 +9,9 @@ use Yiisoft\Cache\CacheInterface;
 use Yiisoft\Cache\File\FileCache;
 use Yiisoft\Factory\Definitions\Reference;
 
+/** @var array $params */
+
 return [
-    /** component cache */
     CacheInterface::class => [
         '__class' => Cache::class,
         '__construct()' => [

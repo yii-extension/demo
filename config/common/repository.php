@@ -17,6 +17,8 @@ use Yiisoft\Db\Connection\ConnectionInterface;
 use Yiisoft\Factory\Definitions\Reference;
 use Yiisoft\Router\UrlGeneratorInterface;
 
+/** @var array $params */
+
 return [
     UserRepository::class => [
         '__class' => UserRepository::class,

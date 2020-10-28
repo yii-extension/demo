@@ -12,8 +12,9 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
 
+/** @var array $params */
+
 return [
-    /** component PSR-17 */
     RequestFactoryInterface::class => Psr17Factory::class,
     ServerRequestFactoryInterface::class => Psr17Factory::class,
     ResponseFactoryInterface::class => Psr17Factory::class,
