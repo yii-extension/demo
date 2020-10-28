@@ -81,7 +81,8 @@ final class RegisterPageCest
         $I->expectTo('see registration register validation.');
         $I->see('Value is invalid.');
 
-        $I->wantTo('register invalid data.');
+        $I->amOnPage('/registration/register');
+
         $I->fillField('#register-email', 'demo@example.com');
         $I->fillField('#register-username', '**');
         $I->fillField('#register-password', '123456');

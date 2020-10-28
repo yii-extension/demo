@@ -10,7 +10,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": "^7.4",
+        "php": "^7.4|^8.0",
         "lasserafn/php-initial-avatar-generator": "^4.1",
         "nyholm/psr7": "^1.3.0",
         "symfony/console": "^5.0",
@@ -54,8 +54,7 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src",
-            "Yii\\": "config"
+            "App\\": "src"
         }
     },
     "autoload-dev": {
@@ -69,27 +68,27 @@
         },
         "config-plugin-output-dir": "runtime/build/config",
         "config-plugin": {
-            "params-console-local": [
-                "config/ParamsConsole.php"
+            "common": [
+                "config/common/*.php"
             ],
-            "params-local": [
-                "$params-console-local",
-                "config/ParamsLocal.php",
-                "src/Theme/AdminOneBulma/Config/ParamsLocal.php"
+            "params": [
+                "config/params.php",
+                "src/Theme/AdminOneBulma/config/params.php"
             ],
-            "web-local": [
-                "config/WebLocal.php"
+            "web": [
+                "$common",
+                "config/web/*.php"
             ],
-            "console-local": [
-                "config/ConsoleLocal.php"
+            "console": [
+                "$common",
+                "config/console/*.php"
             ],
-            "events-local": [
-                "config/EventsLocal.php"
-            ],
-            "routes-local": [
-                "config/RoutesLocal.php",
-                "src/Module/Rbac/Config/RoutesLocal.php",
-                "src/Module/User/Config/RoutesLocal.php"
+            "events": "config/events.php",
+            "providers": "config/providers.php",
+            "routes": [
+                "config/routes.php",
+                "src/Module/Rbac/config/routes.php",
+                "src/Module/User/config/routes.php"
             ]
         }
     },

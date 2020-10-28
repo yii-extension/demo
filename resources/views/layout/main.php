@@ -28,7 +28,7 @@ $this->setJsFiles($assetManager->getJsFiles());
 
 <?php $this->beginPage() ?>
     <!DOCTYPE html>
-    <html lang = <?= $app->get('app.language') ?>>
+    <html lang = <?= $app->get('language') ?>>
 
         <?= $this->render('_head', ['app' => $app, 'csrf' => $csrf]) ?>
 

@@ -14,13 +14,16 @@ if (!is_file($autoload)) {
 
 require_once $autoload;
 
-$paramsConsole = require Builder::path('params-console-local');
+$params = require Builder::path('params');
 
-$container = new Container(require Builder::path('console-local'));
+$container = new Container(
+    require Builder::path('console'),
+    require Builder::path('providers')
+);
 
 $loader = new ContainerCommandLoader(
     $container,
-    $paramsConsole['consoleCommands']
+    $params['yiisoft/yii-console']['commands']
 );
 
 $app = new Application();

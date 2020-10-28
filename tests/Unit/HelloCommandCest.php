@@ -19,18 +19,18 @@ final class HelloCommandCest
     public function _before(UnitTester $I): void
     {
         $this->container = new Container(
-            require Builder::path('web-local')
+            require Builder::path('web')
         );
     }
 
     public function testExecute(UnitTester $I): void
     {
         $app = new Application();
-        $paramsConsole = require Builder::path('params-console-local');
+        $params = require Builder::path('params');
 
         $loader = new ContainerCommandLoader(
             $this->container,
-            $paramsConsole['consoleCommands']
+            $params['yiisoft/yii-console']['commands']
         );
 
         $app->setCommandLoader($loader);

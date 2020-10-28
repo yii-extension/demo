@@ -11,13 +11,6 @@ use Yiisoft\Factory\Definitions\Reference;
 
 return [
     /** component cache */
-    FileCache::class => [
-        '__class' => FileCache::class,
-        '__construct()' => [
-            $params['cachePath']
-        ]
-    ],
-
     CacheInterface::class => [
         '__class' => Cache::class,
         '__construct()' => [

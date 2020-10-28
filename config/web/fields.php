@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace Yii\Component;
-
 use Yiisoft\Form\Widget\Field;
 
 return [

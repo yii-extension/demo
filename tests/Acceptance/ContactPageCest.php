@@ -28,7 +28,7 @@ final class ContactPageCest
         $I->fillField('#contactform-subject', 'test subject');
         $I->fillField('#contactform-body', 'test content');
 
-        $I->click('contact-button');
+        $I->click('Send mail');
 
         $I->dontSeeElement('#contact-form');
         $I->see("Thanks to contact us, we'll get in touch with you as soon as possible.");

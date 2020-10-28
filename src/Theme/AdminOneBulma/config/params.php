@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace App\Theme\AdminOneBulma\Config;
-
 $htmlLabel = <<<HTML
     <div class = 'is-user-avatar'>
         {logo}
@@ -15,7 +13,7 @@ $htmlLabel = <<<HTML
 HTML;
 
 return [
-    'appConfig' => [
+    'app' => [
         'nav' => [
             'guest' => [
                 ['label' => 'Register', 'url' => '/registration/register'],

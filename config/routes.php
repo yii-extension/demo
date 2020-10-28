@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace Yii;
-
 use App\Action\AboutAction;
 use App\Action\ContactAction;
 use App\Action\IndexAction;

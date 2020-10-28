@@ -21,8 +21,8 @@ use Yiisoft\Yii\Web\User\User;
  */
 
 if (isset($identity) && $identity->getId() !== null) {
-    if ($app->get('app.nav.logged') !== []) {
-        $menuItems = $app->get('app.nav.logged');
+    if ($app->get('nav.logged') !== []) {
+        $menuItems = $app->get('nav.logged');
     }
 
     $label = '';
@@ -38,11 +38,11 @@ if (isset($identity) && $identity->getId() !== null) {
         }
     }
 } else {
-    $menuItems =  $app->get('app.nav.guest');
+    $menuItems =  $app->get('nav.guest');
 }
 ?>
 
-<?= NavBar::begin($app->get('app.navBar.config'))->start() ?>
+<?= NavBar::begin($app->get('navBar.config'))->start() ?>
 
     <?= Nav::widget()
         ->currentPath($url->generate($urlMatcher->getCurrentRoute()->getName()))

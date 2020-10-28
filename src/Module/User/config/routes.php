@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace App\Module\User\Config;
-
 use App\Module\User\Action\AdminAction;
 use App\Module\User\Action\AdminBlockAction;
 use App\Module\User\Action\AdminCreateAction;

@@ -2,12 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Yii;
-
+use App\Command\HelloCommand;
 use Psr\Log\LogLevel;
 use Yiisoft\Form\Widget\Field;
-
-use function dirname;
 
 return [
     'aliases' => [
@@ -34,7 +31,8 @@ return [
         /** config module-user */
         '@rbac' => '@root/src/Module/Rbac'
     ],
-    'appConfig' => [
+
+    'app' => [
         'charset' => 'UTF-8',
         'emailFrom' => 'tester@example.com',
         'language' => 'en',
@@ -81,44 +79,80 @@ return [
 
         'name' => 'My Project'
     ],
-    'cachePath' => dirname(__DIR__) . '/runtime/cache',
-    'composerView' => dirname(__DIR__) . '/resources/mail',
-    'sqliteDsn' => 'sqlite:' . dirname(__DIR__) . '/resources/database/yiitest.sq3',
-    'fieldConfig' => [
-        'labelOptions' => [['label' => '']],
-        'inputOptions' => [['class' => 'field input']],
-        'errorOptions' => [['class' => 'has-text-left has-text-danger is-italic']]
+
+    'yiisoft/db-sqlite' => [
+        'dsn' => 'sqlite:' . dirname(__DIR__) . '/resources/database/yiitest.sq3'
     ],
-    'fileMailerStorage' => dirname(__DIR__) . '/runtime/mail',
-    'fileRotatorMaxFiles' => 5,
-    'fileRotatorMaxFileSize' => 10,
-    'htmlRendererConfig' => [
-        'default' => [
-            'callStackItem',
-            'error',
-            'exception',
-            'previousException'
+
+    'yiisoft/log-target-file' => [
+        'fileTarget' => [
+            'file' => '@runtime/logs/app.txt',
+            'levels' => [
+                LogLevel::EMERGENCY,
+                LogLevel::ERROR,
+                LogLevel::WARNING,
+                LogLevel::INFO,
+                LogLevel::DEBUG,
+            ],
+            'dirMode' => 0755,
+            'fileMode' => null
         ],
-        'path' => dirname(__DIR__) . '/vendor/yiisoft/yii-web/src/ErrorHandler/templates',
+        'file-rotator' => [
+            'maxFileSize' => 10,
+            'maxFiles' => 5,
+            'fileMode' => null,
+            'rotateByCopy' => null
+        ]
     ],
-    'logFile' => dirname(__DIR__) . '/runtime/logs/app.log',
-    'loginUrl' => '/auth/login',
-    'logLevels' => [
-        LogLevel::EMERGENCY,
-        LogLevel::ERROR,
-        LogLevel::WARNING,
-        LogLevel::INFO,
-        LogLevel::DEBUG
+
+    'yiisoft/mailer' => [
+        'composer' => [
+            'composerView' => '@resources/mail'
+        ],
+        'fileMailer' => [
+            'fileMailerStorage' => '@runtime/mail'
+        ],
+        'writeToFiles' => true
     ],
-    'mailerConfig' =>  [
-        'host' => 'smtp.example.com',
-        'port' => 25,
-        'encryption' => null,
-        'username' => '',
-        'password' => ''
+    'swiftmailer/swiftmailer' => [
+        'SwiftSmtpTransport' => [
+            'host' => 'smtp.example.com',
+            'port' => 25,
+            'encryption' => null,
+            'username' => 'admin@example.com',
+            'password' => ''
+        ]
     ],
-    'themePathMap' => [
-        '@layout' => '@AdminOneLayout',
+
+    'yiisoft/view' => [
+        'theme' => [
+            'pathMap' => [
+                '@layout' => '@AdminOneLayout'
+            ],
+            'basePath' => '',
+            'baseUrl' => '',
+        ]
     ],
-    'writeToFiles' => true
+
+    'yiisoft/yii-console' => [
+        'commands' => [
+            'hello' => HelloCommand::class,
+        ]
+    ],
+
+    'yiisoft/yii-db-migration' => [
+        'createNameSpace' => 'App\\Migration',
+        'createPath' => '',
+        'updateNameSpace' => [
+            'App\\Module\\Rbac\\Migration',
+            'App\\Module\\User\\Migration'
+        ],
+        'updatePath' => []
+    ],
+
+    'yiisoft/yii-web' => [
+        'userAuth' => [
+            'authUrl' => '/auth/login'
+        ]
+    ]
 ];

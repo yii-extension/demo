@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Rbac\Config;
-
 use App\Module\Rbac\Action\ItemAction;
 use App\Module\Rbac\Action\ItemCreateAction;
 use App\Module\Rbac\Action\ItemDeleteAction;

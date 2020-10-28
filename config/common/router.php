@@ -2,11 +2,6 @@
 
 declare(strict_types=1);
 
-namespace Yii\Component;
-
-use App\Module\User\Config\Routes as UserRoutes;
-use App\Module\Rbac\Config\Routes as RbacRoutes;
-use Yii\Routes;
 use Yiisoft\Composer\Config\Builder;
 use Yiisoft\DataResponse\Middleware\FormatDataResponse;
 use Yiisoft\Router\Group;
@@ -28,7 +23,7 @@ return [
 
     RouteCollectionInterface::class => static function (RouteCollectorInterface $collector) {
         $collector->addGroup(
-            Group::create(null, require Builder::path('routes-local'))
+            Group::create(null, require Builder::path('routes'))
                 ->addMiddleware(FormatDataResponse::class)
         );
 
