@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Command\HelloCommand;
-use Psr\Log\LogLevel;
 use Yiisoft\Form\Widget\Field;
 
 return [
@@ -86,22 +85,7 @@ return [
 
     'yiisoft/log-target-file' => [
         'fileTarget' => [
-            'file' => '@runtime/logs/app.txt',
-            'levels' => [
-                LogLevel::EMERGENCY,
-                LogLevel::ERROR,
-                LogLevel::WARNING,
-                LogLevel::INFO,
-                LogLevel::DEBUG,
-            ],
-            'dirMode' => 0755,
-            'fileMode' => null
-        ],
-        'file-rotator' => [
-            'maxFileSize' => 10,
-            'maxFiles' => 5,
-            'fileMode' => null,
-            'rotateByCopy' => null
+            'file' => '@runtime/logs/app.txt'
         ]
     ],
 
