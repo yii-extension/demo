@@ -28,12 +28,10 @@ final class LoginService
         /** @var UserAR $user */
         $user = $userRepository->findUserByUsernameOrEmail($login);
 
-        if ($user->isBlocked()) {
-            $this->loginForm->addError('password', 'Your user has been blocked, contact an administrator.');
-        }
-
         if ($user === null) {
             $this->loginForm->addError('password', 'Unregistered user/Invalid password.');
+        } elseif ($user->isBlocked()) {
+            $this->loginForm->addError('password', 'Your user has been blocked, contact an administrator.');
         }
 
         if (
