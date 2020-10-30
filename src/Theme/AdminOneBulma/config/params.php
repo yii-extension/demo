@@ -14,6 +14,7 @@ HTML;
 
 return [
     'app' => [
+        'adminUrl' => 'admin/index',
         'nav' => [
             'guest' => [
                 ['label' => 'Register', 'url' => '/registration/register'],

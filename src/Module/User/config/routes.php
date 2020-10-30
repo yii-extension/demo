@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Middleware\Guest;
 use App\Module\User\Action\AdminAction;
 use App\Module\User\Action\AdminBlockAction;
 use App\Module\User\Action\AdminCreateAction;
@@ -25,8 +26,10 @@ use Yiisoft\Router\Route;
 return [
     /** auth actions */
     Route::methods(['GET', 'POST'], '/auth/login', [LoginAction::class, 'login'])
+        ->addMiddleware(Guest::class)
         ->name('auth/login'),
     Route::get('/auth/logout', [LogoutAction::class, 'logout'])
+        ->addMiddleware(Authentication::class)
         ->name('auth/logout'),
 
     /** admin actions */
@@ -56,23 +59,28 @@ return [
 
     /** api users */
     Route::get('/users', [UserApiAction::class, 'index'])
-        ->name('users/index')
-        ->addMiddleware(FormatDataResponseAsJson::class),
+        ->addMiddleware(FormatDataResponseAsJson::class)
+        ->name('users/index'),
 
     /** recovery actions */
     Route::methods(['GET', 'POST'], '/recovery/request', [RequestAction::class, 'request'])
+        ->addMiddleware(Guest::class)
         ->name('recovery/request'),
 
     Route::methods(['GET', 'POST'], '/recovery/reset[/{id}/{code}]', [ResetAction::class, 'reset'])
+        ->addMiddleware(Guest::class)
         ->name('recovery/reset'),
 
     /** registration actions */
     Route::get('/registration/confirm[/{id}/{code}]', [ConfirmAction::class, 'confirm'])
+        ->addMiddleware(Guest::class)
         ->name('registration/confirm'),
 
     Route::methods(['GET', 'POST'], '/registration/register', [RegisterAction::class, 'register'])
+        ->addMiddleware(Guest::class)
         ->name('registration/register'),
 
     Route::methods(['GET', 'POST'], '/registration/resend', [ResendAction::class, 'resend'])
+        ->addMiddleware(Guest::class)
         ->name('registration/resend')
 ];

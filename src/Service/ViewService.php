@@ -63,24 +63,17 @@ final class ViewService implements ViewContextInterface
         array $viewParameters = [],
         array $layoutParameters = []
     ): ResponseInterface {
-        $viewParameters = array_merge(
-            $viewParameters,
-            [
-                'assetManager' => $this->assetManager,
-                'csrf' => $this->csrf->getValue(),
-                'field' => $this->field,
-            ]
-        );
-
-        $layoutParameters = array_merge($layoutParameters, $this->layoutParameters());
-
         $content = $this->webView->render(
             '//layout/main',
             array_merge(
                 [
-                    'content' => $this->webView->render($view, $viewParameters, $this),
+                    'content' => $this->webView->render(
+                        $view,
+                        array_merge($viewParameters, $this->viewParameters()),
+                        $this
+                    )
                 ],
-                $layoutParameters
+                array_merge($layoutParameters, $this->layoutParameters())
             ),
             $this
         );
@@ -125,6 +118,15 @@ final class ViewService implements ViewContextInterface
             'identity' => $this->user,
             'url' => $this->url,
             'urlMatcher' => $this->urlMatcher
+        ];
+    }
+
+    private function viewParameters(): array
+    {
+        return [
+            'assetManager' => $this->assetManager,
+            'csrf' => $this->csrf->getValue(),
+            'field' => $this->field,
         ];
     }
 }

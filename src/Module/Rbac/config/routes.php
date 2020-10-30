@@ -28,6 +28,7 @@ return [
 
     /** items api actions */
     Route::get('/items', [ItemsApiAction::class, 'index'])
+        ->addMiddleware(Authentication::class)
+        ->addMiddleware(FormatDataResponseAsJson::class)
         ->name('items/index')
-        ->addMiddleware(FormatDataResponseAsJson::class),
 ];
