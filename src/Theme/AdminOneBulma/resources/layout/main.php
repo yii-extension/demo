@@ -95,7 +95,7 @@ if (isset($identity) && $identity->getId() !== null) {
                             </header>
                             <div>
                                 <?= Breadcrumbs::widget()
-                                    ->homeLink(
+                                    ->homeItem(
                                         [
                                             'label' => 'Home',
                                             'url' => '/',
@@ -104,7 +104,7 @@ if (isset($identity) && $identity->getId() !== null) {
                                             'encode' => false
                                         ]
                                     )
-                                    ->links($breadCrumbsItems)
+                                    ->items($breadCrumbsItems)
                                     ->options(['class' => 'has-succeeds-separator is-centered has-margin-top-20']) ?>
                                 <?= FlashMessage::widget() ?>
                             </div>

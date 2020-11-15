@@ -6,29 +6,31 @@ use App\Command\HelloCommand;
 use Yiisoft\Form\Widget\Field;
 
 return [
-    'aliases' => [
-        '@root' => dirname(__DIR__),
-        '@assets' => '@root/public/assets',
-        '@assetsUrl' => '/assets',
-        '@mail' => '@root/resources/mail',
-        '@npm' => '@root/node_modules',
-        '@resources' => '@root/resources',
-        '@runtime' => '@root/runtime',
-        '@vendor' => '@root/vendor',
-        '@layout' => '@root/resources/views/layout',
-        '@views' => '@root/resources/views',
+    'yiisoft/aliases' => [
+        'aliases' => [
+            '@root' => dirname(__DIR__),
+            '@assets' => '@root/public/assets',
+            '@assetsUrl' => '/assets',
+            '@mail' => '@root/resources/mail',
+            '@npm' => '@root/node_modules',
+            '@resources' => '@root/resources',
+            '@runtime' => '@root/runtime',
+            '@vendor' => '@root/vendor',
+            '@layout' => '@root/resources/views/layout',
+            '@views' => '@root/resources/views',
 
-        /** config theme adminonebulma */
-        '@AdminOneLayout' => '@root/src/Theme/AdminOneBulma/resources/layout',
+            /** config theme adminonebulma */
+            '@AdminOneLayout' => '@root/src/Theme/AdminOneBulma/resources/layout',
 
-        /** config yii-db-migration */
-        '@yiisoft/yii/db/migration' => '@vendor/yiisoft/yii-db-migration',
+            /** config yii-db-migration */
+            '@yiisoft/yii/db/migration' => '@vendor/yiisoft/yii-db-migration',
 
-        /** config module-user */
-        '@user' => '@root/src/Module/User',
+            /** config module-user */
+            '@user' => '@root/src/Module/User',
 
-        /** config module-user */
-        '@rbac' => '@root/src/Module/Rbac'
+            /** config module-user */
+            '@rbac' => '@root/src/Module/Rbac'
+        ]
     ],
 
     'app' => [
