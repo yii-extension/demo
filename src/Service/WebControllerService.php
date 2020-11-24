@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Yii\Web\User\User;
+use Yiisoft\User\User;
 
 final class WebControllerService
 {

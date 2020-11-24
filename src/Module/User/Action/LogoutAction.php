@@ -9,7 +9,7 @@ use App\Module\User\Repository\UserRepository;
 use Psr\Http\Message\ResponseInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Yii\Web\User\User;
+use Yiisoft\User\User;
 
 final class LogoutAction
 {

@@ -20,6 +20,7 @@ return [
             '@views' => '@root/resources/views',
 
             /** config theme adminonebulma */
+            '@AdminOneAssets' => '@root/src/Theme/AdminOneBulma/resources/assets',
             '@AdminOneLayout' => '@root/src/Theme/AdminOneBulma/resources/layout',
 
             /** config yii-db-migration */

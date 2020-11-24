@@ -15,7 +15,7 @@ use Yiisoft\Router\UrlMatcherInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\View\ViewContextInterface;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\Web\User\User;
+use Yiisoft\User\User;
 
 final class ViewService implements ViewContextInterface
 {

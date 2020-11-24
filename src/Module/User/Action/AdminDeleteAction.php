@@ -9,7 +9,7 @@ use App\Module\User\Repository\UserRepository;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Yiisoft\Yii\Web\User\User;
+use Yiisoft\User\User;
 
 final class AdminDeleteAction
 {

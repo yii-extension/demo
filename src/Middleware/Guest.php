@@ -11,7 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Yii\Web\User\User;
+use Yiisoft\User\User;
 
 final class Guest implements MiddlewareInterface
 {

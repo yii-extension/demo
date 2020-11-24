@@ -6,7 +6,7 @@ namespace App\Module\User\Service;
 
 use App\Module\User\ActiveRecord\UserAR;
 use App\Module\User\Repository\UserRepository;
-use Yiisoft\Yii\Web\User\User;
+use Yiisoft\User\User;
 
 final class LogoutService
 {

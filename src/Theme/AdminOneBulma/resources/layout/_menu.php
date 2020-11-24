@@ -7,7 +7,7 @@ use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Router\UrlMatcherInterface;
 use Yiisoft\Yii\Bulma\Nav;
 use Yiisoft\Yii\Bulma\NavBar;
-use Yiisoft\Yii\Web\User\User;
+use Yiisoft\User\User;
 
 /**
  * @var ParameterService $app

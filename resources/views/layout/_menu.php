@@ -9,7 +9,7 @@ use Yiisoft\Router\FastRoute\UrlMatcher;
 use Yiisoft\Yii\Bulma\Nav;
 use Yiisoft\Yii\Bulma\NavBar;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Web\User\User;
+use Yiisoft\User\User;
 
 /**
  * @var Aliases $aliases

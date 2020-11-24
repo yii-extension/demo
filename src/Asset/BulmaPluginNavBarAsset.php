@@ -10,7 +10,7 @@ final class BulmaPluginNavBarAsset extends AssetBundle
 {
     public ?string $basePath = '@assets';
     public ?string $baseUrl = '@assetsUrl';
-    public ?string $sourcePath = '@npm/@vizuaalog/bulmajs/dist';
+    public ?string $sourcePath = '@npm/vizuaalog--bulmajs/dist';
 
     public array $js = [
         'navbar.js'

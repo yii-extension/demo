@@ -11,7 +11,7 @@ use App\Module\User\Repository\UserRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Yii\Web\User\User;
+use Yiisoft\User\User;
 
 final class AdminResetPasswordAction
 {

@@ -11,7 +11,7 @@ use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Router\UrlMatcherInterface;
 use Yiisoft\Yii\Bulma\Breadcrumbs;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Web\User\User;
+use Yiisoft\User\User;
 
 /**
  * @var ParameterService $app
