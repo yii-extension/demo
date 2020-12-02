@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Service\ParameterService;
+use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Router\UrlMatcherInterface;
 use Yiisoft\Yii\Bulma\Nav;
@@ -48,7 +49,7 @@ if (isset($identity) && $identity->getId() !== null) {
 
     foreach ($menuItems as $key => $item) {
         $label = strtr($item['label'], [
-            '{logo}' => $identity->getIdentity()->profile->avatar,
+            '{logo}' => Html::img('/images/avatars/' . $identity->getId() . '.svg'),
             '{username}' => $identity->getIdentity()->username
         ]);
 
@@ -61,7 +62,7 @@ if (isset($identity) && $identity->getId() !== null) {
 }
 ?>
 
-<?= NavBar::begin($navConfig)->start() ?>
+<?= NavBar::widget($navConfig)->begin() ?>
 
     <?= Nav::widget()
         ->currentPath($url->generate($urlMatcher->getCurrentRoute()->getName()))

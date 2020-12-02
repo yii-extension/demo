@@ -28,7 +28,7 @@ use Yiisoft\Router\UrlGeneratorInterface;
 
 <div class="column is-4 is-offset-4">
 
-    <?= Form::begin()
+    <?= Form::widget()
         ->action($url->generate('contact'))
         ->options(
             [
@@ -37,7 +37,7 @@ use Yiisoft\Router\UrlGeneratorInterface;
                 'enctype' => 'multipart/form-data',
             ]
         )
-        ->start() ?>
+        ->begin() ?>
 
         <?= $field->config($form, 'username') ?>
         <?= $field->config($form, 'email') ?>

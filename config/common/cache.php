@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yii\Component;
 
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 use Yiisoft\Cache\Cache;
 use Yiisoft\Cache\CacheInterface;
 use Yiisoft\Cache\File\FileCache;
@@ -17,5 +18,7 @@ return [
         '__construct()' => [
             Reference::to(FileCache::class)
         ]
-    ]
+    ],
+
+    SimpleCacheInterface::class => CacheInterface::class,
 ];

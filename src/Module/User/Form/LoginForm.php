@@ -39,7 +39,7 @@ final class LoginForm extends FormModel
 
     public function getLogin(): string
     {
-        if ($this->settings->getUsernameCaseSensitive()) {
+        if (!$this->settings->getUserNameCaseSensitive()) {
             $this->login = strtolower($this->login);
         }
 

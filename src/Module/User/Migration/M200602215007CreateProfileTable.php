@@ -27,8 +27,7 @@ final class M200602215007CreateProfileTable extends Migration
                 'location' => $this->string(255),
                 'website' => $this->string(255),
                 'bio' => $this->text(),
-                'timezone' => $this->string(40),
-                'avatar' => $this->text()
+                'timezone' => $this->string(40)
             ],
             $tableOptions
         );

@@ -5,3 +5,7 @@
 .perPage {
     border: 0.25px black solid !important;
 }
+
+.is-vmiddle {
+    vertical-align: middle !important;
+}

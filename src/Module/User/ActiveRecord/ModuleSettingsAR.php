@@ -24,7 +24,8 @@ use Yiisoft\ActiveRecord\ActiveRecord;
  * @property string  $subjectWelcome
  * @property int     $tokenConfirmWithin
  * @property int     $tokenRecoverWithin
- * @property string  $usernameRegExp
+ * @property bool    $userNameCaseSensitive
+ * @property string  $userNameRegExp
  */
 final class ModuleSettingsAR extends ActiveRecord
 {

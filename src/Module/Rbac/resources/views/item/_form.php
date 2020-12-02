@@ -44,7 +44,7 @@ $this->setTitle($title);
 
 <div class = 'column is-4 is-offset-4'>
 
-    <?= Form::begin()
+    <?= Form::widget()
         ->action($action)
         ->options(
             [
@@ -53,7 +53,7 @@ $this->setTitle($title);
                 'csrf' => $csrf
             ]
         )
-        ->start() ?>
+        ->begin() ?>
 
         <?= $field->config($data, 'name')->textInput(['tabindex' => '1']) ?>
 

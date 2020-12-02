@@ -11,6 +11,7 @@ return [
             '@root' => dirname(__DIR__),
             '@assets' => '@root/public/assets',
             '@assetsUrl' => '/assets',
+            '@avatars' => '@root/public/images/avatars',
             '@mail' => '@root/resources/mail',
             '@npm' => '@root/node_modules',
             '@resources' => '@root/resources',

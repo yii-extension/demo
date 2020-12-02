@@ -55,13 +55,28 @@ $assetManager->register([
             aria-current-label='Current page'
             >
 
-            <b-table-column field='id' label='Id' sortable searchable numeric v-slot='props' width='80'>
+            <b-table-column cell-class='is-vmiddle' field='avatar' label='avatar' v-slot='props' width='30'>
+                <div>
+                    <img :src="'/images/avatars/' + props.row.id + '.svg'"></img>
+                </div>
+            </b-table-column>
+
+            <b-table-column
+                cell-class='is-vmiddle'
+                field='id'
+                label='Id'
+                sortable
+                searchable
+                numeric
+                v-slot='props'
+                width='80'
+            >
                 {{ props.row.id }}
             </b-table-column>
 
             <b-table-column
                 field='username'
-                cell-class='has-text-left'
+                cell-class='has-text-left is-vmiddle'
                 label='UserName'
                 sortable
                 searchable
@@ -72,24 +87,24 @@ $assetManager->register([
             </b-table-column>
 
             <b-table-column
-                field='email' cell-class='has-text-left' label='Email' sortable searchable v-slot='props'
+                field='email' cell-class='has-text-left is-vmiddle' label='Email' sortable searchable v-slot='props'
             >
                 {{ props.row.email }}
             </b-table-column>
 
-            <b-table-column field='ip' centered label='Ip' v-slot='props' width='100'>
+            <b-table-column cell-class='is-vmiddle' field='ip' centered label='Ip' v-slot='props' width='100'>
                 {{ props.row.registration_ip }}
             </b-table-column>
 
-            <b-table-column field='createdAT' centered label='Created' v-slot='props'>
+            <b-table-column cell-class='is-vmiddle' field='createdAT' centered label='Created' v-slot='props'>
                 {{ props.row.created_at }}
             </b-table-column>
 
-            <b-table-column field='lastLogin' centered label='Last Login' v-slot='props'>
+            <b-table-column cell-class='is-vmiddle' field='lastLogin' centered label='Last Login' v-slot='props'>
                 {{ props.row.last_login_at }}
             </b-table-column>
 
-            <b-table-column field='blocked' centered label='Block' v-slot='props' width='20'>
+            <b-table-column cell-class='is-vmiddle' field='blocked' centered label='Block' v-slot='props' width='20'>
                 <a
                     class='fa-stack has-text-success'
                     slot="blocked"
@@ -105,7 +120,7 @@ $assetManager->register([
                 </a>
             </b-table-column>
 
-            <b-table-column field='confirm' centered label='Confirm' v-slot='props'>
+            <b-table-column cell-class='is-vmiddle' field='confirm' centered label='Confirm' v-slot='props'>
                 <span class='has-text-success' slot="confirm" v-if="props.row.confirm > '0'">
                     <b>Confirm</b>
                 </span>
@@ -115,7 +130,7 @@ $assetManager->register([
                 </a>
             </b-table-column>
 
-            <b-table-column field='operations' centered label='Operations' v-slot='props'>
+            <b-table-column cell-class='is-vmiddle' field='operations' centered label='Operations' v-slot='props'>
                 <a class='fa-stack has-text-info' :href="'/admin/info/' + props.row.id">
                     <i class="fas fa-circle fa-stack-2x"></i>
                     <i class="fas fa-eye fa-stack-1x fa-inverse"></i>

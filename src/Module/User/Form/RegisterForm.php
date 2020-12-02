@@ -56,7 +56,7 @@ final class RegisterForm extends FormModel
 
     public function getUsername(): string
     {
-        if ($this->settings->getUsernameCaseSensitive()) {
+        if (!$this->settings->getUsernameCaseSensitive()) {
             $this->username = strtolower($this->username);
         }
 

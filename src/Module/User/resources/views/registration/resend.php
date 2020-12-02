@@ -42,7 +42,7 @@ $assetManager->register([
 
 <div class = 'column is-4 is-offset-4'>
 
-    <?= Form::begin()
+    <?= Form::widget()
         ->action($action)
         ->options(
             [
@@ -51,7 +51,7 @@ $assetManager->register([
                 'csrf' => $csrf
             ]
         )
-        ->start() ?>
+        ->begin() ?>
 
         <?= $field->config($data, 'email')->textInput(['tabindex' => '1']) ?>
 

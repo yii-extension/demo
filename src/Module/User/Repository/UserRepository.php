@@ -119,7 +119,9 @@ final class UserRepository implements IdentityRepositoryInterface
                 return false;
             }
 
-            $this->insertProfile();
+            $this->generateAvatar();
+
+            $this->profile->link('user', $this->user);
 
             $transaction->commit();
 
@@ -270,7 +272,9 @@ final class UserRepository implements IdentityRepositoryInterface
                 $this->insertToken();
             }
 
-            $this->insertProfile();
+            $this->generateAvatar();
+
+            $this->profile->link('user', $this->user);
 
             $transaction->commit();
 
@@ -315,7 +319,7 @@ final class UserRepository implements IdentityRepositoryInterface
         );
     }
 
-    public function update(UserAr $user, RegisterForm $registerForm): bool
+    public function update(UserAr $user, RegisterForm $registerForm): int
     {
         $password = empty($registerForm->getAttributeValue('password'))
             ? $this->generate(8)
@@ -333,7 +337,7 @@ final class UserRepository implements IdentityRepositoryInterface
         $user->updatedAt();
         $user->flags(0);
 
-        return $user->save();
+        return $user->update();
     }
 
     public function unblock(UserAr $user): bool
@@ -387,22 +391,19 @@ final class UserRepository implements IdentityRepositoryInterface
         return $password;
     }
 
-    private function insertProfile(): void
+    private function generateAvatar(): void
     {
-        $this->profile->setAttribute(
-            'avatar',
-            $this->avatar->name($this->user->getAttribute('username'))
-                ->length(2)
-                ->fontSize(0.5)
-                ->size(28)
-                ->background('#1e6887')
-                ->color('#fff')
-                ->rounded()
-                ->generateSvg()
-                ->toXMLString()
-        );
+        $avatar = $this->avatar->name($this->user->getAttribute('username'))
+            ->length(2)
+            ->fontSize(0.5)
+            ->size(28)
+            ->background('#1e6887')
+            ->color('#fff')
+            ->rounded()
+            ->generateSvg()
+            ->toXMLString();
 
-        $this->profile->link('user', $this->user);
+        file_put_contents($this->aliases->get('@avatars') . '/' . $this->user->getAttribute('id') . '.svg', $avatar);
     }
 
     private function insertToken(): void
@@ -424,10 +425,6 @@ final class UserRepository implements IdentityRepositoryInterface
 
     private function userQuery(): ActiveQueryInterface
     {
-        if ($this->userQuery === null) {
-            $this->userQuery = new ActiveQuery(UserAR::class, $this->db);
-        }
-
-        return $this->userQuery;
+        return $this->userQuery = new ActiveQuery(UserAR::class, $this->db);
     }
 }

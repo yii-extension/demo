@@ -53,7 +53,15 @@ $items = [
                         'linkOptions' => ['class' => 'pl-3'],
                         'visible' => in_array(
                             $currentRoute,
-                            ['index', 'admin/index', 'item/index', 'item/create', 'item/edit']
+                            [
+                                'index',
+                                'admin/index',
+                                'item/index',
+                                'item/create',
+                                'item/edit',
+                                'settings/index',
+                                'settings/mailer'
+                            ]
                         ) ? false : true
                     ],
                     [
@@ -63,7 +71,16 @@ $items = [
                         'linkOptions' => ['class' => 'pl-3'],
                         'visible' => in_array(
                             $currentRoute,
-                            ['index', 'admin/index', 'admin/create', 'item/index', 'item/create', 'item/edit']
+                            [
+                                'index',
+                                'admin/index',
+                                'admin/create',
+                                'item/index',
+                                'item/create',
+                                'item/edit',
+                                'settings/index',
+                                'settings/mailer'
+                            ]
                         ) ? false : true
                     ],
                     [
@@ -73,7 +90,16 @@ $items = [
                         'linkOptions' => ['class' => 'pl-3'],
                         'visible' => in_array(
                             $currentRoute,
-                            ['index', 'admin/index', 'admin/create', 'item/index', 'item/create', 'item/edit']
+                            [
+                                'index',
+                                'admin/index',
+                                'admin/create',
+                                'item/index',
+                                'item/create',
+                                'item/edit',
+                                'settings/index',
+                                'settings/mailer'
+                            ]
                         ) ? false : true
                     ],
                 ]
@@ -97,7 +123,16 @@ $items = [
                                 'linkOptions' => ['class' => 'pl-3'],
                                 'visible' => in_array(
                                     $currentRoute,
-                                    ['index', 'admin/index', 'admin/create', 'admin/edit', 'admin/info', 'item/index']
+                                    [
+                                        'index',
+                                        'admin/index',
+                                        'admin/create',
+                                        'admin/edit',
+                                        'admin/info',
+                                        'item/index',
+                                        'settings/index',
+                                        'settings/mailer'
+                                    ]
                                 ) ? false : true
                             ],
                             [
@@ -107,7 +142,17 @@ $items = [
                                 'linkOptions' => ['class' => 'pl-3'],
                                 'visible' => in_array(
                                     $currentRoute,
-                                    ['index', 'admin/index', 'admin/create', 'admin/edit', 'admin/info', 'item/index', 'item/create']
+                                    [
+                                        'index',
+                                        'admin/index',
+                                        'admin/create',
+                                        'admin/edit',
+                                        'admin/info',
+                                        'item/index',
+                                        'item/create',
+                                        'settings/index',
+                                        'settings/mailer'
+                                    ]
                                 ) ? false : true
                             ],
                         ]
@@ -118,13 +163,24 @@ $items = [
                 ]
             ],
             [
-                'label' => 'Resources',
+                'label' => 'Settings',
                 'items' => [
                     [
-                        'label' => 'Settings',
-                        'url' => '#',
-                        'icon' => 'mdi mdi-cogs',
-                        'iconOptions' => ['class' => 'icon']
+                        'label' => 'Module User',
+                        'items' => [
+                            [
+                                'label' => 'General',
+                                'url' => '/settings/index',
+                                'icon' => 'mdi mdi-account-circle',
+                                'iconOptions' => ['class' => 'icon']
+                            ],
+                            [
+                                'label' => 'Mailer',
+                                'url' => '/settings/mailer',
+                                'icon' => 'mdi mdi-account-circle',
+                                'iconOptions' => ['class' => 'icon']
+                            ],
+                        ]
                     ]
                 ]
             ]

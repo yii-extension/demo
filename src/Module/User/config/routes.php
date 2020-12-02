@@ -18,6 +18,8 @@ use App\Module\User\Action\RequestAction;
 use App\Module\User\Action\RegisterAction;
 use App\Module\User\Action\ResendAction;
 use App\Module\User\Action\ResetAction;
+use App\Module\User\Action\SettingsAction;
+use App\Module\User\Action\SettingsMailerAction;
 use App\Module\User\Action\UserApiAction;
 use Yiisoft\Auth\Middleware\Authentication;
 use Yiisoft\DataResponse\Middleware\FormatDataResponseAsJson;
@@ -82,5 +84,13 @@ return [
 
     Route::methods(['GET', 'POST'], '/registration/resend', [ResendAction::class, 'resend'])
         ->addMiddleware(Guest::class)
-        ->name('registration/resend')
+        ->name('registration/resend'),
+
+    /** settings actions */
+    Route::methods(['GET', 'POST'], '/settings/index', [SettingsAction::class, 'index'])
+        ->addMiddleware(Authentication::class)
+        ->name('settings/index'),
+    Route::methods(['GET', 'POST'], '/settings/mailer', [SettingsMailerAction::class, 'mailer'])
+        ->addMiddleware(Authentication::class)
+        ->name('settings/mailer'),
 ];

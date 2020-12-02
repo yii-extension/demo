@@ -25,6 +25,7 @@ final class M201014141725CreateModuleSettings extends Migration implements Rever
             [
                 'id' => $this->primaryKey(),
                 'confirmation' => $this->boolean(),
+                'delete' => $this->boolean(),
                 'emailFrom' => $this->string(45),
                 'generatingPassword' => $this->boolean(),
                 'messageHeader' => $this->string(100),
@@ -37,8 +38,8 @@ final class M201014141725CreateModuleSettings extends Migration implements Rever
                 'subjectWelcome' => $this->string(100),
                 'tokenConfirmWithin' => $this->integer(),
                 'tokenRecoverWithin' => $this->integer(),
-                'usernameCaseSensitive' => $this->boolean(),
-                'usernameRegExp' => $this->string(25)
+                'userNameCaseSensitive' => $this->boolean(),
+                'userNameRegExp' => $this->string(25)
             ],
             $tableOptions
         );
@@ -49,6 +50,7 @@ final class M201014141725CreateModuleSettings extends Migration implements Rever
             'module_settings',
             [
                 'confirmation',
+                'delete',
                 'emailFrom',
                 'generatingPassword',
                 'messageHeader',
@@ -61,11 +63,12 @@ final class M201014141725CreateModuleSettings extends Migration implements Rever
                 'subjectWelcome',
                 'tokenConfirmWithin',
                 'tokenRecoverWithin',
-                'usernameCaseSensitive',
-                'usernameRegExp'
+                'userNameCaseSensitive',
+                'userNameRegExp'
             ],
             [
                 [
+                    false,
                     false,
                     'support@example.com',
                     false,

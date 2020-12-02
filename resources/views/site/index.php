@@ -13,14 +13,13 @@ $this->params['breadcrumbs'] = '/';
 
 $this->setTitle('My Project');
 
-$cache = FragmentCache::begin()->id('index');
-
+$cache = FragmentCache::widget()->id('index');
+$cache->begin();
 ?>
 
 <?php if ($cache->getCachedContent() === null) : ?>
-    <?php $cache->start() ?>
     <h1 class="title">Hello World</h1>
     <p class="subtitle">My first website with <strong>Yii 3.0</strong>!</p>
 <?php endif ?>
 
-<?= FragmentCache::end() ?>
+<?= $cache::end() ?>

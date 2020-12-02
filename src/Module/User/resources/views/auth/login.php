@@ -67,7 +67,7 @@ $assetManager->register([
 
         </div>
 
-        <?= Form::begin()
+        <?= Form::widget()
             ->action($action)
             ->options(
                 [
@@ -75,7 +75,7 @@ $assetManager->register([
                     'csrf' => $csrf
                 ]
             )
-            ->start() ?>
+            ->begin() ?>
 
             <?= $field->config($data, 'login')->textInput(['tabindex' => '1']) ?>
 

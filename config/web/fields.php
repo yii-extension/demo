@@ -11,7 +11,8 @@ return [
         $fieldConfig = [
             'labelOptions()' => [['label' => '']],
             'inputOptions()' => [['class' => 'field input']],
-            'errorOptions()' => [['class' => 'has-text-left has-text-danger is-italic']]
+            'errorOptions()' => [['class' => 'has-text-left has-text-danger is-italic']],
+            'hintOptions()' => [['class' => 'has-text-left is-size-7']],
         ];
 
         return Field::Widget($fieldConfig);
