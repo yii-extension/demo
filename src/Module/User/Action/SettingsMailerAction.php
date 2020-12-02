@@ -36,7 +36,7 @@ final class SettingsMailerAction
             $flash->add(
                 'is-info',
                 [
-                    'header' => $settingsForm->getMessageHeader(),
+                    'header' => $settings->getMessageHeader(),
                     'body' =>  'The settings has been updated.'
                 ],
                 true

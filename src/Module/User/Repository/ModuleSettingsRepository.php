@@ -196,7 +196,7 @@ final class ModuleSettingsRepository
         $settingsForm->setAttribute('userNameRegExp', $this->getUserNameRegExp());
     }
 
-    public function update(SettingsForm $settingForm): int
+    public function update(SettingsForm $settingForm): bool
     {
         $this->register($settingForm->getAttributeValue('register'));
         $this->confirmation($settingForm->getAttributeValue('confirmation'));
@@ -210,7 +210,7 @@ final class ModuleSettingsRepository
         $this->tokenRecoverWithin($settingForm->getAttributeValue('tokenRecoverWithin'));
         $this->userNameRegExp($settingForm->getAttributeValue('userNameRegExp'));
 
-        return $this->settings->update();
+        return (bool) $this->settings->update();
     }
 
     private function loadSettings(): ?ActiveRecordInterface

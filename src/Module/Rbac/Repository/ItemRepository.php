@@ -89,7 +89,7 @@ final class ItemRepository
         return $result;
     }
 
-    public function update(ActiveRecordInterface $item, ItemForm $itemForm): int
+    public function update(ActiveRecordInterface $item, ItemForm $itemForm): bool
     {
         /** @var ItemAR $item */
         $item->name($itemForm->getAttributeValue('name'));
@@ -97,7 +97,7 @@ final class ItemRepository
         $item->type($itemForm->getAttributeValue('type'));
         $item->updatedAt();
 
-        return $item->update();
+        return (bool) $item->update();
     }
 
     private function itemQuery(): ActiveQueryInterface

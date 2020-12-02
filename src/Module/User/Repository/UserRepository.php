@@ -319,7 +319,7 @@ final class UserRepository implements IdentityRepositoryInterface
         );
     }
 
-    public function update(UserAr $user, RegisterForm $registerForm): int
+    public function update(UserAr $user, RegisterForm $registerForm): bool
     {
         $password = empty($registerForm->getAttributeValue('password'))
             ? $this->generate(8)
@@ -337,7 +337,7 @@ final class UserRepository implements IdentityRepositoryInterface
         $user->updatedAt();
         $user->flags(0);
 
-        return $user->update();
+        return (bool) $user->update();
     }
 
     public function unblock(UserAr $user): bool
